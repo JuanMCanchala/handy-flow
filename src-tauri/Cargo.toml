@@ -86,12 +86,23 @@ chrono = "0.4"
 rusqlite = { version = "0.37", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
+# Decompresses the pyannote segmentation-3.0 .tar.bz2 release asset (see
+# diarization::models); sherpa-onnx ships it as bzip2, unlike the gzip
+# archives flate2 already handles elsewhere in this file.
+bzip2 = "0.5"
 sha2 = "0.10"
 # Whisper-family models run through transcribe-cpp (GGUF/ggml, native backends);
 # transcribe-rs is now ONNX-only (Parakeet, Moonshine, SenseVoice, GigaAM,
 # Canary, Cohere). Per-platform backend features are added in the target tables.
 transcribe-rs = { version = "0.3.8", features = ["onnx"] }
 transcribe-cpp = { version = "0.2.3", default-features = false }
+# Direct ONNX Runtime session access for speaker diarization (pyannote
+# segmentation + WeSpeaker embedding models). Pinned to the exact version
+# transcribe-rs already resolves so Cargo unifies the two into one ORT
+# build rather than linking a second, possibly differently-configured copy
+# (see the Windows ORT_LIB_LOCATION note in the windows target table below).
+ort = { version = "=2.0.0-rc.12", default-features = false, features = ["ndarray"] }
+ndarray = "0.17"
 handy-keys = "0.3.4"
 ferrous-opencc = "0.2.3"
 clap = { version = "4", features = ["derive"] }

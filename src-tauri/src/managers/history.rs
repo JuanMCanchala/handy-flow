@@ -45,6 +45,9 @@ static MIGRATIONS: &[M] = &[
         CREATE INDEX IF NOT EXISTS idx_transcript_segments_history_entry_id
             ON transcript_segments (history_entry_id);",
     ),
+    // Speaker diarization label, e.g. "Speaker 1". NULL for segments that
+    // were never diarized (dictations, or imports with diarization off).
+    M::up("ALTER TABLE transcript_segments ADD COLUMN speaker_label TEXT;"),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -298,8 +301,8 @@ impl HistoryManager {
 
         if !segments.is_empty() {
             let mut stmt = conn.prepare(
-                "INSERT INTO transcript_segments (history_entry_id, ordinal, start_ms, end_ms, text)
-                 VALUES (?1, ?2, ?3, ?4, ?5)",
+                "INSERT INTO transcript_segments (history_entry_id, ordinal, start_ms, end_ms, text, speaker_label)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             )?;
             for (ordinal, segment) in segments.iter().enumerate() {
                 stmt.execute(params![
@@ -308,6 +311,7 @@ impl HistoryManager {
                     segment.start_ms as i64,
                     segment.end_ms as i64,
                     &segment.text,
+                    &segment.speaker,
                 ])?;
             }
         }
@@ -707,7 +711,7 @@ impl HistoryManager {
     ) -> Result<Vec<crate::transcript_export::TranscriptSegment>> {
         let conn = self.get_connection()?;
         let mut stmt = conn.prepare(
-            "SELECT start_ms, end_ms, text FROM transcript_segments
+            "SELECT start_ms, end_ms, text, speaker_label FROM transcript_segments
              WHERE history_entry_id = ?1
              ORDER BY ordinal ASC",
         )?;
@@ -717,6 +721,7 @@ impl HistoryManager {
                 start_ms: row.get::<_, i64>("start_ms")? as u64,
                 end_ms: row.get::<_, i64>("end_ms")? as u64,
                 text: row.get("text")?,
+                speaker: row.get("speaker_label")?,
             })
         })?;
 

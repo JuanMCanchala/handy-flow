@@ -170,15 +170,17 @@ pub async fn import_audio_file(
     transcription_manager: State<'_, Arc<TranscriptionManager>>,
     history_manager: State<'_, Arc<HistoryManager>>,
     file_import_manager: State<'_, Arc<crate::file_import::FileImportManager>>,
+    diarization_model_manager: State<'_, Arc<crate::diarization::models::DiarizationModelManager>>,
     path: String,
 ) -> Result<HistoryEntry, String> {
     let tm = Arc::clone(&transcription_manager);
     let hm = Arc::clone(&history_manager);
     let fim = Arc::clone(&file_import_manager);
+    let dmm = Arc::clone(&diarization_model_manager);
     let path = PathBuf::from(path);
 
     tauri::async_runtime::spawn_blocking(move || {
-        crate::file_import::import_and_save(&app, &tm, &hm, &fim, &path)
+        crate::file_import::import_and_save(&app, &tm, &hm, &fim, &dmm, &path)
     })
     .await
     .map_err(|e| format!("Import task panicked: {}", e))?
@@ -239,6 +241,7 @@ pub async fn export_transcript(
                 start_ms: 0,
                 end_ms,
                 text,
+                speaker: None,
             });
         }
     }

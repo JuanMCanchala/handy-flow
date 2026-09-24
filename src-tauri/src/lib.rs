@@ -11,6 +11,7 @@ mod cloud_stt;
 mod command_mode;
 mod commands;
 mod copilot;
+mod diarization;
 mod file_import;
 mod helpers;
 mod input;
@@ -221,6 +222,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
         transcription_manager.clone(),
     ));
     let file_import_manager = Arc::new(file_import::FileImportManager::new());
+    let diarization_model_manager = Arc::new(
+        diarization::models::DiarizationModelManager::new(app_handle)
+            .expect("Failed to initialize diarization model manager"),
+    );
 
     // Initialize the transcribe-cpp native backend (logging + backend module
     // registration) once, before any whisper model is loaded.
@@ -236,6 +241,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(history_manager.clone());
     app_handle.manage(live_translate_manager.clone());
     app_handle.manage(file_import_manager.clone());
+    app_handle.manage(diarization_model_manager.clone());
     app_handle.manage(tray::TrayState::new());
 
     // Note: Shortcuts are NOT initialized here.
@@ -816,6 +822,11 @@ pub fn run(cli_args: CliArgs) {
             commands::copilot::clear_copilot_history,
             commands::copilot::is_copilot_active,
             commands::copilot::toggle_copilot,
+            commands::diarization::change_diarization_enabled_setting,
+            commands::diarization::change_diarization_cluster_threshold_setting,
+            commands::diarization::get_diarization_models_status,
+            commands::diarization::download_diarization_model,
+            commands::diarization::delete_diarization_model,
             helpers::clamshell::is_laptop,
         ])
         .events(collect_events![

@@ -585,6 +585,16 @@ pub struct AppSettings {
     /// selected (see `live_translate::capture`).
     #[serde(default)]
     pub live_translate_source: LiveTranslateSource,
+    /// Speaker diarization for imported files and live-subtitle/copilot
+    /// sessions. Off by default: enabling it downloads the segmentation and
+    /// embedding ONNX models on demand (see `diarization::models`).
+    #[serde(default)]
+    pub diarization_enabled: bool,
+    /// Cosine-distance threshold below which two speech segments' embeddings
+    /// are merged into the same speaker cluster. Lower = more (stricter)
+    /// speakers; higher = fewer (looser) speakers.
+    #[serde(default = "default_diarization_cluster_threshold")]
+    pub diarization_cluster_threshold: f32,
 }
 
 fn default_model() -> String {
@@ -946,6 +956,10 @@ fn default_typing_tool() -> TypingTool {
     TypingTool::Auto
 }
 
+fn default_diarization_cluster_threshold() -> f32 {
+    0.4
+}
+
 fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
     let mut changed = false;
     for provider in default_post_process_providers() {
@@ -1196,6 +1210,8 @@ pub fn get_default_settings() -> AppSettings {
         transforms: default_transforms(),
         translation_target: TranslationTarget::default(),
         live_translate_source: LiveTranslateSource::default(),
+        diarization_enabled: false,
+        diarization_cluster_threshold: default_diarization_cluster_threshold(),
     }
 }
 

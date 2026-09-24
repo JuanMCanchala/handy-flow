@@ -1168,6 +1168,46 @@ async toggleCopilot() : Promise<Result<null, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async changeDiarizationEnabledSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_diarization_enabled_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeDiarizationClusterThresholdSetting(threshold: number) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_diarization_cluster_threshold_setting", { threshold }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getDiarizationModelsStatus() : Promise<Result<DiarizationModelInfo[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_diarization_models_status") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async downloadDiarizationModel(kind: DiarizationModelKind) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("download_diarization_model", { kind }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async deleteDiarizationModel(kind: DiarizationModelKind) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("delete_diarization_model", { kind }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1286,7 +1326,19 @@ translation_target?: TranslationTarget;
  * only implemented on Windows; other platforms report an error when
  * selected (see `live_translate::capture`).
  */
-live_translate_source?: LiveTranslateSource }
+live_translate_source?: LiveTranslateSource; 
+/**
+ * Speaker diarization for imported files and live-subtitle/copilot
+ * sessions. Off by default: enabling it downloads the segmentation and
+ * embedding ONNX models on demand (see `diarization::models`).
+ */
+diarization_enabled?: boolean; 
+/**
+ * Cosine-distance threshold below which two speech segments' embeddings
+ * are merged into the same speaker cluster. Lower = more (stricter)
+ * speakers; higher = fewer (looser) speakers.
+ */
+diarization_cluster_threshold?: number }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1322,6 +1374,10 @@ export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LiveSubtitleLine = { original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
+
+export type DiarizationModelKind = "Segmentation" | "Embedding"
+
+export type DiarizationModelInfo = { kind: DiarizationModelKind; filename: string; size_bytes: number; is_downloaded: boolean }
 export type CopilotAnswerLine = { question: string; answer: string }
 export type CopilotAnswerEntry = { id: string; question: string; answer: string; 
 /**
