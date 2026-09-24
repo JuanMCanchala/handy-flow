@@ -14,8 +14,8 @@ import {
   Type,
   Wand2,
 } from "lucide-react";
-import HandyTextLogo from "./icons/HandyTextLogo";
-import HandyHand from "./icons/HandyHand";
+import VoxaTextLogo from "./icons/VoxaTextLogo";
+import VoxaWaveformIcon from "./icons/VoxaWaveformIcon";
 import Footer from "./footer";
 import { useSettings } from "../hooks/useSettings";
 import { HomeSettings } from "./home/HomeSettings";
@@ -60,7 +60,7 @@ export const SECTIONS_CONFIG = {
   },
   general: {
     labelKey: "sidebar.general",
-    icon: HandyHand,
+    icon: VoxaWaveformIcon,
     component: GeneralSettings,
     enabled: () => true,
   },
@@ -153,7 +153,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       className="w-[var(--sidebar-w)] shrink-0 h-full flex flex-col bg-transparent pt-[var(--titlebar-h)] px-3 pb-3"
       data-tauri-drag-region
     >
-      <HandyTextLogo width={88} className="ms-2 mb-6" />
+      <VoxaTextLogo width={88} className="ms-2 mb-6" />
       <div className="flex flex-col w-full gap-0.5">
         {availableSections.map((section) => {
           const Icon = section.icon;

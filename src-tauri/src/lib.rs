@@ -988,7 +988,7 @@ pub fn run(cli_args: CliArgs) {
             // for portable mode (redirects WebView2 cache to portable Data dir)
             let mut win_builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
-                    .title("Handy")
+                    .title("Voxa")
                     .inner_size(880.0, 620.0)
                     .min_inner_size(720.0, 540.0)
                     .resizable(true)

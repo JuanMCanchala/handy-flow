@@ -201,6 +201,13 @@ Access debug features: `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux)
 - **Linux**: OpenBLAS + Vulkan, limited Wayland support, overlay uses GTK layer shell (disable with `HANDY_NO_GTK_LAYER_SHELL=1`)
 - **Nix/NixOS**: the Nix package sets `HANDY_DISABLE_UPDATER=1` to force-disable the self-updater at runtime without touching the persisted setting (self-update can't work against an immutable `/nix/store`)
 
+## Pending: App Icons
+
+`src-tauri/icons/` still ships the upstream Handy artwork. Regenerate from a
+Voxa source SVG with `bun tauri icon path/to/voxa-icon.svg` once that asset
+exists; no SVG source was available at rebrand time so the binaries were left
+untouched.
+
 ## Troubleshooting
 
 See the [Troubleshooting](README.md#troubleshooting) section in README.md.
