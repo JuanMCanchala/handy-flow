@@ -12,6 +12,7 @@ import {
   NotebookPen,
   Palette,
   Sparkles,
+  SlidersHorizontal,
   Type,
   Wand2,
 } from "lucide-react";
@@ -29,6 +30,7 @@ import {
   HistorySettings,
   LiveTranslateSettings,
   ModelsSettings,
+  ModesSettings,
   PostProcessingSettings,
   SnippetsSettings,
   StyleSettings,
@@ -100,6 +102,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.transforms",
     icon: Wand2,
     component: TransformsSettings,
+    enabled: () => true,
+  },
+  modes: {
+    labelKey: "sidebar.modes",
+    icon: SlidersHorizontal,
+    component: ModesSettings,
     enabled: () => true,
   },
   postprocessing: {

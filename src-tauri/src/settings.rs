@@ -585,6 +585,14 @@ pub struct AppSettings {
     /// selected (see `live_translate::capture`).
     #[serde(default)]
     pub live_translate_source: LiveTranslateSource,
+    /// User-defined named modes/presets (Superwhisper-style). Seeded with
+    /// Default/Email/Notes on fresh installs. See `modes.rs`.
+    #[serde(default = "default_modes")]
+    pub modes: Vec<crate::modes::Mode>,
+    /// Id of the currently active mode, or `None` to use the global
+    /// post-processing prompt/model/language selection.
+    #[serde(default)]
+    pub active_mode_id: Option<String>,
 }
 
 fn default_model() -> String {
@@ -921,6 +929,10 @@ fn default_transforms() -> Vec<Transform> {
     ]
 }
 
+fn default_modes() -> Vec<crate::modes::Mode> {
+    crate::modes::default_modes()
+}
+
 fn default_transcribe_gpu_device() -> Option<String> {
     None // automatic device selection
 }
@@ -1196,6 +1208,8 @@ pub fn get_default_settings() -> AppSettings {
         transforms: default_transforms(),
         translation_target: TranslationTarget::default(),
         live_translate_source: LiveTranslateSource::default(),
+        modes: default_modes(),
+        active_mode_id: None,
     }
 }
 

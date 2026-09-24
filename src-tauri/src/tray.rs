@@ -61,6 +61,9 @@ struct MenuInputs {
     selected_model: String,
     /// `(id, name)` of downloaded models, sorted by name.
     downloaded_models: Vec<(String, String)>,
+    /// `(id, name)` of user-defined modes, in settings order.
+    modes: Vec<(String, String)>,
+    active_mode_id: Option<String>,
     locale: String,
     update_checks_enabled: bool,
 }
@@ -332,6 +335,12 @@ fn compute_desired(app: &AppHandle, icon_state: TrayIconState) -> TrayDesired {
             model_loaded,
             selected_model: settings.selected_model,
             downloaded_models,
+            modes: settings
+                .modes
+                .iter()
+                .map(|m| (m.id.clone(), m.name.clone()))
+                .collect(),
+            active_mode_id: settings.active_mode_id,
             locale: settings.app_language,
             update_checks_enabled: settings.update_checks_enabled,
         },
@@ -554,22 +563,73 @@ fn build_menu(app: &AppHandle, inputs: &MenuInputs) -> tauri::Result<(Menu<tauri
             None::<&str>,
         )?;
 
-        Menu::with_items(
-            app,
-            &[
-                &version_i,
-                &separator()?,
-                &copy_last_transcript_i,
-                &separator()?,
-                &model_submenu,
-                &unload_model_i,
-                &separator()?,
-                &settings_i,
-                &check_updates_i,
-                &separator()?,
-                &quit_i,
-            ],
-        )?
+        // Modes submenu — "No mode" plus every user-defined mode, active one
+        // checked. Hidden entirely when there are no modes configured.
+        let modes_submenu = if inputs.modes.is_empty() {
+            None
+        } else {
+            let submenu = Submenu::with_id(app, "modes_submenu", &strings.modes, true)?;
+            let none_active = inputs.active_mode_id.is_none();
+            let none_item = CheckMenuItem::with_id(
+                app,
+                "mode_select:",
+                &strings.no_mode,
+                true,
+                none_active,
+                None::<&str>,
+            )?;
+            submenu.append(&none_item)?;
+            submenu.append(&PredefinedMenuItem::separator(app)?)?;
+            for (id, name) in &inputs.modes {
+                let is_active = inputs.active_mode_id.as_deref() == Some(id.as_str());
+                let item_id = format!("mode_select:{}", id);
+                let item =
+                    CheckMenuItem::with_id(app, &item_id, name, true, is_active, None::<&str>)?;
+                submenu.append(&item)?;
+            }
+            Some(submenu)
+        };
+
+        let sep1 = separator()?;
+        let sep2 = separator()?;
+        let sep3 = separator()?;
+        let sep4 = separator()?;
+
+        match &modes_submenu {
+            Some(modes_submenu) => Menu::with_items(
+                app,
+                &[
+                    &version_i,
+                    &sep1,
+                    &copy_last_transcript_i,
+                    &sep2,
+                    &model_submenu,
+                    &unload_model_i,
+                    modes_submenu,
+                    &sep3,
+                    &settings_i,
+                    &check_updates_i,
+                    &sep4,
+                    &quit_i,
+                ],
+            )?,
+            None => Menu::with_items(
+                app,
+                &[
+                    &version_i,
+                    &sep1,
+                    &copy_last_transcript_i,
+                    &sep2,
+                    &model_submenu,
+                    &unload_model_i,
+                    &sep3,
+                    &settings_i,
+                    &check_updates_i,
+                    &sep4,
+                    &quit_i,
+                ],
+            )?,
+        }
     };
 
     // When update checks are forced off (e.g. HANDY_DISABLE_UPDATER, set by
@@ -693,6 +753,8 @@ mod tests {
             model_loaded: true,
             selected_model: "small".to_string(),
             downloaded_models: vec![("small".to_string(), "Small".to_string())],
+            modes: Vec::new(),
+            active_mode_id: None,
             locale: "en".to_string(),
             update_checks_enabled: true,
         }
