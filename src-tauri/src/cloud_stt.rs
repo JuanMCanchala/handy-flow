@@ -167,22 +167,26 @@ pub async fn transcribe(
         Some(custom_words.join(", "))
     };
 
-    let form = build_form(wav_bytes, &model, language_param, prompt.as_deref())?;
+    // Validate the form once up front so a bad mime/params error surfaces
+    // directly instead of through the retry closure.
+    build_form(wav_bytes.clone(), &model, language_param, prompt.as_deref())?;
 
     let client = reqwest::Client::builder()
         .timeout(REQUEST_TIMEOUT)
         .build()
         .map_err(|e| format!("Failed to build HTTP client: {}", e))?;
 
-    let mut request = client.post(&url).multipart(form);
-    if !api_key.is_empty() {
-        request = request.bearer_auth(api_key);
-    }
-
-    let response = request
-        .send()
-        .await
-        .map_err(|e| format!("Cloud STT request failed: {}", e))?;
+    let response = crate::llm_client::send_with_connect_retry(|| {
+        let form = build_form(wav_bytes.clone(), &model, language_param, prompt.as_deref())
+            .expect("form validated above");
+        let mut request = client.post(&url).multipart(form);
+        if !api_key.is_empty() {
+            request = request.bearer_auth(&api_key);
+        }
+        Ok(request)
+    })
+    .await
+    .map_err(|e| crate::llm_client::report_reqwest_error("Cloud STT request failed", &e))?;
 
     let status = response.status();
     if !status.is_success() {
@@ -278,6 +282,25 @@ mod tests {
             .recv_timeout(std::time::Duration::from_secs(15))
             .expect("cloud STT call deadlocked inside an async task");
         assert!(result.is_err());
+    }
+
+    /// Live check against Fireworks (needs network + FIREWORKS_API_KEY):
+    /// `cargo test --lib live_fireworks -- --ignored --nocapture`
+    #[test]
+    #[ignore]
+    fn live_fireworks_transcription() {
+        let key = std::env::var("FIREWORKS_API_KEY").expect("FIREWORKS_API_KEY");
+        let mut settings = get_default_settings();
+        settings.cloud_stt_provider_id = "fireworks".to_string();
+        settings
+            .cloud_stt_api_keys
+            .insert("fireworks".to_string(), key);
+        let tone: Vec<f32> = (0..16000)
+            .map(|i| (i as f32 * 440.0 * std::f32::consts::TAU / 16000.0).sin() * 0.1)
+            .collect();
+        let result = transcribe_blocking(&settings, tone, &[], "en");
+        println!("live result: {:?}", result);
+        assert!(result.is_ok(), "{:?}", result);
     }
 
     #[test]

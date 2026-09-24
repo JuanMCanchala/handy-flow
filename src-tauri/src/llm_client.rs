@@ -1,5 +1,5 @@
 use crate::settings::PostProcessProvider;
-use log::{debug, error, info};
+use log::{debug, error, info, warn};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, REFERER, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -268,7 +268,39 @@ fn sanitized_url_for_log(url: &str) -> String {
         .unwrap_or_else(|_| "<invalid URL>".to_string())
 }
 
-fn report_reqwest_error(context: &str, error: &reqwest::Error) -> String {
+/// How many times a request is sent when it fails before reaching the server
+/// (DNS or TCP/TLS connect). Flaky home-router DNS makes the first lookup fail
+/// surprisingly often; the retry succeeds once the resolver answers.
+const CONNECT_ATTEMPTS: u32 = 3;
+
+/// Sends a request, retrying only failures that happened before the request
+/// reached the server (`is_connect`), so a request is never delivered twice.
+/// `build` is called once per attempt because a sent builder is consumed.
+pub(crate) async fn send_with_connect_retry<F>(
+    build: F,
+) -> Result<reqwest::Response, reqwest::Error>
+where
+    F: Fn() -> Result<reqwest::RequestBuilder, reqwest::Error>,
+{
+    let mut attempt = 1;
+    loop {
+        match build()?.send().await {
+            Err(e) if e.is_connect() && attempt < CONNECT_ATTEMPTS => {
+                warn!(
+                    "Connection attempt {} failed ({}); retrying",
+                    attempt,
+                    report_reqwest_error("connect", &e)
+                );
+                tokio::time::sleep(std::time::Duration::from_millis(300 * u64::from(attempt)))
+                    .await;
+                attempt += 1;
+            }
+            other => return other,
+        }
+    }
+}
+
+pub(crate) fn report_reqwest_error(context: &str, error: &reqwest::Error) -> String {
     let kinds = reqwest_error_kinds(error);
     let url = error
         .url()
@@ -393,10 +425,7 @@ pub async fn send_chat_completion_with_schema(
         reasoning,
     };
 
-    let mut response = client
-        .post(&url)
-        .json(&request_body)
-        .send()
+    let mut response = send_with_connect_retry(|| Ok(client.post(&url).json(&request_body)))
         .await
         .map_err(|e| report_reqwest_error("HTTP request failed", &e))?;
     let mut status = response.status();
@@ -422,10 +451,7 @@ pub async fn send_chat_completion_with_schema(
         );
 
         request_body.reasoning = ReasoningParams::default();
-        response = client
-            .post(&url)
-            .json(&request_body)
-            .send()
+        response = send_with_connect_retry(|| Ok(client.post(&url).json(&request_body)))
             .await
             .map_err(|e| report_reqwest_error("HTTP retry failed", &e))?;
         status = response.status();
@@ -480,9 +506,7 @@ pub async fn fetch_models(
 
     let client = create_client(provider, &api_key)?;
 
-    let response = client
-        .get(&url)
-        .send()
+    let response = send_with_connect_retry(|| Ok(client.get(&url)))
         .await
         .map_err(|e| report_reqwest_error("Failed to fetch models", &e))?;
 

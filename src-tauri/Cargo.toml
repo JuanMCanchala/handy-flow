@@ -78,7 +78,7 @@ symphonia = { version = "0.5.5", default-features = false, features = [
 # Direct handle to the mkv/webm demuxer symphonia's `mkv` feature enables,
 # used only to assert format registration in tests.
 symphonia-format-mkv = "0.5.5"
-reqwest = { version = "0.12", features = ["json", "stream", "gzip", "brotli", "deflate", "multipart"] }
+reqwest = { version = "0.12", features = ["json", "stream", "gzip", "brotli", "deflate", "multipart", "hickory-dns"] }
 futures-util = "0.3"
 rustfft = "6.4.0"
 strsim = "0.11.0"
