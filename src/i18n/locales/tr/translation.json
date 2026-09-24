@@ -129,6 +129,11 @@
         "checkFailed": "İzinler kontrol edilemedi. Lütfen tekrar deneyin.",
         "requestFailed": "İzin isteği başarısız oldu. Lütfen tekrar deneyin."
       }
+    },
+    "cloud": {
+      "title": "Try it with a cloud API first",
+      "description": "No download needed. Pick a provider, then paste your API key in Models. You can add a local model any time.",
+      "error": "Could not enable cloud transcription: {{error}}"
     }
   },
   "modelSelector": {

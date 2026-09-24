@@ -898,6 +898,7 @@ pub fn run(cli_args: CliArgs) {
             commands::models::is_model_loading,
             commands::models::rescan_local_models,
             commands::cloud_stt::change_cloud_stt_enabled_setting,
+            commands::cloud_stt::complete_onboarding_with_cloud,
             commands::cloud_stt::set_cloud_stt_provider,
             commands::cloud_stt::change_cloud_stt_base_url_setting,
             commands::cloud_stt::change_cloud_stt_api_key_setting,

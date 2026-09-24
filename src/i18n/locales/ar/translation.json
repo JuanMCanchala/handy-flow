@@ -129,6 +129,11 @@
         "checkFailed": "فشل التحقق من الأذونات. يرجير المحاولة مرة أخرى.",
         "requestFailed": "فشل طلب الإذن. يرجى المحاولة مرة أخرى."
       }
+    },
+    "cloud": {
+      "title": "Try it with a cloud API first",
+      "description": "No download needed. Pick a provider, then paste your API key in Models. You can add a local model any time.",
+      "error": "Could not enable cloud transcription: {{error}}"
     }
   },
   "modelSelector": {

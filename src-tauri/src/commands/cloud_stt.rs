@@ -27,6 +27,21 @@ pub fn change_cloud_stt_enabled_setting(app: AppHandle, enabled: bool) -> Result
     Ok(())
 }
 
+/// Finishes first-run onboarding without downloading a local model: turns on
+/// cloud transcription with the given provider so the user can try the app
+/// right away and add a local model later.
+#[tauri::command]
+#[specta::specta]
+pub fn complete_onboarding_with_cloud(app: AppHandle, provider_id: String) -> Result<(), String> {
+    let mut app_settings = settings::get_settings(&app);
+    validate_provider_exists(&app_settings, &provider_id)?;
+    app_settings.cloud_stt_enabled = true;
+    app_settings.cloud_stt_provider_id = provider_id;
+    app_settings.onboarding_completed = true;
+    settings::write_settings(&app, app_settings);
+    Ok(())
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn set_cloud_stt_provider(app: AppHandle, provider_id: String) -> Result<(), String> {

@@ -129,6 +129,11 @@
         "checkFailed": "检查权限失败。请重试。",
         "requestFailed": "请求权限失败。请重试。"
       }
+    },
+    "cloud": {
+      "title": "Try it with a cloud API first",
+      "description": "No download needed. Pick a provider, then paste your API key in Models. You can add a local model any time.",
+      "error": "Could not enable cloud transcription: {{error}}"
     }
   },
   "modelSelector": {

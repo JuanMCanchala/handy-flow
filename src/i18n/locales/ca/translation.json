@@ -129,6 +129,11 @@
         "checkFailed": "No s'han pogut comprovar els permisos. Torneu-ho a provar.",
         "requestFailed": "No s'ha pogut sol·licitar el permís. Torneu-ho a provar."
       }
+    },
+    "cloud": {
+      "title": "Try it with a cloud API first",
+      "description": "No download needed. Pick a provider, then paste your API key in Models. You can add a local model any time.",
+      "error": "Could not enable cloud transcription: {{error}}"
     }
   },
   "modelSelector": {

@@ -129,6 +129,11 @@
         "checkFailed": "Error al verificar permisos. Por favor, inténtalo de nuevo.",
         "requestFailed": "Error al solicitar permiso. Por favor, inténtalo de nuevo."
       }
+    },
+    "cloud": {
+      "title": "Pruébalo primero con una API en la nube",
+      "description": "Sin descargas. Elige un proveedor y luego pega tu API key en Modelos. Puedes agregar un modelo local cuando quieras.",
+      "error": "No se pudo activar la transcripción en la nube: {{error}}"
     }
   },
   "modelSelector": {

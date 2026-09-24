@@ -59,8 +59,7 @@ function App() {
   // Track if this is a returning user who just needs to grant permissions
   // (vs a new user who needs full onboarding including model selection)
   const [isReturningUser, setIsReturningUser] = useState(false);
-  const [currentSection, setCurrentSection] =
-    useState<SidebarSection>("home");
+  const [currentSection, setCurrentSection] = useState<SidebarSection>("home");
   const { settings, updateSetting } = useSettings();
   const direction = getLanguageDirection(i18n.language);
   const refreshAudioDevices = useSettingsStore(
@@ -287,6 +286,13 @@ function App() {
     setOnboardingStep(isReturningUser ? "done" : "model");
   };
 
+  const handleUseCloud = () => {
+    // Cloud transcription was enabled from onboarding: land on Models so the
+    // user can paste their API key right away.
+    setCurrentSection("models");
+    setOnboardingStep("done");
+  };
+
   const handleModelSelected = () => {
     // Transition to main app - user has started a download
     setOnboardingStep("done");
@@ -349,7 +355,12 @@ function App() {
       <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />
     );
   } else if (onboardingStep === "model") {
-    content = <Onboarding onModelSelected={handleModelSelected} />;
+    content = (
+      <Onboarding
+        onModelSelected={handleModelSelected}
+        onUseCloud={handleUseCloud}
+      />
+    );
   } else {
     content = (
       <div
@@ -364,7 +375,10 @@ function App() {
           onSectionChange={setCurrentSection}
         />
         <main className="flex-1 m-2 ms-0 bg-surface rounded-xl shadow-panel overflow-hidden flex flex-col">
-          <div data-tauri-drag-region className="h-[var(--titlebar-h)] shrink-0" />
+          <div
+            data-tauri-drag-region
+            className="h-[var(--titlebar-h)] shrink-0"
+          />
           <div ref={settingsScrollRef} className="flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-[720px] px-8 pb-12 flex flex-col gap-8">
               <AccessibilityPermissions />

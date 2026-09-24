@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ChevronDown } from "lucide-react";
-import type { ModelInfo } from "@/bindings";
+import { commands, type ModelInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
 import ModelCard, { isLegacySource } from "./ModelCard";
 import VoxaTextLogo from "../icons/VoxaTextLogo";
@@ -10,11 +10,20 @@ import { useModelStore } from "../../stores/modelStore";
 
 interface OnboardingProps {
   onModelSelected: () => void;
+  /** Skip the local model and start with cloud transcription. */
+  onUseCloud?: () => void;
   preview?: boolean;
 }
 
+const CLOUD_PROVIDERS = [
+  { id: "groq", label: "Groq" },
+  { id: "fireworks", label: "Fireworks" },
+  { id: "openai", label: "OpenAI" },
+] as const;
+
 const Onboarding: React.FC<OnboardingProps> = ({
   onModelSelected,
+  onUseCloud,
   preview = false,
 }) => {
   const { t } = useTranslation();
@@ -34,6 +43,15 @@ const Onboarding: React.FC<OnboardingProps> = ({
   const hasStartedSelection = useRef(false);
 
   const isBusy = selectedModelId !== null;
+
+  const handleUseCloud = async (providerId: string) => {
+    const result = await commands.completeOnboardingWithCloud(providerId);
+    if (result.status === "ok") {
+      onUseCloud?.();
+    } else {
+      toast.error(t("onboarding.cloud.error", { error: result.error }));
+    }
+  };
 
   // Curate the download list: legacy (.bin/ONNX) downloads are deprecated and
   // never shown here (they still appear in the compatible section if already on
@@ -170,6 +188,31 @@ const Onboarding: React.FC<OnboardingProps> = ({
 
       <div className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0">
         <div className="space-y-6 pb-6">
+          {onUseCloud && !preview && (
+            <div className="rounded-lg border border-border bg-surface p-4 text-left space-y-3">
+              <div>
+                <h2 className="text-small font-medium text-text">
+                  {t("onboarding.cloud.title")}
+                </h2>
+                <p className="text-small text-text-secondary">
+                  {t("onboarding.cloud.description")}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {CLOUD_PROVIDERS.map((provider) => (
+                  <button
+                    key={provider.id}
+                    type="button"
+                    disabled={isBusy}
+                    onClick={() => handleUseCloud(provider.id)}
+                    className="rounded-md border border-border-strong bg-surface px-3 py-1.5 text-small font-medium text-text hover:bg-fill-hover disabled:opacity-50"
+                  >
+                    {provider.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           {models.some((m: ModelInfo) => m.is_downloaded) && (
             <div className="space-y-3">
               <div className="text-left">
