@@ -23,7 +23,7 @@ use serde::Serialize;
 use specta::Type;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
-use tauri::AppHandle;
+use tauri::{AppHandle, Emitter};
 use tauri_specta::Event;
 
 const SILERO_VAD_THRESHOLD: f32 = 0.3;
@@ -37,6 +37,9 @@ pub struct LiveSubtitleLine {
     /// (with an empty translation) and re-emitted with the same id once the
     /// translation arrives, so the overlay updates the line in place.
     pub id: u32,
+    /// Language detected for `original` ("en" or "es"); the live view uses it
+    /// to route the line to the EN→ES or ES→EN column.
+    pub source_lang: String,
     pub original: String,
     pub translation: String,
 }
@@ -205,6 +208,7 @@ impl LiveTranslateManager {
         };
 
         log::info!("Live session capturing audio");
+        let _ = self.app_handle.emit("live-translate-state", true);
         *self.capture.lock().unwrap() = Some(stream);
 
         // Keep the STT/LLM connections warm for the whole session: each
@@ -249,6 +253,7 @@ impl LiveTranslateManager {
             self.process_segment(segment);
         }
         super::overlay::destroy_live_subtitles_window(&self.app_handle);
+        let _ = self.app_handle.emit("live-translate-state", false);
     }
 
     /// Transcribes one closed speech segment, then dispatches it to the
@@ -303,6 +308,7 @@ impl LiveTranslateManager {
         let id = NEXT_LINE_ID.fetch_add(1, Ordering::Relaxed);
         let _ = LiveSubtitleLine {
             id,
+            source_lang: source_lang.code().to_string(),
             original: transcript.clone(),
             translation: String::new(),
         }
@@ -343,6 +349,7 @@ impl LiveTranslateManager {
         log::debug!("Live subtitles: translated in {:?}", started.elapsed());
         let line = LiveSubtitleLine {
             id,
+            source_lang: source_lang.code().to_string(),
             original: transcript,
             translation,
         };

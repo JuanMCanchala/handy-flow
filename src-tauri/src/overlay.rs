@@ -467,6 +467,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
                 crate::flow_bar_windows::make_non_activating(hwnd);
             }
 
+            crate::privacy::protect_window(app_handle, &window);
             debug!("Recording overlay window created successfully (hidden)");
         }
         Err(e) => {

@@ -880,6 +880,24 @@
       "suggestAnswers": {
         "label": "Suggest answers with AI",
         "description": "When someone asks you a question, suggest a reply based on your Copilot profile, in the language of the question."
+      },
+      "view": {
+        "idle": "Not listening",
+        "conversation": "Conversation",
+        "answers": "AI answers",
+        "translating": "Translating…",
+        "emptyEn": "When someone speaks English, you'll see it here with the Spanish translation.",
+        "emptyEs": "When someone speaks Spanish, you'll see it here with the English translation.",
+        "answersEmptyOn": "When someone asks you a question, a suggested answer appears here.",
+        "answersEmptyOff": "Turn on AI answers to get a suggested reply whenever someone asks you a question. Replies use your Copilot profile.",
+        "enableAnswers": "Turn on AI answers",
+        "copy": "Copy",
+        "copied": "Answer copied",
+        "copyFailed": "Couldn't copy the answer"
+      },
+      "hideFromShare": {
+        "label": "Hide Voxa from screen sharing",
+        "description": "Voxa windows stay visible to you but don't appear in Meet, Zoom, Teams or recordings."
       }
     },
     "copilot": {

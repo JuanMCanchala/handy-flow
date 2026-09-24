@@ -1242,6 +1242,14 @@ async isLaptop() : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async changeHideFromScreenShareSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_hide_from_screen_share_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeLiveTranslateSuggestAnswersSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_live_translate_suggest_answers_setting", { enabled }) };
@@ -1523,7 +1531,7 @@ translation_target?: TranslationTarget;
  * only implemented on Windows; other platforms report an error when
  * selected (see `live_translate::capture`).
  */
-live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; 
+live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; hide_from_screen_share?: boolean; 
 /**
  * User-defined named modes/presets (Superwhisper-style). Seeded with
  * Default/Email/Notes on fresh installs. See `modes.rs`.
@@ -1615,7 +1623,7 @@ hotkey: string | null }
  * `style.rs` appends its tone fragment.
  */
 export type ModeOutputFormat = "plain" | "bullet_list" | "email" | "markdown"
-export type LiveSubtitleLine = { id: number; original: string; translation: string }
+export type LiveSubtitleLine = { id: number; source_lang: string; original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
 
 export type DiarizationModelKind = "Segmentation" | "Embedding"

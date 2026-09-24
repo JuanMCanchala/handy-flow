@@ -880,6 +880,24 @@
       "suggestAnswers": {
         "label": "Sugerir respuestas con IA",
         "description": "Cuando te hacen una pregunta, sugiere una respuesta basada en tu perfil del Copilot, en el idioma de la pregunta."
+      },
+      "view": {
+        "idle": "Sin escuchar",
+        "conversation": "Conversación",
+        "answers": "Respuestas IA",
+        "translating": "Traduciendo…",
+        "emptyEn": "Cuando alguien hable en inglés, lo verás aquí con la traducción al español.",
+        "emptyEs": "Cuando alguien hable en español, lo verás aquí con la traducción al inglés.",
+        "answersEmptyOn": "Cuando te hagan una pregunta, aquí aparecerá una respuesta sugerida.",
+        "answersEmptyOff": "Activa las respuestas IA para recibir una respuesta sugerida cada vez que te hagan una pregunta. Usan tu perfil del Copilot.",
+        "enableAnswers": "Activar respuestas IA",
+        "copy": "Copiar",
+        "copied": "Respuesta copiada",
+        "copyFailed": "No se pudo copiar la respuesta"
+      },
+      "hideFromShare": {
+        "label": "Ocultar Voxa al compartir pantalla",
+        "description": "Tú sigues viendo las ventanas de Voxa, pero no aparecen en Meet, Zoom, Teams ni en grabaciones."
       }
     },
     "copilot": {

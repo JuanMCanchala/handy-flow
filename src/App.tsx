@@ -30,6 +30,10 @@ import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
+import { initLiveTranslateStore } from "./stores/liveTranslateStore";
+
+// Live translate feed keeps collecting while other sections are open.
+initLiveTranslateStore();
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
@@ -104,7 +108,10 @@ function App() {
       }
     };
 
-    commands.takePendingMainSection().then(goToSection).catch(() => {});
+    commands
+      .takePendingMainSection()
+      .then(goToSection)
+      .catch(() => {});
     const unlisten = listen<string>("navigate-to-section", (event) => {
       goToSection(event.payload);
     });

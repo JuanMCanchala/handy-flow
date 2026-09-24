@@ -26,6 +26,13 @@ impl SubtitleLanguage {
         }
     }
 
+    pub fn code(self) -> &'static str {
+        match self {
+            SubtitleLanguage::En => "en",
+            SubtitleLanguage::Es => "es",
+        }
+    }
+
     pub fn label(self) -> &'static str {
         match self {
             SubtitleLanguage::En => "English",

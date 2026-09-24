@@ -33,6 +33,16 @@ pub fn change_live_translate_suggest_answers_setting(
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_hide_from_screen_share_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut current_settings = settings::get_settings(&app);
+    current_settings.hide_from_screen_share = enabled;
+    settings::write_settings(&app, current_settings);
+    crate::privacy::apply_to_all_windows(&app);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn is_live_translate_active(app: AppHandle) -> Result<bool, String> {
     let manager = app.state::<Arc<LiveTranslateManager>>();
     Ok(manager.is_active())

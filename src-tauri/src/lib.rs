@@ -30,6 +30,7 @@ mod notes;
 mod overlay;
 mod paste_tx;
 pub mod portable;
+mod privacy;
 mod secure_input;
 mod settings;
 mod shortcut;
@@ -166,6 +167,7 @@ fn build_main_window(app: &AppHandle) -> tauri::Result<tauri::WebviewWindow> {
     // Only used on Windows, to disable WebView2 browser accelerators.
     #[cfg_attr(not(target_os = "windows"), allow(unused_variables))]
     let main_window = win_builder.build()?;
+    privacy::protect_window(app, &main_window);
 
     // Disable WebView2 browser accelerators (F5, F6, Ctrl+F, F12, ...).
     // A settings window has no use for them, and pressing F6 while
@@ -988,6 +990,7 @@ pub fn run(cli_args: CliArgs) {
             commands::notes::toggle_note_action_item,
             commands::live_translate::change_live_translate_source_setting,
             commands::live_translate::change_live_translate_suggest_answers_setting,
+            commands::live_translate::change_hide_from_screen_share_setting,
             commands::live_translate::is_live_translate_active,
             commands::live_translate::toggle_live_translate,
             commands::copilot::get_copilot_profile,

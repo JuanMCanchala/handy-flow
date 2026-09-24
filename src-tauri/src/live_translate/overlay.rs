@@ -79,7 +79,7 @@ pub fn create_live_subtitles_window(app_handle: &AppHandle) {
             let _ = window.set_ignore_cursor_events(true);
             // Best-effort: hides the overlay from screen capture/share where
             // the OS supports it (Windows 10 2004+, macOS). No-op elsewhere.
-            let _ = window.set_content_protected(true);
+            crate::privacy::protect_window(app_handle, &window);
             let _ = window.show();
             log::debug!("Live subtitles window created and shown");
         }

@@ -600,6 +600,9 @@ pub struct AppSettings {
     /// Copilot profile) whenever a question is detected.
     #[serde(default)]
     pub live_translate_suggest_answers: bool,
+    /// Exclude every Voxa window from screen sharing / recording.
+    #[serde(default = "default_true")]
+    pub hide_from_screen_share: bool,
     /// User-defined named modes/presets (Superwhisper-style). Seeded with
     /// Default/Email/Notes on fresh installs. See `modes.rs`.
     #[serde(default = "default_modes")]
@@ -735,6 +738,10 @@ fn default_sound_theme() -> SoundTheme {
 
 fn default_theme() -> Theme {
     Theme::System
+}
+
+fn default_true() -> bool {
+    true
 }
 
 fn default_agent_name() -> String {
@@ -1289,6 +1296,7 @@ pub fn get_default_settings() -> AppSettings {
         translation_target: TranslationTarget::default(),
         live_translate_source: LiveTranslateSource::default(),
         live_translate_suggest_answers: false,
+        hide_from_screen_share: true,
         modes: default_modes(),
         active_mode_id: None,
         diarization_enabled: false,

@@ -1,0 +1,281 @@
+/*
+ * Live translate view. One idea carries it: the translation reads like a film
+ * subtitle (display serif, large), the original sits above it as quiet
+ * reference text. Everything else stays in the app's sober system.
+ */
+
+/* ---- Status + timer ---------------------------------------------------- */
+.lt-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+
+.lt-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--color-text-tertiary);
+}
+
+.lt-status.is-live {
+  color: var(--color-text);
+}
+
+.lt-status.is-live .lt-dot {
+  background: var(--color-error);
+  animation: lt-breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes lt-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---- Tabs ---------------------------------------------------------------- */
+.lt-tabs {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+}
+
+.lt-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition:
+    background 150ms var(--ease-out),
+    color 150ms var(--ease-out);
+}
+
+.lt-tab:hover {
+  color: var(--color-text);
+}
+
+.lt-tab[aria-selected="true"] {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+
+.lt-tab:focus-visible,
+.lt-copy:focus-visible {
+  outline: 2px solid var(--color-border-strong);
+  outline-offset: 2px;
+}
+
+.lt-count {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  background: var(--color-fill-selected);
+  font-size: 11px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* ---- Two directions, one continuous surface ---------------------------- */
+.lt-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 420px;
+  height: calc(100vh - 330px);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.lt-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.lt-column + .lt-column {
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.lt-column-head {
+  padding: 14px 22px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.lt-direction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.lt-arrow {
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+
+.lt-column-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lt-empty {
+  max-width: 34ch;
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-tertiary);
+}
+
+.lt-line {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lt-original {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.lt-translation {
+  font-family: var(--font-display);
+  font-size: 23px;
+  line-height: 1.32;
+  color: var(--color-text);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+
+.lt-pending {
+  color: var(--color-text-tertiary);
+  animation: lt-breathe 1.2s ease-in-out infinite;
+}
+
+/* ---- Suggested answers ------------------------------------------------- */
+.lt-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 420px;
+}
+
+.lt-answers-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 28px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+.lt-answers-empty p {
+  max-width: 52ch;
+}
+
+.lt-answer {
+  padding: 20px 24px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+}
+
+/* The newest suggestion is the one to read aloud: give it the weight. */
+.lt-answer:first-child {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-raised);
+}
+
+.lt-answer-question {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.lt-answer-text {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.38;
+  color: var(--color-text);
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+.lt-answer:not(:first-child) .lt-answer-text {
+  font-size: 18px;
+}
+
+.lt-answer-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.lt-answer-time {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-tertiary);
+}
+
+.lt-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.lt-copy:hover {
+  background: var(--color-fill-hover);
+  color: var(--color-text);
+}
+
+@media (max-width: 720px) {
+  .lt-columns {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .lt-column + .lt-column {
+    border-inline-start: 0;
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lt-status.is-live .lt-dot,
+  .lt-pending {
+    animation: none;
+  }
+}
