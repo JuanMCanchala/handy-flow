@@ -10,6 +10,7 @@ export { ModelsSettings } from "./models/ModelsSettings";
 export { SnippetsSettings } from "./snippets/SnippetsSettings";
 export { TransformsSettings } from "./transforms/TransformsSettings";
 export { ModesSettings } from "./modes/ModesSettings";
+export { TemplatesSettings } from "./templates/TemplatesSettings";
 export { StyleSettings } from "./StyleSettings";
 export { LiveTranslateSettings } from "./live-translate/LiveTranslateSettings";
 export { CopilotSettings } from "./copilot/CopilotSettings";

@@ -26,7 +26,8 @@
     "about": "关于",
     "liveTranslate": "实时翻译",
     "copilot": "副驾驶",
-    "modes": "Modes"
+    "modes": "Modes",
+    "templates": "Templates"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -864,6 +865,22 @@
         "remove": "Remove {{name}}",
         "activate": "Activate {{name}}"
       }
+    },
+    "templates": {
+      "title": "Templates",
+      "add": {
+        "title": "Add Template",
+        "description": "Create a note template used by \"Generate notes\" to turn a transcript into structured markdown notes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
     }
   },
   "footer": {
@@ -942,5 +959,23 @@
     "learnMore": "如何解决",
     "recorderBlocked": "当前无法录制快捷键——macOS 的 Secure Input 正在阻止按键事件。请先解决 Secure Input 警告。",
     "dismiss": "关闭"
+  },
+  "notes": {
+    "title": "Notes",
+    "generate": "Generate notes",
+    "generateError": "Failed to generate notes",
+    "copy": "Copy notes",
+    "copyError": "Failed to copy notes",
+    "export": "Export as .md",
+    "exportError": "Failed to export notes",
+    "actionItems": "Action Items",
+    "toggleItemError": "Failed to update action item",
+    "generateDialog": {
+      "title": "Generate notes",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "cancel": "Cancel",
+      "noTemplates": "No templates yet. Add one in the Templates section."
+    }
   }
 }

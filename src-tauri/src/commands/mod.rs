@@ -6,6 +6,7 @@ pub mod insights;
 pub mod live_translate;
 pub mod models;
 pub mod modes;
+pub mod notes;
 pub mod transcription;
 pub mod transforms;
 

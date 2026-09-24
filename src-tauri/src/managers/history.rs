@@ -45,6 +45,10 @@ static MIGRATIONS: &[M] = &[
         CREATE INDEX IF NOT EXISTS idx_transcript_segments_history_entry_id
             ON transcript_segments (history_entry_id);",
     ),
+    M::up(
+        "ALTER TABLE transcription_history ADD COLUMN notes_markdown TEXT;
+        ALTER TABLE transcription_history ADD COLUMN notes_template_id TEXT;",
+    ),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -78,6 +82,8 @@ pub struct HistoryEntry {
     pub post_process_prompt: Option<String>,
     pub post_process_requested: bool,
     pub duration_seconds: Option<f64>,
+    pub notes_markdown: Option<String>,
+    pub notes_template_id: Option<String>,
 }
 
 pub struct HistoryManager {
@@ -223,6 +229,8 @@ impl HistoryManager {
             post_process_prompt: row.get("post_process_prompt")?,
             post_process_requested: row.get("post_process_requested")?,
             duration_seconds: row.get("duration_seconds")?,
+            notes_markdown: row.get("notes_markdown")?,
+            notes_template_id: row.get("notes_template_id")?,
         })
     }
 
@@ -323,6 +331,8 @@ impl HistoryManager {
             post_process_prompt,
             post_process_requested,
             duration_seconds,
+            notes_markdown: None,
+            notes_template_id: None,
         };
 
         debug!("Saved history entry with id {}", entry.id);
@@ -370,7 +380,7 @@ impl HistoryManager {
 
         let entry = conn
             .query_row(
-                "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds
+                "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds, notes_markdown, notes_template_id
                  FROM transcription_history WHERE id = ?1",
                 params![id],
                 Self::map_history_entry,
@@ -521,7 +531,7 @@ impl HistoryManager {
             (Some(cursor_id), Some(lim)) => {
                 let fetch_count = (lim + 1) as i64;
                 let mut stmt = conn.prepare(
-                    "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds
+                    "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds, notes_markdown, notes_template_id
                      FROM transcription_history
                      WHERE id < ?1
                      ORDER BY id DESC
@@ -535,7 +545,7 @@ impl HistoryManager {
             (None, Some(lim)) => {
                 let fetch_count = (lim + 1) as i64;
                 let mut stmt = conn.prepare(
-                    "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds
+                    "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds, notes_markdown, notes_template_id
                      FROM transcription_history
                      ORDER BY id DESC
                      LIMIT ?1",
@@ -547,7 +557,7 @@ impl HistoryManager {
             }
             (_, None) => {
                 let mut stmt = conn.prepare(
-                    "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds
+                    "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds, notes_markdown, notes_template_id
                      FROM transcription_history
                      ORDER BY id DESC",
                 )?;
@@ -604,7 +614,9 @@ impl HistoryManager {
                 post_processed_text,
                 post_process_prompt,
                 post_process_requested,
-                duration_seconds
+                duration_seconds,
+                notes_markdown,
+                notes_template_id
              FROM transcription_history
              ORDER BY timestamp DESC
              LIMIT 1",
@@ -632,7 +644,9 @@ impl HistoryManager {
                 post_processed_text,
                 post_process_prompt,
                 post_process_requested,
-                duration_seconds
+                duration_seconds,
+                notes_markdown,
+                notes_template_id
              FROM transcription_history
              WHERE transcription_text != ''
              ORDER BY timestamp DESC
@@ -687,7 +701,9 @@ impl HistoryManager {
                 post_processed_text,
                 post_process_prompt,
                 post_process_requested,
-                duration_seconds
+                duration_seconds,
+                notes_markdown,
+                notes_template_id
              FROM transcription_history
              WHERE id = ?1",
         )?;
@@ -695,6 +711,82 @@ impl HistoryManager {
         let entry = stmt.query_row([id], Self::map_history_entry).optional()?;
 
         Ok(entry)
+    }
+
+    /// Store generated notes (and the template used) for a history entry,
+    /// then emit an `Updated` event so open views pick up the new notes.
+    pub fn save_notes(&self, id: i64, markdown: &str, template_id: &str) -> Result<HistoryEntry> {
+        let conn = self.get_connection()?;
+        let updated = conn.execute(
+            "UPDATE transcription_history
+             SET notes_markdown = ?1,
+                 notes_template_id = ?2
+             WHERE id = ?3",
+            params![markdown, template_id, id],
+        )?;
+
+        if updated == 0 {
+            return Err(anyhow!("History entry {} not found", id));
+        }
+
+        let entry = conn.query_row(
+            "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds, notes_markdown, notes_template_id
+             FROM transcription_history WHERE id = ?1",
+            params![id],
+            Self::map_history_entry,
+        )?;
+
+        debug!("Saved notes for history entry {}", id);
+
+        if let Err(e) = (HistoryUpdatePayload::Updated {
+            entry: entry.clone(),
+        })
+        .emit(&self.app_handle)
+        {
+            error!("Failed to emit history-updated event: {}", e);
+        }
+
+        Ok(entry)
+    }
+
+    /// Toggles the checked state of the `item_index`-th action item in a
+    /// history entry's notes and persists the resulting markdown. Returns
+    /// the updated markdown.
+    pub fn toggle_action_item(&self, id: i64, item_index: usize) -> Result<String> {
+        let conn = self.get_connection()?;
+        let markdown: Option<String> = conn.query_row(
+            "SELECT notes_markdown FROM transcription_history WHERE id = ?1",
+            params![id],
+            |row| row.get("notes_markdown"),
+        )?;
+
+        let markdown = markdown.ok_or_else(|| anyhow!("History entry {} has no notes", id))?;
+
+        let mut items = crate::notes::parse_action_items(&markdown);
+        let item = items
+            .get_mut(item_index)
+            .ok_or_else(|| anyhow!("Action item {} not found", item_index))?;
+        item.checked = !item.checked;
+
+        let updated_markdown = crate::notes::apply_action_items(&markdown, &items);
+
+        conn.execute(
+            "UPDATE transcription_history SET notes_markdown = ?1 WHERE id = ?2",
+            params![updated_markdown, id],
+        )?;
+
+        let entry = conn.query_row(
+            "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds, notes_markdown, notes_template_id
+             FROM transcription_history WHERE id = ?1",
+            params![id],
+            Self::map_history_entry,
+        )?;
+
+        if let Err(e) = (HistoryUpdatePayload::Updated { entry }).emit(&self.app_handle) {
+            error!("Failed to emit history-updated event: {}", e);
+        }
+
+        Ok(updated_markdown)
     }
 
     /// Fetch the stored per-segment timestamps for a history entry, ordered
@@ -784,7 +876,9 @@ mod tests {
                 post_processed_text TEXT,
                 post_process_prompt TEXT,
                 post_process_requested BOOLEAN NOT NULL DEFAULT 0,
-                duration_seconds REAL
+                duration_seconds REAL,
+                notes_markdown TEXT,
+                notes_template_id TEXT
             );",
         )
         .expect("create transcription_history table");

@@ -26,7 +26,8 @@
     "debug": "Debug",
     "about": "About",
     "liveTranslate": "Live translate",
-    "copilot": "Copilot"
+    "copilot": "Copilot",
+    "templates": "Templates"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -864,6 +865,22 @@
         "empty": "No suggested answers yet.",
         "clear": "Clear history"
       }
+    },
+    "templates": {
+      "title": "Templates",
+      "add": {
+        "title": "Add Template",
+        "description": "Create a note template used by \"Generate notes\" to turn a transcript into structured markdown notes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
     }
   },
   "footer": {
@@ -942,5 +959,23 @@
     "learnMore": "How to fix",
     "recorderBlocked": "Can't record shortcuts right now — macOS Secure Input is blocking key events. Resolve the Secure Input warning first.",
     "dismiss": "Dismiss"
+  },
+  "notes": {
+    "title": "Notes",
+    "generate": "Generate notes",
+    "generateError": "Failed to generate notes",
+    "copy": "Copy notes",
+    "copyError": "Failed to copy notes",
+    "export": "Export as .md",
+    "exportError": "Failed to export notes",
+    "actionItems": "Action Items",
+    "toggleItemError": "Failed to update action item",
+    "generateDialog": {
+      "title": "Generate notes",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "cancel": "Cancel",
+      "noTemplates": "No templates yet. Add one in the Templates section."
+    }
   }
 }

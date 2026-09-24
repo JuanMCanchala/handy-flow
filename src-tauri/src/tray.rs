@@ -743,6 +743,8 @@ mod tests {
             post_process_prompt: None,
             post_process_requested: false,
             duration_seconds: None,
+            notes_markdown: None,
+            notes_template_id: None,
         }
     }
 

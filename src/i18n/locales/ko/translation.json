@@ -26,7 +26,8 @@
     "about": "정보",
     "liveTranslate": "실시간 번역",
     "copilot": "코파일럿",
-    "modes": "Modes"
+    "modes": "Modes",
+    "templates": "Templates"
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -864,6 +865,22 @@
         "remove": "Remove {{name}}",
         "activate": "Activate {{name}}"
       }
+    },
+    "templates": {
+      "title": "Templates",
+      "add": {
+        "title": "Add Template",
+        "description": "Create a note template used by \"Generate notes\" to turn a transcript into structured markdown notes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
     }
   },
   "footer": {
@@ -942,5 +959,23 @@
     "learnMore": "해결 방법",
     "recorderBlocked": "지금은 단축키를 등록할 수 없습니다. macOS Secure Input이 키 이벤트를 차단하고 있습니다. Secure Input 경고를 먼저 해결하세요.",
     "dismiss": "닫기"
+  },
+  "notes": {
+    "title": "Notes",
+    "generate": "Generate notes",
+    "generateError": "Failed to generate notes",
+    "copy": "Copy notes",
+    "copyError": "Failed to copy notes",
+    "export": "Export as .md",
+    "exportError": "Failed to export notes",
+    "actionItems": "Action Items",
+    "toggleItemError": "Failed to update action item",
+    "generateDialog": {
+      "title": "Generate notes",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "cancel": "Cancel",
+      "noTemplates": "No templates yet. Add one in the Templates section."
+    }
   }
 }

@@ -26,7 +26,8 @@
     "about": "Over Voxa",
     "liveTranslate": "Live vertaling",
     "copilot": "Copilot",
-    "modes": "Modes"
+    "modes": "Modes",
+    "templates": "Templates"
   },
   "onboarding": {
     "subtitle": "Kies een transcriptiemodel om aan de slag te gaan",
@@ -864,6 +865,22 @@
         "remove": "Remove {{name}}",
         "activate": "Activate {{name}}"
       }
+    },
+    "templates": {
+      "title": "Templates",
+      "add": {
+        "title": "Add Template",
+        "description": "Create a note template used by \"Generate notes\" to turn a transcript into structured markdown notes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
     }
   },
   "footer": {
@@ -942,5 +959,23 @@
     "learnMore": "Hoe je dit oplost",
     "recorderBlocked": "Sneltoetsen kunnen nu niet worden opgenomen — Secure Input van macOS blokkeert toetsgebeurtenissen. Los eerst de Secure Input-waarschuwing op.",
     "dismiss": "Sluiten"
+  },
+  "notes": {
+    "title": "Notes",
+    "generate": "Generate notes",
+    "generateError": "Failed to generate notes",
+    "copy": "Copy notes",
+    "copyError": "Failed to copy notes",
+    "export": "Export as .md",
+    "exportError": "Failed to export notes",
+    "actionItems": "Action Items",
+    "toggleItemError": "Failed to update action item",
+    "generateDialog": {
+      "title": "Generate notes",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "cancel": "Cancel",
+      "noTemplates": "No templates yet. Add one in the Templates section."
+    }
   }
 }

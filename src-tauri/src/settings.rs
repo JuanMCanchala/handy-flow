@@ -1,3 +1,4 @@
+use crate::notes::NoteTemplate;
 use crate::transforms::Transform;
 use crate::translate::TranslationTarget;
 use crate::utils;
@@ -576,6 +577,11 @@ pub struct AppSettings {
     /// ("apply bullet list"). Seeded with a few defaults on fresh installs.
     #[serde(default = "default_transforms")]
     pub transforms: Vec<Transform>,
+    /// Templates used by "Generate notes" to turn a transcript into
+    /// structured markdown notes (summary, decisions, action items).
+    /// Seeded with a few defaults on fresh installs.
+    #[serde(default = "default_note_templates")]
+    pub note_templates: Vec<NoteTemplate>,
     /// Target language for the `translate` binding. `Auto` translates
     /// Spanish to English and anything else to Spanish.
     #[serde(default)]
@@ -932,6 +938,43 @@ fn default_transforms() -> Vec<Transform> {
 fn default_modes() -> Vec<crate::modes::Mode> {
     crate::modes::default_modes()
 }
+fn default_note_templates() -> Vec<NoteTemplate> {
+    vec![
+        NoteTemplate {
+            id: "default_meeting_notes".to_string(),
+            name: "Meeting notes".to_string(),
+            prompt: "You are turning a meeting transcript into structured notes. Include a \
+\"## Summary\" section with the key discussion points, a \"## Decisions\" section listing \
+decisions made, and a \"## Action Items\" section."
+                .to_string(),
+        },
+        NoteTemplate {
+            id: "default_one_on_one".to_string(),
+            name: "1:1".to_string(),
+            prompt: "You are turning a 1:1 meeting transcript into structured notes. Include a \
+\"## Summary\" section covering topics discussed and feedback given, and a \"## Action Items\" \
+section for any follow-ups either person committed to."
+                .to_string(),
+        },
+        NoteTemplate {
+            id: "default_interview".to_string(),
+            name: "Interview".to_string(),
+            prompt: "You are turning a job interview transcript into structured notes. Include a \
+\"## Summary\" section covering the candidate's background and key answers, a \"## Strengths\" \
+section, a \"## Concerns\" section, and a \"## Action Items\" section for next steps."
+                .to_string(),
+        },
+        NoteTemplate {
+            id: "default_lecture".to_string(),
+            name: "Lecture".to_string(),
+            prompt: "You are turning a lecture transcript into structured notes. Include a \
+\"## Summary\" section covering the main topics, a \"## Key Points\" section with the most \
+important facts and definitions, and a \"## Action Items\" section for any assignments or \
+follow-up reading mentioned."
+                .to_string(),
+        },
+    ]
+}
 
 fn default_transcribe_gpu_device() -> Option<String> {
     None // automatic device selection
@@ -1206,6 +1249,7 @@ pub fn get_default_settings() -> AppSettings {
         style_per_app_enabled: false,
         app_styles: HashMap::new(),
         transforms: default_transforms(),
+        note_templates: default_note_templates(),
         translation_target: TranslationTarget::default(),
         live_translate_source: LiveTranslateSource::default(),
         modes: default_modes(),
