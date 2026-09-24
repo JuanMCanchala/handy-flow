@@ -9,7 +9,7 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 | 2   | Cloud transcription provider (OpenAI-compatible: Fireworks, Groq, OpenAI)                              | done        |
 | 3   | Style per app (cleanup tone based on the active app)                                                   | done        |
 | 4   | Snippets (trigger phrase → expansion)                                                                  | done        |
-| 5   | Transforms (saved prompts applied to the selection)                                                    | todo        |
+| 5   | Transforms (saved prompts applied to the selection)                                                    | done        |
 | 6   | Insights (total words, wpm, day streak from history)                                                   | done        |
 | 7   | Flow-style Home (history grouped by day, play / copy)                                                  | done        |
 | 8   | Scratchpad                                                                                             | done        |
