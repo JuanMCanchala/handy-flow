@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Tecla de post procesamiento",
             "description": "Opcional: Una tecla de acceso rápido dedicada que siempre aplica post procesamiento con IA a tu transcripción."
+          },
+          "command": {
+            "name": "Atajo del modo comando",
+            "description": "Di una instrucción; la IA la aplica al texto seleccionado y lo reemplaza (o escribe texto nuevo si no hay selección)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Cancelar",
         "selectToEdit": "Selecciona un prompt arriba para ver y editar sus detalles.",
         "createFirst": "Haz clic en 'Crear nuevo prompt' arriba para crear tu primer prompt de post procesamiento."
+      },
+      "commandMode": {
+        "title": "Modo comando",
+        "agentName": {
+          "title": "Nombre del agente",
+          "description": "Empieza un dictado con \"Oye <nombre>\" para ejecutarlo como comando."
+        }
       }
     },
     "history": {

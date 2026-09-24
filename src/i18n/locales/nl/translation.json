@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "Sneltoets voor naverwerking",
             "description": "Optioneel: Een specifieke sneltoets die altijd AI-naverwerking toepast op je transcriptie."
+          },
+          "command": {
+            "name": "Sneltoets opdrachtmodus",
+            "description": "Spreek een instructie in; de AI past die toe op de geselecteerde tekst en vervangt die (of schrijft nieuwe tekst als er niets geselecteerd is)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Annuleren",
         "selectToEdit": "Selecteer hierboven een prompt om de details te bekijken en te bewerken.",
         "createFirst": "Klik hierboven op 'Nieuwe prompt maken' om je eerste naverwerkingsprompt aan te maken."
+      },
+      "commandMode": {
+        "title": "Opdrachtmodus",
+        "agentName": {
+          "title": "Naam van de agent",
+          "description": "Begin een dictaat met \"Hey <naam>\" om het als opdracht uit te voeren."
+        }
       }
     },
     "history": {

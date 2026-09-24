@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "Genvej til efterbehandling",
             "description": "Valgfrit: En dedikeret genvej, der altid anvender AI-efterbehandling på din transskription."
+          },
+          "command": {
+            "name": "Genvej til kommandotilstand",
+            "description": "Sig en instruktion; AI'en anvender den på den markerede tekst og erstatter den (eller skriver ny tekst, hvis intet er markeret)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Annuller",
         "selectToEdit": "Vælg en prompt ovenfor for at se og redigere dens detaljer.",
         "createFirst": "Klik på 'Opret ny prompt' ovenfor for at oprette din første efterbehandlingsprompt."
+      },
+      "commandMode": {
+        "title": "Kommandotilstand",
+        "agentName": {
+          "title": "Agentens navn",
+          "description": "Start en diktering med \"Hey <navn>\" for at køre den som en kommando."
+        }
       }
     },
     "history": {

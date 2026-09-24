@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Nachbearbeitungs-Tastenkürzel",
             "description": "Optional: Ein dediziertes Tastenkürzel, das immer die KI-Nachbearbeitung auf deine Transkription anwendet."
+          },
+          "command": {
+            "name": "Tastenkürzel für den Befehlsmodus",
+            "description": "Sprich eine Anweisung; die KI wendet sie auf den markierten Text an und ersetzt ihn (oder schreibt neuen Text, wenn nichts markiert ist)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
         "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."
+      },
+      "commandMode": {
+        "title": "Befehlsmodus",
+        "agentName": {
+          "title": "Name des Agenten",
+          "description": "Beginne ein Diktat mit „Hey <Name>“, um es als Befehl auszuführen."
+        }
       }
     },
     "history": {

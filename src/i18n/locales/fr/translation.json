@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Raccourci de post-traitement",
             "description": "Facultatif : Un raccourci dédié qui applique toujours le post-traitement IA à votre transcription."
+          },
+          "command": {
+            "name": "Raccourci du mode commande",
+            "description": "Dictez une instruction ; l'IA l'applique au texte sélectionné et le remplace (ou écrit un nouveau texte si rien n'est sélectionné)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Annuler",
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
+      },
+      "commandMode": {
+        "title": "Mode commande",
+        "agentName": {
+          "title": "Nom de l'agent",
+          "description": "Commencez une dictée par « Hey <nom> » pour l'exécuter comme commande."
+        }
       }
     },
     "history": {

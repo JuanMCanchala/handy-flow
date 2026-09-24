@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "Pintasan Pascaproses",
             "description": "Opsional: pintasan khusus yang selalu menerapkan pascaproses AI pada transkripsi Anda."
+          },
+          "command": {
+            "name": "Pintasan mode perintah",
+            "description": "Ucapkan instruksi; AI menerapkannya pada teks yang dipilih dan menggantinya (atau menulis teks baru jika tidak ada yang dipilih)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Batal",
         "selectToEdit": "Pilih prompt di atas untuk melihat dan mengedit detailnya.",
         "createFirst": "Klik 'Buat Prompt Baru' di atas untuk membuat prompt pascaproses pertama Anda."
+      },
+      "commandMode": {
+        "title": "Mode perintah",
+        "agentName": {
+          "title": "Nama agen",
+          "description": "Mulai dikte dengan \"Hey <nama>\" untuk menjalankannya sebagai perintah."
+        }
       }
     },
     "history": {

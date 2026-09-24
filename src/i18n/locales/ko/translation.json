@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "후처리 단축키",
             "description": "선택 사항: 항상 AI 후처리를 적용하는 전용 단축키입니다."
+          },
+          "command": {
+            "name": "명령 모드 단축키",
+            "description": "지시를 말하면 AI가 선택한 텍스트에 적용해 바꿉니다(선택이 없으면 새 텍스트를 작성합니다)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "취소",
         "selectToEdit": "세부 정보를 보고 편집하려면 위에서 프롬프트를 선택하세요.",
         "createFirst": "첫 번째 후처리 프롬프트를 만들려면 위의 '새 프롬프트 만들기'를 클릭하세요."
+      },
+      "commandMode": {
+        "title": "명령 모드",
+        "agentName": {
+          "title": "에이전트 이름",
+          "description": "받아쓰기를 \"Hey <이름>\"으로 시작하면 명령으로 실행됩니다."
+        }
       }
     },
     "history": {

@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Klávesa pro následné zpracování",
             "description": "Volitelné: Vyhrazená klávesová zkratka, která vždy použije AI následné zpracování na váš přepis."
+          },
+          "command": {
+            "name": "Zkratka režimu příkazů",
+            "description": "Vyslovte pokyn; AI jej použije na vybraný text a nahradí ho (nebo napíše nový text, pokud nic není vybráno)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Zrušit",
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
+      },
+      "commandMode": {
+        "title": "Režim příkazů",
+        "agentName": {
+          "title": "Jméno agenta",
+          "description": "Začněte diktování slovy „Hey <jméno>“, aby se provedlo jako příkaz."
+        }
       }
     },
     "history": {

@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Tasto di post-elaborazione",
             "description": "Facoltativo: Un tasto di scelta rapida dedicato che applica sempre la post-elaborazione IA alla trascrizione."
+          },
+          "command": {
+            "name": "Scorciatoia modalità comando",
+            "description": "Pronuncia un'istruzione; l'IA la applica al testo selezionato e lo sostituisce (o scrive nuovo testo se non c'è selezione)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Annulla",
         "selectToEdit": "Scegli un prompt qui sopra per visualizzare o modificare i dettagli.",
         "createFirst": "Clicca 'Crea un nuovo prompt' qui sopra per creare il tuo primo prompt di post-elaborazione."
+      },
+      "commandMode": {
+        "title": "Modalità comando",
+        "agentName": {
+          "title": "Nome dell'agente",
+          "description": "Inizia una dettatura con \"Hey <nome>\" per eseguirla come comando."
+        }
       }
     },
     "history": {

@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "Snabbkommando för efterbearbetning",
             "description": "Valfritt: En dedikerad snabbknapp som alltid tillämpar AI-efterbearbetning på din transkription."
+          },
+          "command": {
+            "name": "Kortkommando för kommandoläge",
+            "description": "Säg en instruktion; AI:n tillämpar den på den markerade texten och ersätter den (eller skriver ny text om inget är markerat)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning."
+      },
+      "commandMode": {
+        "title": "Kommandoläge",
+        "agentName": {
+          "title": "Agentens namn",
+          "description": "Börja en diktering med \"Hey <namn>\" för att köra den som ett kommando."
+        }
       }
     },
     "history": {

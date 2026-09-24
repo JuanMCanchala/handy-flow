@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Phím tắt xử lý sau",
             "description": "Tùy chọn: Phím tắt chuyên dụng luôn áp dụng xử lý sau bằng AI cho bản chuyển đổi của bạn."
+          },
+          "command": {
+            "name": "Phím tắt chế độ lệnh",
+            "description": "Nói một chỉ dẫn; AI áp dụng nó cho văn bản đã chọn và thay thế (hoặc viết văn bản mới nếu không có gì được chọn)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Hủy",
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
+      },
+      "commandMode": {
+        "title": "Chế độ lệnh",
+        "agentName": {
+          "title": "Tên trợ lý",
+          "description": "Bắt đầu đọc bằng \"Hey <tên>\" để chạy như một lệnh."
+        }
       }
     },
     "history": {

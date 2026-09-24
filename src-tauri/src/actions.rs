@@ -57,13 +57,15 @@ pub trait ShortcutAction: Send + Sync {
 // Transcribe Action
 struct TranscribeAction {
     post_process: bool,
+    /// Treat the whole utterance as an instruction for the selected text.
+    command: bool,
 }
 
 /// Field name for structured output JSON schema
 const TRANSCRIPTION_FIELD: &str = "transcription";
 
 /// Strip invisible Unicode characters that some LLMs may insert
-fn strip_invisible_chars(s: &str) -> String {
+pub(crate) fn strip_invisible_chars(s: &str) -> String {
     s.replace(['\u{200B}', '\u{200C}', '\u{200D}', '\u{FEFF}'], "")
 }
 
@@ -71,7 +73,7 @@ fn strip_invisible_chars(s: &str) -> String {
 /// reasoning, and some local servers put the reasoning text into `content`
 /// instead of a separate field — without this the user would get the model's
 /// chain of thought pasted along with the cleaned transcription.
-fn strip_think_block(s: &str) -> &str {
+pub(crate) fn strip_think_block(s: &str) -> &str {
     if let Some(rest) = s.trim_start().strip_prefix("<think>") {
         if let Some(end) = rest.find("</think>") {
             return rest[end + "</think>".len()..].trim_start();
@@ -466,6 +468,45 @@ pub(crate) async fn process_transcription_output(
     }
 }
 
+/// Runs command mode when the utterance is an instruction, otherwise the
+/// normal dictation output pipeline. A failed command surfaces an error and
+/// pastes nothing, so the user's selection is never overwritten by accident.
+async fn process_output_or_command(
+    app: &AppHandle,
+    transcription: &str,
+    post_process: bool,
+    command_instruction: Option<String>,
+) -> ProcessedTranscription {
+    let Some(instruction) = command_instruction else {
+        return process_transcription_output(app, transcription, post_process).await;
+    };
+
+    let app_for_copy = app.clone();
+    let selection = tauri::async_runtime::spawn_blocking(move || {
+        crate::command_mode::capture_selection(&app_for_copy)
+    })
+    .await
+    .unwrap_or(None);
+
+    let settings = get_settings(app);
+    match crate::command_mode::run_command(&settings, selection.as_deref(), &instruction).await {
+        Ok(result) => ProcessedTranscription {
+            final_text: result.clone(),
+            post_processed_text: Some(result),
+            post_process_prompt: Some(format!("command: {}", instruction)),
+        },
+        Err(err) => {
+            error!("Command mode failed: {}", err);
+            let _ = app.emit("transcription-error", err);
+            ProcessedTranscription {
+                final_text: String::new(),
+                post_processed_text: None,
+                post_process_prompt: None,
+            }
+        }
+    }
+}
+
 impl ShortcutAction for TranscribeAction {
     fn start(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         let start_time = Instant::now();
@@ -670,6 +711,7 @@ impl ShortcutAction for TranscribeAction {
 
         let binding_id = binding_id.to_string(); // Clone binding_id for the async task
         let post_process = self.post_process;
+        let command = self.command;
         let cancel_generation = rm.cancel_generation();
 
         tauri::async_runtime::spawn(async move {
@@ -768,7 +810,15 @@ impl ShortcutAction for TranscribeAction {
                                 utils::redact_text(&transcription)
                             );
 
-                            if post_process {
+                            let command_instruction = if command {
+                                Some(transcription.trim().to_string()).filter(|t| !t.is_empty())
+                            } else {
+                                crate::command_mode::strip_agent_address(
+                                    &transcription,
+                                    &get_settings(&ah).agent_name,
+                                )
+                            };
+                            if post_process || command_instruction.is_some() {
                                 if use_streaming_overlay {
                                     tm.emit_stream_working(StreamWorkKind::Polishing);
                                 } else {
@@ -776,7 +826,12 @@ impl ShortcutAction for TranscribeAction {
                                 }
                             }
                             let Some(processed) = complete_unless_cancelled(
-                                process_transcription_output(&ah, &transcription, post_process),
+                                process_output_or_command(
+                                    &ah,
+                                    &transcription,
+                                    post_process,
+                                    command_instruction,
+                                ),
                                 || rm.was_cancelled_since(cancel_generation),
                             )
                             .await
@@ -933,11 +988,22 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
         "transcribe".to_string(),
         Arc::new(TranscribeAction {
             post_process: false,
+            command: false,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "transcribe_with_post_process".to_string(),
-        Arc::new(TranscribeAction { post_process: true }) as Arc<dyn ShortcutAction>,
+        Arc::new(TranscribeAction {
+            post_process: true,
+            command: false,
+        }) as Arc<dyn ShortcutAction>,
+    );
+    map.insert(
+        "command".to_string(),
+        Arc::new(TranscribeAction {
+            post_process: false,
+            command: true,
+        }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "cancel".to_string(),

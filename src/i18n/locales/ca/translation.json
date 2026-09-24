@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "Drecera de postprocessament",
             "description": "Opcional: una drecera específica que sempre aplica postprocessament amb IA a la transcripció."
+          },
+          "command": {
+            "name": "Drecera del mode ordre",
+            "description": "Digues una instrucció; la IA l'aplica al text seleccionat i el substitueix (o escriu text nou si no hi ha selecció)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Cancel·leu",
         "selectToEdit": "Seleccioneu una indicació more amunt per veure'n i editar-ne els detalls.",
         "createFirst": "Feu clic a «Creeu una indicació nova» més amunt per crear la primera indicació de postprocessament."
+      },
+      "commandMode": {
+        "title": "Mode ordre",
+        "agentName": {
+          "title": "Nom de l'agent",
+          "description": "Comença un dictat amb \"Ei <nom>\" per executar-lo com a ordre."
+        }
       }
     },
     "history": {

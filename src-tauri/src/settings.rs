@@ -427,6 +427,9 @@ pub struct AppSettings {
     pub log_level: LogLevel,
     #[serde(default)]
     pub custom_words: Vec<String>,
+    /// Name that routes a dictation to command mode when spoken first ("Hey Flow, ...").
+    #[serde(default = "default_agent_name")]
+    pub agent_name: String,
     #[serde(default)]
     pub model_unload_timeout: ModelUnloadTimeout,
     #[serde(default = "default_word_correction_threshold")]
@@ -627,6 +630,10 @@ fn default_sound_theme() -> SoundTheme {
 
 fn default_theme() -> Theme {
     Theme::System
+}
+
+fn default_agent_name() -> String {
+    "Flow".to_string()
 }
 
 fn default_post_process_enabled() -> bool {
@@ -896,6 +903,22 @@ pub fn get_default_settings() -> AppSettings {
             current_binding: default_post_process_shortcut.to_string(),
         },
     );
+    #[cfg(target_os = "macos")]
+    let default_command_shortcut = "control+option+space";
+    #[cfg(not(target_os = "macos"))]
+    let default_command_shortcut = "ctrl+alt+space";
+
+    bindings.insert(
+        "command".to_string(),
+        ShortcutBinding {
+            id: "command".to_string(),
+            name: "Command Mode".to_string(),
+            description: "Speak an instruction that the AI applies to the selected text."
+                .to_string(),
+            default_binding: default_command_shortcut.to_string(),
+            current_binding: default_command_shortcut.to_string(),
+        },
+    );
     bindings.insert(
         "cancel".to_string(),
         ShortcutBinding {
@@ -933,6 +956,7 @@ pub fn get_default_settings() -> AppSettings {
         debug_mode: false,
         log_level: default_log_level(),
         custom_words: Vec::new(),
+        agent_name: default_agent_name(),
         model_unload_timeout: ModelUnloadTimeout::default(),
         word_correction_threshold: default_word_correction_threshold(),
         history_limit: default_history_limit(),
@@ -980,6 +1004,25 @@ impl Default for AppSettings {
 }
 
 impl AppSettings {
+    /// Provider, model and API key of the configured LLM, when one is usable.
+    pub fn resolve_llm_target(&self) -> Option<(PostProcessProvider, String, String)> {
+        let provider = self.active_post_process_provider()?.clone();
+        let model = self
+            .post_process_models
+            .get(&provider.id)
+            .cloned()
+            .unwrap_or_default();
+        if model.trim().is_empty() {
+            return None;
+        }
+        let api_key = self
+            .post_process_api_keys
+            .get(&provider.id)
+            .cloned()
+            .unwrap_or_default();
+        Some((provider, model, api_key))
+    }
+
     pub fn active_post_process_provider(&self) -> Option<&PostProcessProvider> {
         self.post_process_providers
             .iter()

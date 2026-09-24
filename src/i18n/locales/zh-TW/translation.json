@@ -179,6 +179,10 @@
           "transcribe_with_post_process": {
             "name": "後處理快捷鍵",
             "description": "可選：專用快捷鍵，使用時一律對轉錄結果套用 AI 後處理"
+          },
+          "command": {
+            "name": "命令模式快捷鍵",
+            "description": "說出一條指令，AI 會將其套用到選取的文字並取代（若未選取任何內容則撰寫新文字）。"
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "取消",
         "selectToEdit": "選擇上方的提示詞以檢視和編輯其詳細資訊",
         "createFirst": "點選上方的「建立新提示詞」來建立您的第一個後處理提示詞"
+      },
+      "commandMode": {
+        "title": "命令模式",
+        "agentName": {
+          "title": "助理名稱",
+          "description": "以「Hey <名稱>」開頭的聽寫將作為命令執行。"
+        }
       }
     },
     "history": {

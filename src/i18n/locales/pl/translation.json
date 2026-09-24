@@ -199,6 +199,10 @@
           "transcribe_with_post_process": {
             "name": "Skrót postprocessingu",
             "description": "Opcjonalnie: Dedykowany skrót klawiszowy, który zawsze stosuje postprocessing AI do transkrypcji."
+          },
+          "command": {
+            "name": "Skrót trybu poleceń",
+            "description": "Wypowiedz polecenie; AI zastosuje je do zaznaczonego tekstu i go zastąpi (lub napisze nowy tekst, jeśli nic nie jest zaznaczone)."
           }
         },
         "errors": {
@@ -452,6 +456,13 @@
         "cancel": "Anuluj",
         "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu."
+      },
+      "commandMode": {
+        "title": "Tryb poleceń",
+        "agentName": {
+          "title": "Nazwa agenta",
+          "description": "Zacznij dyktowanie od „Hey <nazwa>”, aby wykonać je jako polecenie."
+        }
       }
     },
     "history": {

@@ -24,7 +24,9 @@ pub fn init_shortcuts(app: &AppHandle) {
             continue; // Skip cancel shortcut, it will be registered dynamically
         }
         // Skip post-processing shortcut when the feature is disabled
-        if id == "transcribe_with_post_process" && !user_settings.post_process_enabled {
+        if (id == "transcribe_with_post_process" || id == "command")
+            && !user_settings.post_process_enabled
+        {
             continue;
         }
         let binding = user_settings
