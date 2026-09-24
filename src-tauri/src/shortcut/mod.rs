@@ -1287,6 +1287,24 @@ pub fn change_vad_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), S
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_style_per_app_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.style_per_app_enabled = enabled;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn set_app_style(app: AppHandle, category: String, tone: String) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.app_styles.insert(category, tone);
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn change_vad_backend_setting(app: AppHandle, backend: VadBackend) -> Result<(), String> {
     if settings::get_settings(&app).vad_backend == backend {
         return Ok(());

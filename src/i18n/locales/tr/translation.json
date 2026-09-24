@@ -14,6 +14,7 @@
     "models": "Modeller",
     "advanced": "Gelişmiş",
     "postProcessing": "Son İşlem",
+    "style": "Stil",
     "history": "Geçmiş",
     "debug": "Hata Ayıklama",
     "about": "Hakkında"
@@ -452,6 +453,35 @@
         "cancel": "İptal",
         "selectToEdit": "Ayrıntılarını görüntülemek ve düzenlemek için yukarıdan bir prompt seçin.",
         "createFirst": "İlk son işlem promptunuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Genel",
+        "categories": "Uygulamaya Göre Stil"
+      },
+      "enabled": {
+        "label": "Tonu etkin uygulamaya göre ayarla",
+        "description": "Son işlem çalıştığında Handy, konuştuğunuz uygulamayı algılar ve kategorisine uygun bir ton talimatı ekler."
+      },
+      "selectTone": "Bir ton seçin",
+      "categories": {
+        "personal": "Kişisel Mesajlar",
+        "work": "İş Mesajları",
+        "email": "E-posta",
+        "other": "Diğer"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail ve tarayıcıda Gmail/Outlook",
+        "other": "Diğer herhangi bir uygulama"
+      },
+      "tones": {
+        "formal": "Resmi",
+        "casual": "Gündelik",
+        "very_casual": "Çok Gündelik",
+        "excited": "Coşkulu"
       }
     },
     "history": {

@@ -14,6 +14,7 @@
     "models": "Модели",
     "advanced": "Разширени",
     "postProcessing": "Постобработка",
+    "style": "Стил",
     "history": "История",
     "debug": "Отстраняване",
     "about": "За приложението"
@@ -452,6 +453,35 @@
         "cancel": "Отказ",
         "selectToEdit": "Изберете подкана по-горе, за да видите и редактирате подробностите ѝ.",
         "createFirst": "Натиснете „Нова подкана“ по-горе, за да създадете първата си подкана за постобработка."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Общи",
+        "categories": "Стил по приложение"
+      },
+      "enabled": {
+        "label": "Настройка на тона според активното приложение",
+        "description": "Когато се изпълнява постобработка, Handy разпознава приложението, в което сте диктували, и добавя инструкция за тон за неговата категория."
+      },
+      "selectTone": "Изберете тон",
+      "categories": {
+        "personal": "Лични съобщения",
+        "work": "Работни съобщения",
+        "email": "Имейл",
+        "other": "Друго"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail и Gmail/Outlook в браузъра",
+        "other": "Всяко друго приложение"
+      },
+      "tones": {
+        "formal": "Официален",
+        "casual": "Неформален",
+        "very_casual": "Много неформален",
+        "excited": "Възбуден"
       }
     },
     "history": {

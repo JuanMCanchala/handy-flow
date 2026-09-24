@@ -14,6 +14,7 @@
     "models": "Modellen",
     "advanced": "Geavanceerd",
     "postProcessing": "Naverwerking",
+    "style": "Stijl",
     "history": "Geschiedenis",
     "debug": "Probleemoplossing",
     "about": "Over Handy"
@@ -452,6 +453,35 @@
         "cancel": "Annuleren",
         "selectToEdit": "Selecteer hierboven een prompt om de details te bekijken en te bewerken.",
         "createFirst": "Klik hierboven op 'Nieuwe prompt maken' om je eerste naverwerkingsprompt aan te maken."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Algemeen",
+        "categories": "Stijl per app"
+      },
+      "enabled": {
+        "label": "Toon aanpassen op basis van de actieve app",
+        "description": "Wanneer naverwerking wordt uitgevoerd, detecteert Handy de app waarin je dicteerde en voegt een toon-instructie toe voor die categorie."
+      },
+      "selectTone": "Selecteer een toon",
+      "categories": {
+        "personal": "Persoonlijke berichten",
+        "work": "Werkberichten",
+        "email": "E-mail",
+        "other": "Overig"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail en Gmail/Outlook in de browser",
+        "other": "Elke andere app"
+      },
+      "tones": {
+        "formal": "Formeel",
+        "casual": "Casual",
+        "very_casual": "Heel casual",
+        "excited": "Enthousiast"
       }
     },
     "history": {

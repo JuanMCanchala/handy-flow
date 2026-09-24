@@ -20,6 +20,7 @@ mod secure_input;
 mod settings;
 mod shortcut;
 mod signal_handle;
+mod style;
 mod transcription_coordinator;
 mod tray;
 mod tray_i18n;
@@ -694,6 +695,8 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_lazy_stream_close_setting,
             shortcut::change_vad_enabled_setting,
             shortcut::change_vad_backend_setting,
+            shortcut::change_style_per_app_enabled_setting,
+            shortcut::set_app_style,
             shortcut::change_filler_word_removal_enabled_setting,
             shortcut::change_app_language_setting,
             shortcut::change_update_checks_setting,

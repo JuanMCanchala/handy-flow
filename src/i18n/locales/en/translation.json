@@ -14,6 +14,7 @@
     "models": "Models",
     "advanced": "Advanced",
     "postProcessing": "Post Process",
+    "style": "Style",
     "history": "History",
     "debug": "Debug",
     "about": "About"
@@ -452,6 +453,35 @@
         "cancel": "Cancel",
         "selectToEdit": "Select a prompt above to view and edit its details.",
         "createFirst": "Click 'Create New Prompt' above to create your first post-processing prompt."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "General",
+        "categories": "Style by App"
+      },
+      "enabled": {
+        "label": "Adjust tone based on the app in focus",
+        "description": "When post-processing runs, Handy detects the app you were dictating into and appends a tone instruction for its category."
+      },
+      "selectTone": "Select a tone",
+      "categories": {
+        "personal": "Personal Messages",
+        "work": "Work Messages",
+        "email": "Email",
+        "other": "Other"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail, and Gmail/Outlook in the browser",
+        "other": "Any other app"
+      },
+      "tones": {
+        "formal": "Formal",
+        "casual": "Casual",
+        "very_casual": "Very Casual",
+        "excited": "Excited"
       }
     },
     "history": {

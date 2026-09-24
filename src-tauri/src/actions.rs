@@ -82,8 +82,14 @@ fn strip_think_block(s: &str) -> &str {
 
 /// Build a system prompt from the user's prompt template.
 /// Removes `${output}` placeholder since the transcription is sent as the user message.
-fn build_system_prompt(prompt_template: &str) -> String {
-    prompt_template.replace("${output}", "").trim().to_string()
+/// Appends a per-app style instruction, when provided, so post-processing
+/// adapts its tone to the app in focus when recording stopped.
+fn build_system_prompt(prompt_template: &str, style_instruction: Option<&str>) -> String {
+    let base = prompt_template.replace("${output}", "").trim().to_string();
+    match style_instruction {
+        Some(instruction) => format!("{base}\n\n{instruction}"),
+        None => base,
+    }
 }
 
 /// Returns `true` when a transcription has no meaningful content to
@@ -119,11 +125,23 @@ fn should_use_streaming_overlay(style: OverlayStyle, is_streaming: bool) -> bool
     style == OverlayStyle::Live && is_streaming
 }
 
-async fn post_process_transcription(settings: &AppSettings, transcription: &str) -> Option<String> {
+async fn post_process_transcription(
+    settings: &AppSettings,
+    transcription: &str,
+    style_category: crate::style::StyleCategory,
+) -> Option<String> {
     if is_blank_transcription(transcription) {
         debug!("Post-processing skipped because the transcription is empty");
         return None;
     }
+
+    let style_instruction = if settings.style_per_app_enabled {
+        crate::style::instruction_for(
+            settings.app_styles.get(style_category.as_key()).map(|s| s.as_str()),
+        )
+    } else {
+        None
+    };
 
     let provider = match settings.active_post_process_provider().cloned() {
         Some(provider) => provider,
@@ -194,7 +212,7 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
     if provider.supports_structured_output {
         debug!("Using structured outputs for provider '{}'", provider.id);
 
-        let system_prompt = build_system_prompt(&prompt);
+        let system_prompt = build_system_prompt(&prompt, style_instruction);
         let user_content = transcription.to_string();
 
         // Handle Apple Intelligence separately since it uses native Swift APIs
@@ -309,7 +327,10 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
     }
 
     // Legacy mode: Replace ${output} variable in the prompt with the actual text
-    let processed_prompt = prompt.replace("${output}", transcription);
+    let mut processed_prompt = prompt.replace("${output}", transcription);
+    if let Some(instruction) = style_instruction {
+        processed_prompt = format!("{processed_prompt}\n\n{instruction}");
+    }
     debug!("Processed prompt length: {} chars", processed_prompt.len());
 
     match crate::llm_client::send_chat_completion(
@@ -424,6 +445,7 @@ pub(crate) async fn process_transcription_output(
     app: &AppHandle,
     transcription: &str,
     post_process: bool,
+    style_category: crate::style::StyleCategory,
 ) -> ProcessedTranscription {
     let settings = get_settings(app);
     let mut final_text = transcription.to_string();
@@ -441,7 +463,9 @@ pub(crate) async fn process_transcription_output(
     }
 
     if post_process {
-        if let Some(processed_text) = post_process_transcription(&settings, &final_text).await {
+        if let Some(processed_text) =
+            post_process_transcription(&settings, &final_text, style_category).await
+        {
             post_processed_text = Some(processed_text.clone());
             final_text = processed_text;
 
@@ -668,6 +692,11 @@ impl ShortcutAction for TranscribeAction {
         // Play audio feedback for recording stop
         play_feedback_sound(app, SoundType::Stop);
 
+        // Detect the foreground app now, while recording just stopped, so
+        // post-processing can adapt its tone to whatever app the user was
+        // dictating into.
+        let style_category = crate::style::classify_foreground_app();
+
         let binding_id = binding_id.to_string(); // Clone binding_id for the async task
         let post_process = self.post_process;
         let cancel_generation = rm.cancel_generation();
@@ -776,7 +805,12 @@ impl ShortcutAction for TranscribeAction {
                                 }
                             }
                             let Some(processed) = complete_unless_cancelled(
-                                process_transcription_output(&ah, &transcription, post_process),
+                                process_transcription_output(
+                                    &ah,
+                                    &transcription,
+                                    post_process,
+                                    style_category,
+                                ),
                                 || rm.was_cancelled_since(cancel_generation),
                             )
                             .await

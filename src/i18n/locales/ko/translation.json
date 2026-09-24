@@ -14,6 +14,7 @@
     "models": "모델",
     "advanced": "고급",
     "postProcessing": "후처리",
+    "style": "스타일",
     "history": "히스토리",
     "debug": "디버그",
     "about": "정보"
@@ -452,6 +453,35 @@
         "cancel": "취소",
         "selectToEdit": "세부 정보를 보고 편집하려면 위에서 프롬프트를 선택하세요.",
         "createFirst": "첫 번째 후처리 프롬프트를 만들려면 위의 '새 프롬프트 만들기'를 클릭하세요."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "일반",
+        "categories": "앱별 스타일"
+      },
+      "enabled": {
+        "label": "포그라운드 앱에 따라 어조 조정",
+        "description": "후처리가 실행되면 Handy는 받아쓰기 중이던 앱을 감지하고 해당 범주에 맞는 어조 지침을 추가합니다."
+      },
+      "selectTone": "어조 선택",
+      "categories": {
+        "personal": "개인 메시지",
+        "work": "업무 메시지",
+        "email": "이메일",
+        "other": "기타"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail 및 브라우저의 Gmail/Outlook",
+        "other": "기타 앱"
+      },
+      "tones": {
+        "formal": "격식체",
+        "casual": "친근한",
+        "very_casual": "매우 친근한",
+        "excited": "신난"
       }
     },
     "history": {

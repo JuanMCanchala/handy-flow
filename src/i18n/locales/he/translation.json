@@ -14,6 +14,7 @@
     "models": "מודלים",
     "advanced": "מתקדם",
     "postProcessing": "עיבוד משלים",
+    "style": "סטייל",
     "history": "היסטוריה",
     "debug": "ניפוי שגיאות",
     "about": "אודות"
@@ -452,6 +453,35 @@
         "cancel": "ביטול",
         "selectToEdit": "בחר פרומפט למעלה כדי לצפות בפרטים שלו ולערוך אותם.",
         "createFirst": "לחץ על 'צור פרומפט חדש' למעלה כדי ליצור את פרומפט העיבוד הראשון שלך."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "כללי",
+        "categories": "סטייל לפי אפליקציה"
+      },
+      "enabled": {
+        "label": "התאמת הטון לפי האפליקציה הפעילה",
+        "description": "כאשר העיבוד המשלים פועל, Handy מזהה את האפליקציה שבה הקלטת ומוסיף הנחיית טון לפי הקטגוריה שלה."
+      },
+      "selectTone": "בחר טון",
+      "categories": {
+        "personal": "הודעות אישיות",
+        "work": "הודעות עבודה",
+        "email": "דוא\"ל",
+        "other": "אחר"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail וגם Gmail/Outlook בדפדפן",
+        "other": "כל אפליקציה אחרת"
+      },
+      "tones": {
+        "formal": "רשמי",
+        "casual": "קז'ואל",
+        "very_casual": "קז'ואל מאוד",
+        "excited": "נלהב"
       }
     },
     "history": {

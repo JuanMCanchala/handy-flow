@@ -14,6 +14,7 @@
     "models": "Modeller",
     "advanced": "Avancerat",
     "postProcessing": "Efterbearbetning",
+    "style": "Stil",
     "history": "Historik",
     "debug": "Felsökning",
     "about": "Om"
@@ -452,6 +453,35 @@
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Allmänt",
+        "categories": "Stil per app"
+      },
+      "enabled": {
+        "label": "Justera tonen baserat på den aktiva appen",
+        "description": "När efterbearbetning körs upptäcker Handy appen du dikterade i och lägger till en toninstruktion för dess kategori."
+      },
+      "selectTone": "Välj en ton",
+      "categories": {
+        "personal": "Personliga meddelanden",
+        "work": "Arbetsmeddelanden",
+        "email": "E-post",
+        "other": "Övrigt"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail och Gmail/Outlook i webbläsaren",
+        "other": "Vilken annan app som helst"
+      },
+      "tones": {
+        "formal": "Formell",
+        "casual": "Avslappnad",
+        "very_casual": "Mycket avslappnad",
+        "excited": "Entusiastisk"
       }
     },
     "history": {

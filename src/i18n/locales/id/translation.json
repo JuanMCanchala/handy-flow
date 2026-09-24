@@ -14,6 +14,7 @@
     "models": "Model",
     "advanced": "Lanjutan",
     "postProcessing": "Pascaproses",
+    "style": "Gaya",
     "history": "Riwayat",
     "debug": "Debug",
     "about": "Tentang"
@@ -452,6 +453,35 @@
         "cancel": "Batal",
         "selectToEdit": "Pilih prompt di atas untuk melihat dan mengedit detailnya.",
         "createFirst": "Klik 'Buat Prompt Baru' di atas untuk membuat prompt pascaproses pertama Anda."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Umum",
+        "categories": "Gaya per Aplikasi"
+      },
+      "enabled": {
+        "label": "Sesuaikan nada berdasarkan aplikasi yang aktif",
+        "description": "Saat pascaproses berjalan, Handy mendeteksi aplikasi yang Anda gunakan untuk mendiktekan dan menambahkan instruksi nada untuk kategorinya."
+      },
+      "selectTone": "Pilih nada",
+      "categories": {
+        "personal": "Pesan Pribadi",
+        "work": "Pesan Kerja",
+        "email": "Email",
+        "other": "Lainnya"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail, dan Gmail/Outlook di browser",
+        "other": "Aplikasi lainnya"
+      },
+      "tones": {
+        "formal": "Formal",
+        "casual": "Santai",
+        "very_casual": "Sangat Santai",
+        "excited": "Antusias"
       }
     },
     "history": {

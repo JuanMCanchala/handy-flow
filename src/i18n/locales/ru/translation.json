@@ -14,6 +14,7 @@
     "models": "Модели",
     "advanced": "Продвинутые",
     "postProcessing": "Постобработка",
+    "style": "Стиль",
     "history": "История",
     "debug": "Отладка",
     "about": "О программе"
@@ -452,6 +453,35 @@
         "cancel": "Отмена",
         "selectToEdit": "Выберите запрос выше, чтобы просмотреть и изменить его сведения.",
         "createFirst": "Нажмите «Создать новый запрос» выше, чтобы создать первый запрос для постобработки."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Общие",
+        "categories": "Стиль по приложению"
+      },
+      "enabled": {
+        "label": "Настраивать тон в зависимости от активного приложения",
+        "description": "Когда выполняется постобработка, Handy определяет приложение, в которое вы диктовали, и добавляет инструкцию тона для его категории."
+      },
+      "selectTone": "Выберите тон",
+      "categories": {
+        "personal": "Личные сообщения",
+        "work": "Рабочие сообщения",
+        "email": "Электронная почта",
+        "other": "Другое"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail и Gmail/Outlook в браузере",
+        "other": "Любое другое приложение"
+      },
+      "tones": {
+        "formal": "Официальный",
+        "casual": "Непринуждённый",
+        "very_casual": "Очень непринуждённый",
+        "excited": "Восторженный"
       }
     },
     "history": {

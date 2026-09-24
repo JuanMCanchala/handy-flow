@@ -14,6 +14,7 @@
     "models": "Mô hình",
     "advanced": "Nâng cao",
     "postProcessing": "Xử lý sau",
+    "style": "Phong cách",
     "history": "Lịch sử",
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu"
@@ -452,6 +453,35 @@
         "cancel": "Hủy",
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Chung",
+        "categories": "Phong cách theo ứng dụng"
+      },
+      "enabled": {
+        "label": "Điều chỉnh giọng điệu theo ứng dụng đang hoạt động",
+        "description": "Khi xử lý sau chạy, Handy phát hiện ứng dụng mà bạn đang đọc chính tả và thêm hướng dẫn giọng điệu cho danh mục của nó."
+      },
+      "selectTone": "Chọn một giọng điệu",
+      "categories": {
+        "personal": "Tin nhắn cá nhân",
+        "work": "Tin nhắn công việc",
+        "email": "Email",
+        "other": "Khác"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail và Gmail/Outlook trên trình duyệt",
+        "other": "Bất kỳ ứng dụng khác"
+      },
+      "tones": {
+        "formal": "Trang trọng",
+        "casual": "Thân mật",
+        "very_casual": "Rất thân mật",
+        "excited": "Hào hứng"
       }
     },
     "history": {

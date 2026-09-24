@@ -14,6 +14,7 @@
     "models": "Modèles",
     "advanced": "Avancé",
     "postProcessing": "Post-traitement",
+    "style": "Style",
     "history": "Historique",
     "debug": "Débogage",
     "about": "À propos"
@@ -452,6 +453,35 @@
         "cancel": "Annuler",
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Général",
+        "categories": "Style par application"
+      },
+      "enabled": {
+        "label": "Adapter le ton selon l'application active",
+        "description": "Lorsque le post-traitement s'exécute, Handy détecte l'application dans laquelle vous dictiez et ajoute une instruction de ton pour sa catégorie."
+      },
+      "selectTone": "Choisir un ton",
+      "categories": {
+        "personal": "Messages personnels",
+        "work": "Messages professionnels",
+        "email": "E-mail",
+        "other": "Autre"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail et Gmail/Outlook dans le navigateur",
+        "other": "Toute autre application"
+      },
+      "tones": {
+        "formal": "Formel",
+        "casual": "Décontracté",
+        "very_casual": "Très décontracté",
+        "excited": "Enthousiaste"
       }
     },
     "history": {

@@ -14,6 +14,7 @@
     "models": "模型",
     "advanced": "進階",
     "postProcessing": "後處理",
+    "style": "風格",
     "history": "歷史紀錄",
     "debug": "偵錯",
     "about": "關於"
@@ -452,6 +453,35 @@
         "cancel": "取消",
         "selectToEdit": "選擇上方的提示詞以檢視和編輯其詳細資訊",
         "createFirst": "點選上方的「建立新提示詞」來建立您的第一個後處理提示詞"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "一般",
+        "categories": "依應用程式設定風格"
+      },
+      "enabled": {
+        "label": "根據目前使用的應用程式調整語氣",
+        "description": "執行後處理時，Handy 會偵測您正在輸入的應用程式，並為其類別加入語氣指示。"
+      },
+      "selectTone": "選擇語氣",
+      "categories": {
+        "personal": "個人訊息",
+        "work": "工作訊息",
+        "email": "電子郵件",
+        "other": "其他"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp、Telegram、Messenger、Signal、Discord",
+        "work": "Slack、Teams",
+        "email": "Outlook、Thunderbird、Mail，以及瀏覽器中的 Gmail/Outlook",
+        "other": "任何其他應用程式"
+      },
+      "tones": {
+        "formal": "正式",
+        "casual": "輕鬆",
+        "very_casual": "非常輕鬆",
+        "excited": "興奮"
       }
     },
     "history": {

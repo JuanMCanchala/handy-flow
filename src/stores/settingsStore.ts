@@ -43,6 +43,7 @@ interface SettingsStore {
   playTestSound: (soundType: "start" | "stop") => Promise<void>;
   checkCustomSounds: () => Promise<void>;
   setPostProcessProvider: (providerId: string) => Promise<void>;
+  setAppStyle: (category: string, tone: string) => Promise<void>;
   updatePostProcessSetting: (
     settingType: "base_url" | "api_key" | "model",
     providerId: string,
@@ -194,6 +195,8 @@ const settingUpdaters: {
     commands.changeTranscribeGpuDevice(value as string | null),
   extra_recording_buffer_ms: (value) =>
     commands.changeExtraRecordingBufferSetting(value as number),
+  style_per_app_enabled: (value) =>
+    commands.changeStylePerAppEnabledSetting(value as boolean),
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -469,6 +472,43 @@ export const useSettingsStore = create<SettingsStore>()(
               : null,
           }));
         }
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    setAppStyle: async (category, tone) => {
+      const { settings, setUpdating, refreshSettings } = get();
+      const updateKey = `app_style:${category}`;
+      const previousTone = settings?.app_styles?.[category];
+
+      setUpdating(updateKey, true);
+
+      set((state) => ({
+        settings: state.settings
+          ? {
+              ...state.settings,
+              app_styles: { ...state.settings.app_styles, [category]: tone },
+            }
+          : null,
+      }));
+
+      try {
+        await commands.setAppStyle(category, tone);
+        await refreshSettings();
+      } catch (error) {
+        console.error(`Failed to set style for category ${category}:`, error);
+        set((state) => ({
+          settings: state.settings
+            ? {
+                ...state.settings,
+                app_styles: {
+                  ...state.settings.app_styles,
+                  [category]: previousTone as string,
+                },
+              }
+            : null,
+        }));
       } finally {
         setUpdating(updateKey, false);
       }

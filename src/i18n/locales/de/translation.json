@@ -14,6 +14,7 @@
     "models": "Modelle",
     "advanced": "Erweitert",
     "postProcessing": "Nachbearbeitung",
+    "style": "Stil",
     "history": "Verlauf",
     "debug": "Debug",
     "about": "Info"
@@ -452,6 +453,35 @@
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
         "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Allgemein",
+        "categories": "Stil pro App"
+      },
+      "enabled": {
+        "label": "Tonfall je nach aktiver App anpassen",
+        "description": "Wenn die Nachbearbeitung läuft, erkennt Handy die App, in die du diktiert hast, und fügt eine Tonfall-Anweisung für deren Kategorie hinzu."
+      },
+      "selectTone": "Tonfall auswählen",
+      "categories": {
+        "personal": "Persönliche Nachrichten",
+        "work": "Arbeitsnachrichten",
+        "email": "E-Mail",
+        "other": "Sonstige"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail sowie Gmail/Outlook im Browser",
+        "other": "Jede andere App"
+      },
+      "tones": {
+        "formal": "Formell",
+        "casual": "Locker",
+        "very_casual": "Sehr locker",
+        "excited": "Begeistert"
       }
     },
     "history": {

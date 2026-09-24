@@ -14,6 +14,7 @@
     "models": "模型",
     "advanced": "高级",
     "postProcessing": "后处理",
+    "style": "风格",
     "history": "历史记录",
     "debug": "调试",
     "about": "关于"
@@ -452,6 +453,35 @@
         "cancel": "取消",
         "selectToEdit": "选择上方的提示词以查看和编辑其详细信息。",
         "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "常规",
+        "categories": "按应用设置风格"
+      },
+      "enabled": {
+        "label": "根据当前应用调整语气",
+        "description": "运行后处理时，Handy 会检测您正在输入的应用，并为其类别添加语气指令。"
+      },
+      "selectTone": "选择语气",
+      "categories": {
+        "personal": "个人消息",
+        "work": "工作消息",
+        "email": "电子邮件",
+        "other": "其他"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp、Telegram、Messenger、Signal、Discord",
+        "work": "Slack、Teams",
+        "email": "Outlook、Thunderbird、Mail，以及浏览器中的 Gmail/Outlook",
+        "other": "任何其他应用"
+      },
+      "tones": {
+        "formal": "正式",
+        "casual": "随意",
+        "very_casual": "非常随意",
+        "excited": "兴奋"
       }
     },
     "history": {

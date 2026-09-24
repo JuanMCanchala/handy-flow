@@ -14,6 +14,7 @@
     "models": "Modely",
     "advanced": "Pokročilé",
     "postProcessing": "Následné zpracování",
+    "style": "Styl",
     "history": "Historie",
     "debug": "Ladění",
     "about": "O aplikaci"
@@ -452,6 +453,35 @@
         "cancel": "Zrušit",
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Obecné",
+        "categories": "Styl podle aplikace"
+      },
+      "enabled": {
+        "label": "Upravit tón podle aktivní aplikace",
+        "description": "Když běží následné zpracování, Handy rozpozná aplikaci, do které jste diktovali, a připojí instrukci tónu pro její kategorii."
+      },
+      "selectTone": "Vyberte tón",
+      "categories": {
+        "personal": "Osobní zprávy",
+        "work": "Pracovní zprávy",
+        "email": "E-mail",
+        "other": "Ostatní"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail a Gmail/Outlook v prohlížeči",
+        "other": "Jakákoli jiná aplikace"
+      },
+      "tones": {
+        "formal": "Formální",
+        "casual": "Neformální",
+        "very_casual": "Velmi neformální",
+        "excited": "Nadšený"
       }
     },
     "history": {

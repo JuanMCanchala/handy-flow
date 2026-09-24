@@ -514,6 +514,16 @@ pub struct AppSettings {
     /// `overlay_position` (position `none` → style `None`).
     #[serde(default = "default_overlay_style")]
     pub overlay_style: OverlayStyle,
+    /// Adjust the post-processing cleanup tone based on the app in focus
+    /// when recording stops (Personal / Work / Email / Other).
+    #[serde(default)]
+    pub style_per_app_enabled: bool,
+    /// Tone selected per style category. Keys are `StyleCategory::as_key()`
+    /// values ("personal", "work", "email", "other"); values are tone keys
+    /// ("formal", "casual", "very_casual", "excited"). Missing entries mean
+    /// no extra tone instruction is appended for that category.
+    #[serde(default)]
+    pub app_styles: HashMap<String, String>,
 }
 
 fn default_model() -> String {
@@ -970,6 +980,8 @@ pub fn get_default_settings() -> AppSettings {
         vad_enabled: default_vad_enabled(),
         vad_backend: VadBackend::default(),
         overlay_style: default_overlay_style(),
+        style_per_app_enabled: false,
+        app_styles: HashMap::new(),
     }
 }
 
