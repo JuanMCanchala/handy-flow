@@ -7,6 +7,7 @@ mod autostart;
 mod catalog;
 pub mod cli;
 mod clipboard;
+mod cloud_stt;
 mod commands;
 mod helpers;
 mod input;
@@ -736,6 +737,11 @@ pub fn run(cli_args: CliArgs) {
             commands::models::get_transcription_model_status,
             commands::models::is_model_loading,
             commands::models::rescan_local_models,
+            commands::cloud_stt::change_cloud_stt_enabled_setting,
+            commands::cloud_stt::set_cloud_stt_provider,
+            commands::cloud_stt::change_cloud_stt_base_url_setting,
+            commands::cloud_stt::change_cloud_stt_api_key_setting,
+            commands::cloud_stt::change_cloud_stt_model_setting,
             commands::audio::update_microphone_mode,
             commands::audio::get_microphone_mode,
             commands::audio::get_windows_microphone_permission_status,

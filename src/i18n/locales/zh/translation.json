@@ -636,6 +636,32 @@
         "label": "显示新功能",
         "description": "Handy 更新后显示发行说明"
       }
+    },
+    "cloudStt": {
+      "title": "云端转录",
+      "enable": {
+        "label": "使用云端转录",
+        "description": "将音频发送到云端语音转文字 API，而不是在本设备上运行模型。启用后不会加载本地模型，实时流式转录也会被禁用。"
+      },
+      "provider": {
+        "title": "提供方",
+        "description": "选择一个云端语音转文字提供方，或选择“自定义”以使用任何兼容 OpenAI 的接口。"
+      },
+      "baseUrl": {
+        "title": "基础 URL",
+        "description": "兼容 OpenAI 的 API 基础 URL，例如 https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "模型",
+        "description": "向提供方请求的转录模型 ID。",
+        "placeholder": "例如 whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "API 密钥",
+        "description": "此提供方的 API 密钥。保存在本地，仅发送到该提供方的接口。",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {

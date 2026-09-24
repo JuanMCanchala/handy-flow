@@ -18,6 +18,7 @@ import {
   supportsLanguageCode,
 } from "@/lib/constants/languages.ts";
 import type { ModelInfo } from "@/bindings";
+import { CloudSttSettings } from "./CloudSttSettings";
 
 // check if model supports a language based on its supported_languages list
 const modelSupportsLanguage = (model: ModelInfo, langCode: string): boolean => {
@@ -259,6 +260,8 @@ export const ModelsSettings: React.FC = () => {
           className="w-full pl-9 pr-3 py-2 text-sm bg-mid-gray/10 border border-mid-gray/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-logo-primary placeholder:text-text/40"
         />
       </div>
+
+      <CloudSttSettings />
 
       <div className="space-y-6">
         {/* Downloaded Models Section — header always visible so filter stays accessible */}

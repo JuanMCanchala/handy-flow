@@ -742,6 +742,11 @@ impl TranscriptionManager {
 
     /// Kicks off the model loading in a background thread if it's not already loaded
     pub fn initiate_model_load(&self) {
+        if get_settings(&self.app_handle).cloud_stt_enabled {
+            // Cloud STT is active: the local model must never be loaded.
+            return;
+        }
+
         let mut is_loading = self.is_loading.lock().unwrap();
         if *is_loading {
             return;
@@ -1195,6 +1200,21 @@ impl TranscriptionManager {
             return Ok(String::new());
         }
 
+        // Cloud STT bypasses the local engine entirely: no model load, no
+        // engine lock, no local post-processing pipeline below.
+        let settings = get_settings(&self.app_handle);
+        if settings.cloud_stt_enabled {
+            let result = tauri::async_runtime::block_on(crate::cloud_stt::transcribe(
+                &settings,
+                audio,
+                &settings.custom_words,
+                &settings.selected_language,
+            ))
+            .map_err(|e| anyhow::anyhow!(e));
+            debug!("Cloud transcription completed in {:?}", st.elapsed());
+            return result;
+        }
+
         // Check if model is loaded, if not try to load it
         {
             // If the model is loading, wait for it to complete.
@@ -1210,7 +1230,7 @@ impl TranscriptionManager {
         }
 
         // Get current settings for configuration
-        let settings = get_settings(&self.app_handle);
+        // (fetched above, before the cloud STT branch, and reused here)
 
         // Validate selected language against the model's supported languages.
         // If the language isn't supported, fall back to "auto" to prevent errors.

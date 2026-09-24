@@ -636,6 +636,32 @@
         "label": "新機能を表示",
         "description": "Handy のアップデート後にリリースノートを表示"
       }
+    },
+    "cloudStt": {
+      "title": "クラウド文字起こし",
+      "enable": {
+        "label": "クラウド文字起こしを使用",
+        "description": "この端末でモデルを実行する代わりに、音声をクラウドの音声認識APIに送信します。オンの間はローカルモデルが読み込まれず、ライブストリーミングも無効になります。"
+      },
+      "provider": {
+        "title": "プロバイダー",
+        "description": "クラウド音声認識プロバイダーを選択するか、OpenAI互換のエンドポイントには「カスタム」を選択してください。"
+      },
+      "baseUrl": {
+        "title": "ベースURL",
+        "description": "OpenAI互換APIのベースURL（例: https://api.example.com/v1）",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "モデル",
+        "description": "プロバイダーに要求する文字起こしモデルのID。",
+        "placeholder": "例: whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "APIキー",
+        "description": "このプロバイダー用のAPIキーです。ローカルに保存され、プロバイダーのエンドポイント以外には送信されません。",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {

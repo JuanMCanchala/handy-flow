@@ -636,6 +636,32 @@
         "label": "Neuerungen anzeigen",
         "description": "Versionshinweise nach Handy-Updates anzeigen"
       }
+    },
+    "cloudStt": {
+      "title": "Cloud-Transkription",
+      "enable": {
+        "label": "Cloud-Transkription verwenden",
+        "description": "Sendet Audio an eine Cloud-Sprache-zu-Text-API, anstatt ein Modell auf diesem Gerät auszuführen. Solange dies aktiviert ist, wird kein lokales Modell geladen und Live-Streaming ist deaktiviert."
+      },
+      "provider": {
+        "title": "Anbieter",
+        "description": "Wähle einen Cloud-Anbieter für Sprache-zu-Text oder „Benutzerdefiniert“ für einen beliebigen OpenAI-kompatiblen Endpunkt."
+      },
+      "baseUrl": {
+        "title": "Basis-URL",
+        "description": "Die OpenAI-kompatible API-Basis-URL, z. B. https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "Modell",
+        "description": "Die Transkriptionsmodell-ID, die beim Anbieter angefragt wird.",
+        "placeholder": "z. B. whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "API-Schlüssel",
+        "description": "Dein API-Schlüssel für diesen Anbieter. Wird lokal gespeichert und nur an den Endpunkt des Anbieters gesendet.",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {

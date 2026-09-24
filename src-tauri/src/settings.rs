@@ -107,6 +107,17 @@ pub struct PostProcessProvider {
     pub supports_structured_output: bool,
 }
 
+/// A preset (or custom) OpenAI-compatible cloud speech-to-text endpoint. Mirrors
+/// `PostProcessProvider`'s shape but targets `POST {base_url}/audio/transcriptions`.
+#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+pub struct CloudSttProvider {
+    pub id: String,
+    pub label: String,
+    pub base_url: String,
+    #[serde(default)]
+    pub allow_base_url_edit: bool,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum OverlayPosition {
@@ -457,6 +468,19 @@ pub struct AppSettings {
     pub post_process_prompts: Vec<LLMPrompt>,
     #[serde(default)]
     pub post_process_selected_prompt_id: Option<String>,
+    /// When enabled, every transcription (batch and streaming-capable models)
+    /// is sent to the selected cloud provider instead of a local model; the
+    /// local model is never loaded. See `cloud_stt.rs`.
+    #[serde(default)]
+    pub cloud_stt_enabled: bool,
+    #[serde(default = "default_cloud_stt_provider_id")]
+    pub cloud_stt_provider_id: String,
+    #[serde(default = "default_cloud_stt_providers")]
+    pub cloud_stt_providers: Vec<CloudSttProvider>,
+    #[serde(default = "default_cloud_stt_api_keys")]
+    pub cloud_stt_api_keys: SecretMap,
+    #[serde(default = "default_cloud_stt_models")]
+    pub cloud_stt_models: HashMap<String, String>,
     #[serde(default)]
     pub mute_while_recording: bool,
     #[serde(default)]
@@ -746,6 +770,56 @@ fn default_post_process_api_keys() -> SecretMap {
     SecretMap(map)
 }
 
+fn default_cloud_stt_provider_id() -> String {
+    "openai".to_string()
+}
+
+fn default_cloud_stt_providers() -> Vec<CloudSttProvider> {
+    vec![
+        CloudSttProvider {
+            id: "openai".to_string(),
+            label: "OpenAI".to_string(),
+            base_url: "https://api.openai.com/v1".to_string(),
+            allow_base_url_edit: false,
+        },
+        CloudSttProvider {
+            id: "groq".to_string(),
+            label: "Groq".to_string(),
+            base_url: "https://api.groq.com/openai/v1".to_string(),
+            allow_base_url_edit: false,
+        },
+        CloudSttProvider {
+            id: "fireworks".to_string(),
+            label: "Fireworks".to_string(),
+            base_url: "https://audio-turbo.api.fireworks.ai/v1".to_string(),
+            allow_base_url_edit: false,
+        },
+        CloudSttProvider {
+            id: "custom".to_string(),
+            label: "Custom".to_string(),
+            base_url: "http://localhost:8000/v1".to_string(),
+            allow_base_url_edit: true,
+        },
+    ]
+}
+
+fn default_cloud_stt_api_keys() -> SecretMap {
+    let mut map = HashMap::new();
+    for provider in default_cloud_stt_providers() {
+        map.insert(provider.id, String::new());
+    }
+    SecretMap(map)
+}
+
+fn default_cloud_stt_models() -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    map.insert("openai".to_string(), "gpt-4o-mini-transcribe".to_string());
+    map.insert("groq".to_string(), "whisper-large-v3-turbo".to_string());
+    map.insert("fireworks".to_string(), "whisper-v3-turbo".to_string());
+    map.insert("custom".to_string(), String::new());
+    map
+}
+
 fn default_model_for_provider(provider_id: &str) -> String {
     if provider_id == APPLE_INTELLIGENCE_PROVIDER_ID {
         return APPLE_INTELLIGENCE_DEFAULT_MODEL_ID.to_string();
@@ -948,6 +1022,11 @@ pub fn get_default_settings() -> AppSettings {
         post_process_models: default_post_process_models(),
         post_process_prompts: default_post_process_prompts(),
         post_process_selected_prompt_id: None,
+        cloud_stt_enabled: false,
+        cloud_stt_provider_id: default_cloud_stt_provider_id(),
+        cloud_stt_providers: default_cloud_stt_providers(),
+        cloud_stt_api_keys: default_cloud_stt_api_keys(),
+        cloud_stt_models: default_cloud_stt_models(),
         mute_while_recording: false,
         append_trailing_space: false,
         app_language: default_app_language(),
@@ -997,6 +1076,24 @@ impl AppSettings {
         provider_id: &str,
     ) -> Option<&mut PostProcessProvider> {
         self.post_process_providers
+            .iter_mut()
+            .find(|provider| provider.id == provider_id)
+    }
+
+    pub fn active_cloud_stt_provider(&self) -> Option<&CloudSttProvider> {
+        self.cloud_stt_providers
+            .iter()
+            .find(|provider| provider.id == self.cloud_stt_provider_id)
+    }
+
+    pub fn cloud_stt_provider(&self, provider_id: &str) -> Option<&CloudSttProvider> {
+        self.cloud_stt_providers
+            .iter()
+            .find(|provider| provider.id == provider_id)
+    }
+
+    pub fn cloud_stt_provider_mut(&mut self, provider_id: &str) -> Option<&mut CloudSttProvider> {
+        self.cloud_stt_providers
             .iter_mut()
             .find(|provider| provider.id == provider_id)
     }
