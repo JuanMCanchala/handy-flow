@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Dropdown } from "../ui/Dropdown";
 import { SettingContainer } from "../ui/SettingContainer";
 import { SettingsGroup } from "../ui/SettingsGroup";
+import { PageHeader } from "../ui/PageHeader";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
 import { useSettings } from "../../hooks/useSettings";
 
@@ -49,7 +50,8 @@ export const StyleSettings: React.FC = () => {
   const enabled = getSetting("style_per_app_enabled") || false;
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("sidebar.style")} />
       <SettingsGroup title={t("settings.style.groups.general")}>
         <ToggleSwitch
           checked={enabled}

@@ -49,7 +49,7 @@ export const Slider: React.FC<SliderProps> = ({
       disabled={disabled}
     >
       <div className="w-full">
-        <div className="flex items-center space-x-1 h-6">
+        <div className="flex items-center gap-1 h-6">
           <input
             type="range"
             min={min}
@@ -58,17 +58,17 @@ export const Slider: React.FC<SliderProps> = ({
             value={value}
             onChange={handleChange}
             disabled={disabled}
-            className="flex-grow h-2 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-logo-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-grow h-1 rounded-full appearance-none cursor-pointer focus:outline-none focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
-              background: `linear-gradient(to right, var(--color-background-ui) ${
+              background: `linear-gradient(to right, var(--color-accent) ${
                 ((value - min) / (max - min)) * 100
-              }%, rgba(128, 128, 128, 0.2) ${
+              }%, var(--color-border-strong) ${
                 ((value - min) / (max - min)) * 100
               }%)`,
             }}
           />
           {showValue && (
-            <span className="text-sm font-medium text-text/90 w-12 text-end">
+            <span className="text-small font-medium text-text-secondary tabular w-12 text-end">
               {formatValue(value)}
             </span>
           )}

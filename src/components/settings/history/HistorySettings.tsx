@@ -6,6 +6,7 @@ import { commands, type HistoryEntry } from "@/bindings";
 import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
+import { PageHeader } from "../../ui/PageHeader";
 import { copyToClipboard } from "./clipboard";
 import { useHistoryEntries } from "./useHistoryEntries";
 
@@ -19,10 +20,10 @@ const IconButton: React.FC<{
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`p-1.5 rounded-md flex items-center justify-center transition-colors cursor-pointer disabled:cursor-not-allowed disabled:text-text/20 ${
+    className={`size-7 rounded-md flex items-center justify-center transition-colors duration-[var(--dur-fast)] cursor-default disabled:pointer-events-none disabled:text-text-tertiary/40 ${
       active
-        ? "text-logo-primary hover:text-logo-primary/80"
-        : "text-text/50 hover:text-logo-primary"
+        ? "text-brand hover:text-accent-hover"
+        : "text-text-secondary hover:bg-fill-hover hover:text-text"
     }`}
     title={title}
   >
@@ -105,13 +106,13 @@ export const HistorySettings: React.FC = () => {
 
   if (loading) {
     content = (
-      <div className="px-4 py-3 text-center text-text/60">
+      <div className="px-4 py-3 text-center text-text-secondary">
         {t("settings.history.loading")}
       </div>
     );
   } else if (entries.length === 0) {
     content = (
-      <div className="px-4 py-3 text-center text-text/60">
+      <div className="px-4 py-3 text-center text-text-secondary">
         {t("settings.history.empty")}
       </div>
     );
@@ -119,7 +120,7 @@ export const HistorySettings: React.FC = () => {
     content = (
       <>
         <AudioPlayerGroup>
-          <div className="divide-y divide-mid-gray/20">
+          <div className="divide-y divide-border">
             {entries.map((entry) => (
               <HistoryEntryComponent
                 key={entry.id}
@@ -140,22 +141,18 @@ export const HistorySettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <div className="space-y-2">
-        <div className="px-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-xs font-medium text-mid-gray uppercase tracking-wide">
-              {t("settings.history.title")}
-            </h2>
-          </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title={t("sidebar.history")}
+        actions={
           <OpenRecordingsButton
             onClick={openRecordingsFolder}
             label={t("settings.history.openFolder")}
           />
-        </div>
-        <div className="bg-background border border-mid-gray/20 rounded-lg overflow-visible">
-          {content}
-        </div>
+        }
+      />
+      <div className="bg-surface border border-border rounded-lg overflow-visible">
+        {content}
       </div>
     </div>
   );
@@ -230,7 +227,7 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   return (
     <div className="px-4 py-2 pb-5 flex flex-col gap-3">
       <div className="flex justify-between items-center">
-        <p className="text-sm font-medium">{formattedDate}</p>
+        <p className="text-body font-medium tabular">{formattedDate}</p>
         <div className="flex items-center">
           <IconButton
             onClick={handleCopyText}
@@ -285,12 +282,12 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
       </div>
 
       <p
-        className={`italic text-sm pb-2 ${
+        className={`italic text-small pb-2 ${
           retrying
             ? ""
             : hasTranscription
-              ? "text-text/90 select-text cursor-text whitespace-pre-wrap break-words"
-              : "text-text/40"
+              ? "text-text select-text cursor-text whitespace-pre-wrap break-words"
+              : "text-text-tertiary"
         }`}
         style={
           retrying

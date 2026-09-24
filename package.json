@@ -22,6 +22,8 @@
     "postinstall": "bun scripts/check-nix-deps.ts"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "5.2.6",
+    "@fontsource/instrument-serif": "5.2.5",
     "@tailwindcss/vite": "^4.1.16",
     "@tauri-apps/api": "^2.11.0",
     "@tauri-apps/plugin-autostart": "~2.5.1",

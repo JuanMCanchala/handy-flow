@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 export interface DropdownOption {
   value: string;
@@ -65,37 +66,23 @@ export const Dropdown: React.FC<DropdownProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`px-2 py-[5px] text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 rounded-md min-w-[200px] w-full text-start grid grid-cols-[1fr_auto] gap-2 items-center transition-all duration-150 ${
-          disabled
-            ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-logo-primary/10 cursor-pointer hover:border-logo-primary"
+        className={`h-8 px-3 text-body bg-surface border border-border-strong rounded-md min-w-[200px] w-full text-start grid grid-cols-[1fr_auto] gap-2 items-center transition-colors duration-[var(--dur-fast)] cursor-default ${
+          disabled ? "opacity-40 pointer-events-none" : "hover:bg-fill-hover"
         }`}
         onClick={handleToggle}
         disabled={disabled}
       >
         <span className="truncate">{selectedOption?.label || placeholder}</span>
-        <svg
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        <ChevronsUpDown size={14} className="text-text-tertiary shrink-0" />
       </button>
       {isOpen && !disabled && (
         <div
-          className={`absolute top-full mt-1 bg-background border border-mid-gray/80 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto ${
+          className={`absolute top-full mt-1 bg-surface-raised rounded-md shadow-pop p-1 z-50 max-h-72 overflow-auto ${
             menuClassName ?? "left-0 right-0"
           }`}
         >
           {options.length === 0 ? (
-            <div className="px-2 py-1 text-sm text-mid-gray">
+            <div className="px-2 py-1.5 text-small text-text-tertiary">
               {t("common.noOptionsFound")}
             </div>
           ) : (
@@ -103,27 +90,24 @@ export const Dropdown: React.FC<DropdownProps> = ({
               <button
                 key={option.value}
                 type="button"
-                className={`w-full text-sm text-start hover:bg-logo-primary/10 transition-colors duration-150 ${
-                  option.description ? "px-3 py-2" : "px-2 py-1"
-                } ${
-                  selectedValue === option.value ? "bg-logo-primary/20" : ""
-                } ${option.disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`w-full text-body text-start rounded-sm hover:bg-fill-hover transition-colors duration-[var(--dur-fast)] flex items-start justify-between gap-2 cursor-default ${
+                  option.description ? "px-2 py-1.5" : "h-7 px-2"
+                } ${option.disabled ? "opacity-40 pointer-events-none" : ""}`}
                 onClick={() => handleSelect(option.value)}
                 disabled={option.disabled}
               >
-                <span
-                  className={`block whitespace-normal break-words ${
-                    option.description || selectedValue === option.value
-                      ? "font-semibold"
-                      : ""
-                  }`}
-                >
-                  {option.label}
-                </span>
-                {option.description && (
-                  <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-snug text-mid-gray">
-                    {option.description}
+                <span className="min-w-0">
+                  <span className="block whitespace-normal break-words">
+                    {option.label}
                   </span>
+                  {option.description && (
+                    <span className="mt-0.5 block whitespace-normal text-caption font-normal leading-snug text-text-tertiary">
+                      {option.description}
+                    </span>
+                  )}
+                </span>
+                {selectedValue === option.value && (
+                  <Check size={14} className="text-text shrink-0 mt-0.5" />
                 )}
               </button>
             ))

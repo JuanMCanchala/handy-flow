@@ -5,6 +5,7 @@ import { MicrophoneSelector } from "../MicrophoneSelector";
 import { ChannelSelector } from "../ChannelSelector";
 import { ShortcutInput } from "../ShortcutInput";
 import { SettingsGroup } from "../../ui/SettingsGroup";
+import { PageHeader } from "../../ui/PageHeader";
 import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { ShortcutActivationSetting } from "../ShortcutActivation";
 import { AudioFeedback } from "../AudioFeedback";
@@ -18,7 +19,8 @@ export const GeneralSettings: React.FC = () => {
   const { audioFeedbackEnabled } = useSettings();
   const isLinux = type() === "linux";
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("sidebar.general")} />
       <SettingsGroup title={t("settings.general.title")}>
         <ShortcutInput shortcutId="transcribe" grouped={true} />
         <ShortcutActivationSetting descriptionMode="tooltip" grouped={true} />

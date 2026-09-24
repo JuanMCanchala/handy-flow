@@ -5,20 +5,10 @@ import { copyToClipboard } from "../settings/history/clipboard";
 import { HistoryEntryComponent } from "../settings/history/HistorySettings";
 import { useHistoryEntries } from "../settings/history/useHistoryEntries";
 import { AudioPlayerGroup } from "../ui/AudioPlayer";
+import { PageHeader } from "../ui/PageHeader";
+import { StatCard } from "../ui/StatCard";
 
-const StatCard: React.FC<{ label: string; value: string }> = ({
-  label,
-  value,
-}) => (
-  <div className="flex-1 bg-background border border-mid-gray/20 rounded-lg px-4 py-3 flex flex-col gap-1">
-    <span className="text-2xl font-semibold">{value}</span>
-    <span className="text-xs text-mid-gray uppercase tracking-wide">
-      {label}
-    </span>
-  </div>
-);
-
-const StatsCard: React.FC = () => {
+const StatsRow: React.FC = () => {
   const { t } = useTranslation();
   const [insights, setInsights] = useState<Insights | null>(null);
 
@@ -35,18 +25,18 @@ const StatsCard: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex gap-3">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
       <StatCard
         label={t("settings.home.stats.totalWords")}
-        value={insights ? insights.total_words.toLocaleString() : "—"}
+        value={insights ? insights.total_words : "—"}
       />
       <StatCard
         label={t("settings.home.stats.averageWpm")}
-        value={insights ? Math.round(insights.average_wpm).toString() : "—"}
+        value={insights ? Math.round(insights.average_wpm) : "—"}
       />
       <StatCard
         label={t("settings.home.stats.dayStreak")}
-        value={insights ? insights.day_streak.toString() : "—"}
+        value={insights ? insights.day_streak : "—"}
       />
     </div>
   );
@@ -112,28 +102,28 @@ export const HomeSettings: React.FC = () => {
   const groups = groupByDay(entries);
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <h1 className="text-xl font-semibold">{t("settings.home.welcome")}</h1>
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("settings.home.welcome")} />
 
-      <StatsCard />
+      <StatsRow />
 
       <div className="space-y-4">
         {loading ? (
-          <div className="px-4 py-3 text-center text-text/60">
+          <div className="px-4 py-3 text-center text-text-secondary">
             {t("settings.history.loading")}
           </div>
         ) : entries.length === 0 ? (
-          <div className="px-4 py-3 text-center text-text/60">
+          <div className="px-4 py-3 text-center text-text-secondary">
             {t("settings.history.empty")}
           </div>
         ) : (
           <AudioPlayerGroup>
             {groups.map(([key, dayEntries]) => (
               <div key={key} className="space-y-2">
-                <h2 className="px-4 text-xs font-medium text-mid-gray uppercase tracking-wide">
+                <h2 className="px-1 text-overline uppercase text-text-tertiary tracking-wide">
                   {dayGroupLabel(dayEntries[0].timestamp)}
                 </h2>
-                <div className="bg-background border border-mid-gray/20 rounded-lg overflow-visible divide-y divide-mid-gray/20">
+                <div className="bg-surface border border-border rounded-lg overflow-visible divide-y divide-border">
                   {dayEntries.map((entry) => (
                     <HistoryEntryComponent
                       key={entry.id}
