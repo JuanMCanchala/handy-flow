@@ -648,6 +648,17 @@ impl ShortcutAction for TranscribeAction {
         let settings = get_settings(app);
         let is_always_on = settings.always_on_microphone;
 
+        // Open the network connections this dictation will need while the
+        // user is still speaking, so stopping goes straight to the upload.
+        if settings.cloud_stt_enabled {
+            crate::cloud_stt::prewarm(&settings);
+        }
+        if self.post_process || self.command || self.translate || settings.post_process_enabled {
+            if let Some((provider, _model, api_key)) = settings.resolve_llm_target() {
+                crate::llm_client::prewarm(&provider, &api_key);
+            }
+        }
+
         let selected_model_info = app
             .state::<Arc<ModelManager>>()
             .get_model_info(&settings.selected_model);

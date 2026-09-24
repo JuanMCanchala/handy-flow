@@ -116,6 +116,38 @@ fn resolve_provider_config(
 /// provider. `custom_words` becomes the `prompt` field (comma-separated, same
 /// convention as the local whisper initial prompt). `language` is omitted
 /// when the setting is `"auto"`.
+/// One client for all cloud STT requests: its connection pool keeps the TLS
+/// connection to the provider alive between dictations.
+static CLIENT: std::sync::OnceLock<reqwest::Client> = std::sync::OnceLock::new();
+
+fn shared_client() -> Result<reqwest::Client, String> {
+    if let Some(client) = CLIENT.get() {
+        return Ok(client.clone());
+    }
+    let client = reqwest::Client::builder()
+        .timeout(REQUEST_TIMEOUT)
+        .pool_idle_timeout(std::time::Duration::from_secs(300))
+        .build()
+        .map_err(|e| format!("Failed to build HTTP client: {}", e))?;
+    Ok(CLIENT.get_or_init(|| client).clone())
+}
+
+/// Warms the connection to the configured provider (DNS + TLS) in the
+/// background, e.g. when recording starts, so the upload after the user stops
+/// speaking starts immediately.
+pub fn prewarm(settings: &AppSettings) {
+    let Ok((provider, _, _)) = resolve_provider_config(settings) else {
+        return;
+    };
+    let Ok(client) = shared_client() else {
+        return;
+    };
+    let url = provider.base_url.trim_end_matches('/').to_string();
+    tauri::async_runtime::spawn(async move {
+        let _ = crate::llm_client::send_with_connect_retry(|| Ok(client.head(&url))).await;
+    });
+}
+
 /// Blocking wrapper for synchronous callers such as
 /// `TranscriptionManager::transcribe`, which often run *inside* a Tokio task
 /// (the dictation pipeline, file import, live subtitles). Calling
@@ -171,10 +203,7 @@ pub async fn transcribe(
     // directly instead of through the retry closure.
     build_form(wav_bytes.clone(), &model, language_param, prompt.as_deref())?;
 
-    let client = reqwest::Client::builder()
-        .timeout(REQUEST_TIMEOUT)
-        .build()
-        .map_err(|e| format!("Failed to build HTTP client: {}", e))?;
+    let client = shared_client()?;
 
     let response = crate::llm_client::send_with_connect_retry(|| {
         let form = build_form(wav_bytes.clone(), &model, language_param, prompt.as_deref())

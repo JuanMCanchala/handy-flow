@@ -3,6 +3,7 @@ use log::{debug, error, info, warn};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, REFERER, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::error::Error as StdError;
 use std::sync::{Mutex, OnceLock};
@@ -179,12 +180,44 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
 }
 
 /// Create an HTTP client with provider-specific headers
+/// Clients are cached per provider/base URL/key so consecutive requests reuse
+/// pooled keep-alive connections instead of paying DNS + TLS every time.
+static CLIENTS: std::sync::LazyLock<Mutex<HashMap<(String, String, String), reqwest::Client>>> =
+    std::sync::LazyLock::new(|| Mutex::new(HashMap::new()));
+
 fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwest::Client, String> {
+    let cache_key = (
+        provider.id.clone(),
+        provider.base_url.clone(),
+        api_key.to_string(),
+    );
+    if let Some(client) = CLIENTS.lock().ok().and_then(|c| c.get(&cache_key).cloned()) {
+        return Ok(client);
+    }
     let headers = build_headers(provider, api_key)?;
-    reqwest::Client::builder()
+    let client = reqwest::Client::builder()
         .default_headers(headers)
         .build()
-        .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))
+        .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))?;
+    if let Ok(mut cache) = CLIENTS.lock() {
+        cache.insert(cache_key, client.clone());
+    }
+    Ok(client)
+}
+
+/// Opens (and pools) a connection to the provider in the background so the
+/// real request right after a dictation skips DNS + TLS setup.
+pub fn prewarm(provider: &PostProcessProvider, api_key: &str) {
+    let Ok(client) = create_client(provider, api_key) else {
+        return;
+    };
+    let url = provider.base_url.trim_end_matches('/').to_string();
+    if !url.starts_with("http") {
+        return;
+    }
+    tauri::async_runtime::spawn(async move {
+        let _ = send_with_connect_retry(|| Ok(client.head(&url))).await;
+    });
 }
 
 /// Format a bounded error source chain.
