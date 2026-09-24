@@ -833,6 +833,10 @@
       "feed": {
         "title": "Live transcript",
         "empty": "Start live subtitles and speak or play audio — lines appear here as they're transcribed."
+      },
+      "suggestAnswers": {
+        "label": "Suggest answers with AI",
+        "description": "When someone asks you a question, suggest a reply based on your Copilot profile, in the language of the question."
       }
     },
     "copilot": {

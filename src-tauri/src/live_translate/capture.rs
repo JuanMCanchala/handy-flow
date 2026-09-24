@@ -317,6 +317,13 @@ mod windows_loopback {
 
     /// WAVEFORMATEX.wFormatTag / WAVE_FORMAT_EXTENSIBLE subformat check for
     /// IEEE float samples, which is what WASAPI mix formats normally use.
+    /// Reads the SubFormat tag of a raw WAVEFORMATEXTENSIBLE (>= 26 bytes).
+    pub(super) fn subformat_tag_is_float(raw: &[u8]) -> bool {
+        const SUBFORMAT_OFFSET: usize = 24;
+        raw.len() >= SUBFORMAT_OFFSET + 2
+            && u16::from_le_bytes([raw[SUBFORMAT_OFFSET], raw[SUBFORMAT_OFFSET + 1]]) == 0x0003
+    }
+
     fn is_float_format(format: &windows::Win32::Media::Audio::WAVEFORMATEX) -> bool {
         const WAVE_FORMAT_IEEE_FLOAT: u16 = 0x0003;
         const WAVE_FORMAT_EXTENSIBLE: u16 = 0xFFFE;
@@ -325,15 +332,35 @@ mod windows_loopback {
             return true;
         }
         if format.wFormatTag == WAVE_FORMAT_EXTENSIBLE && format.cbSize >= 22 {
-            // The extensible struct's SubFormat GUID starts right after the
-            // fixed WAVEFORMATEX fields; the first 2 bytes of the GUID equal
-            // the format tag for PCM (1) / IEEE float (3) subformats.
+            // WAVEFORMATEXTENSIBLE = WAVEFORMATEX (18 bytes) + Samples (u16)
+            // + dwChannelMask (u32), then the SubFormat GUID at offset 24; its
+            // first 2 bytes equal the format tag (PCM = 1, IEEE float = 3).
             let ext = format as *const _ as *const u8;
             unsafe {
-                let sub_format_tag = u16::from_le_bytes([*ext.add(18 + 4), *ext.add(18 + 5)]);
-                return sub_format_tag == WAVE_FORMAT_IEEE_FLOAT;
+                return subformat_tag_is_float(std::slice::from_raw_parts(ext, 40));
             }
         }
         false
+    }
+}
+
+#[cfg(all(test, target_os = "windows"))]
+mod tests {
+    use super::windows_loopback::subformat_tag_is_float;
+
+    fn extensible(channel_mask: u32, sub_format_tag: u16) -> Vec<u8> {
+        let mut raw = vec![0u8; 40];
+        raw[0..2].copy_from_slice(&0xFFFEu16.to_le_bytes()); // wFormatTag
+        raw[16..18].copy_from_slice(&22u16.to_le_bytes()); // cbSize
+        raw[20..24].copy_from_slice(&channel_mask.to_le_bytes()); // dwChannelMask
+        raw[24..26].copy_from_slice(&sub_format_tag.to_le_bytes()); // SubFormat.Data1 low
+        raw
+    }
+
+    #[test]
+    fn float_subformat_is_detected_regardless_of_channel_mask() {
+        assert!(subformat_tag_is_float(&extensible(0x3, 0x0003))); // stereo float
+        assert!(subformat_tag_is_float(&extensible(0x3F, 0x0003))); // 5.1 float
+        assert!(!subformat_tag_is_float(&extensible(0x3, 0x0001))); // PCM
     }
 }

@@ -8,9 +8,12 @@ import { PageHeader } from "../../ui/PageHeader";
 import { Button } from "../../ui/Button";
 import { ShortcutInput } from "../ShortcutInput";
 import { LiveTranslateSourceSelector } from "../LiveTranslateSourceSelector";
+import { ToggleSwitch } from "../../ui/ToggleSwitch";
+import { useSettings } from "../../../hooks/useSettings";
 
 export const LiveTranslateSettings: React.FC = () => {
   const { t } = useTranslation();
+  const { getSetting, updateSetting, isUpdating } = useSettings();
   const [isActive, setIsActive] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [feed, setFeed] = useState<LiveSubtitleLine[]>([]);
@@ -66,6 +69,17 @@ export const LiveTranslateSettings: React.FC = () => {
       <SettingsGroup title={t("settings.liveTranslate.title")}>
         <ShortcutInput shortcutId="live_subtitles" grouped={true} />
         <LiveTranslateSourceSelector descriptionMode="tooltip" grouped={true} />
+        <ToggleSwitch
+          checked={getSetting("live_translate_suggest_answers") ?? false}
+          onChange={(enabled) =>
+            updateSetting("live_translate_suggest_answers", enabled)
+          }
+          isUpdating={isUpdating("live_translate_suggest_answers")}
+          label={t("settings.liveTranslate.suggestAnswers.label")}
+          description={t("settings.liveTranslate.suggestAnswers.description")}
+          descriptionMode="tooltip"
+          grouped={true}
+        />
       </SettingsGroup>
       <div className="flex justify-center">
         <Button

@@ -206,6 +206,8 @@ const settingUpdaters: {
     commands.changeStylePerAppEnabledSetting(value as boolean),
   translation_target: (value) =>
     commands.changeTranslationTargetSetting(value as TranslationTarget),
+  live_translate_suggest_answers: (value) =>
+    commands.changeLiveTranslateSuggestAnswersSetting(value as boolean),
   live_translate_source: (value) =>
     commands.changeLiveTranslateSourceSetting(value as LiveTranslateSource),
   diarization_enabled: (value) =>

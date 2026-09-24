@@ -962,6 +962,7 @@ pub fn run(cli_args: CliArgs) {
             commands::notes::generate_notes,
             commands::notes::toggle_note_action_item,
             commands::live_translate::change_live_translate_source_setting,
+            commands::live_translate::change_live_translate_suggest_answers_setting,
             commands::live_translate::is_live_translate_active,
             commands::live_translate::toggle_live_translate,
             commands::copilot::get_copilot_profile,

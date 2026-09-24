@@ -1209,6 +1209,14 @@ async isLaptop() : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async changeLiveTranslateSuggestAnswersSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_live_translate_suggest_answers_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeLiveTranslateSourceSetting(source: LiveTranslateSource) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_live_translate_source_setting", { source }) };
@@ -1476,7 +1484,7 @@ translation_target?: TranslationTarget;
  * only implemented on Windows; other platforms report an error when
  * selected (see `live_translate::capture`).
  */
-live_translate_source?: LiveTranslateSource; 
+live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; 
 /**
  * User-defined named modes/presets (Superwhisper-style). Seeded with
  * Default/Email/Notes on fresh installs. See `modes.rs`.

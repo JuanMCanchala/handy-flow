@@ -867,6 +867,10 @@
       "feed": {
         "title": "Transcripción en vivo",
         "empty": "Inicia los subtítulos en vivo y habla o reproduce audio: las frases aparecen aquí al transcribirse."
+      },
+      "suggestAnswers": {
+        "label": "Sugerir respuestas con IA",
+        "description": "Cuando te hacen una pregunta, sugiere una respuesta basada en tu perfil del Copilot, en el idioma de la pregunta."
       }
     },
     "copilot": {

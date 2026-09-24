@@ -148,6 +148,11 @@ impl LiveTranslateManager {
         let frame_samples = vad.lock().unwrap().frame_samples();
         let mut pending: Vec<f32> = Vec::with_capacity(frame_samples * 2);
 
+        // Periodic level/VAD diagnostics (~every 3 s) so "nothing happens"
+        // can be told apart from "no audio" vs "audio but no speech".
+        let mut diag_frames = 0u32;
+        let mut diag_speech = 0u32;
+        let mut diag_peak = 0.0f32;
         let on_frame = move |frame: &[f32]| {
             pending.extend_from_slice(frame);
             while pending.len() >= frame_samples {
@@ -159,6 +164,20 @@ impl LiveTranslateManager {
                         false
                     }
                 };
+                diag_frames += 1;
+                diag_speech += u32::from(is_speech);
+                diag_peak = chunk.iter().fold(diag_peak, |m, v| m.max(v.abs()));
+                if diag_frames >= 100 {
+                    log::debug!(
+                        "Live session audio: peak={:.3} speech_frames={}/{}",
+                        diag_peak,
+                        diag_speech,
+                        diag_frames
+                    );
+                    diag_frames = 0;
+                    diag_speech = 0;
+                    diag_peak = 0.0;
+                }
 
                 let closed_segment = segmenter
                     .lock()
@@ -272,6 +291,16 @@ impl LiveTranslateManager {
         }
         .emit(&self.app_handle);
         let started = std::time::Instant::now();
+
+        // Optional answer suggestions alongside the subtitles: same question
+        // detector + profile-grounded answer as the Copilot mode.
+        if get_settings(&self.app_handle).live_translate_suggest_answers {
+            let manager = self.clone();
+            let question = transcript.clone();
+            tauri::async_runtime::spawn(async move {
+                manager.handle_copilot_segment(question).await;
+            });
+        }
 
         let translation = match self.translate(&transcript, target_lang).await {
             Ok(text) => text,

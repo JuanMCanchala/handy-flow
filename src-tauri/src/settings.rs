@@ -591,6 +591,10 @@ pub struct AppSettings {
     /// selected (see `live_translate::capture`).
     #[serde(default)]
     pub live_translate_source: LiveTranslateSource,
+    /// While live subtitles run, also suggest an answer (grounded in the
+    /// Copilot profile) whenever a question is detected.
+    #[serde(default)]
+    pub live_translate_suggest_answers: bool,
     /// User-defined named modes/presets (Superwhisper-style). Seeded with
     /// Default/Email/Notes on fresh installs. See `modes.rs`.
     #[serde(default = "default_modes")]
@@ -1278,6 +1282,7 @@ pub fn get_default_settings() -> AppSettings {
         note_templates: default_note_templates(),
         translation_target: TranslationTarget::default(),
         live_translate_source: LiveTranslateSource::default(),
+        live_translate_suggest_answers: false,
         modes: default_modes(),
         active_mode_id: None,
         diarization_enabled: false,
