@@ -36,12 +36,15 @@ pub fn build_translate_instruction(text: &str, target: TranslationTarget) -> Str
 /// ñ, or common Spanish-only stop words not used in English.
 fn looks_like_spanish(text: &str) -> bool {
     let lower = text.to_lowercase();
-    if lower.chars().any(|c| matches!(c, 'á' | 'é' | 'í' | 'ó' | 'ú' | 'ñ' | '¿' | '¡')) {
+    if lower
+        .chars()
+        .any(|c| matches!(c, 'á' | 'é' | 'í' | 'ó' | 'ú' | 'ñ' | '¿' | '¡'))
+    {
         return true;
     }
     const SPANISH_WORDS: &[&str] = &[
-        "el", "la", "los", "las", "de", "que", "y", "en", "un", "una", "es", "por", "para",
-        "con", "no", "se", "su", "al", "lo", "como", "mas", "pero", "esta", "este",
+        "el", "la", "los", "las", "de", "que", "y", "en", "un", "una", "es", "por", "para", "con",
+        "no", "se", "su", "al", "lo", "como", "mas", "pero", "esta", "este",
     ];
     let words: Vec<&str> = lower.split_whitespace().collect();
     if words.is_empty() {

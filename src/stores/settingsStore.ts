@@ -9,6 +9,7 @@ import type {
   ShortcutActivation,
   VadBackend,
   TranslationTarget,
+  LiveTranslateSource,
 } from "@/bindings";
 import { commands } from "@/bindings";
 import { toast } from "sonner";
@@ -205,6 +206,8 @@ const settingUpdaters: {
     commands.changeStylePerAppEnabledSetting(value as boolean),
   translation_target: (value) =>
     commands.changeTranslationTargetSetting(value as TranslationTarget),
+  live_translate_source: (value) =>
+    commands.changeLiveTranslateSourceSetting(value as LiveTranslateSource),
 };
 
 export const useSettingsStore = create<SettingsStore>()(

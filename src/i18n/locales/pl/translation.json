@@ -21,7 +21,8 @@
     "history": "Historia",
     "scratchpad": "Notatnik",
     "debug": "Debugowanie",
-    "about": "O programie"
+    "about": "O programie",
+    "liveTranslate": "Tłumaczenie na żywo"
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -208,6 +209,10 @@
           "command": {
             "name": "Skrót trybu poleceń",
             "description": "Wypowiedz polecenie; AI zastosuje je do zaznaczonego tekstu i go zastąpi (lub napisze nowy tekst, jeśli nic nie jest zaznaczone)."
+          },
+          "live_subtitles": {
+            "name": "Skrót napisów na żywo",
+            "description": "Uruchamia lub zatrzymuje tłumaczone na żywo napisy dla odtwarzanego dźwięku lub mikrofonu."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Tłumaczenie na żywo",
+      "startButton": "Uruchom napisy na żywo",
+      "stopButton": "Zatrzymaj napisy na żywo",
+      "source": {
+        "title": "Źródło audio",
+        "description": "Nagrywa mikrofon lub dźwięk systemowy (to, co jest odtwarzane, np. druga strona rozmowy). Dźwięk systemowy jest obecnie obsługiwany tylko w systemie Windows.",
+        "options": {
+          "microphone": "Mikrofon",
+          "systemAudio": "Dźwięk systemowy"
+        }
       }
     }
   },

@@ -21,7 +21,8 @@
     "history": "Geçmiş",
     "scratchpad": "Not Defteri",
     "debug": "Hata Ayıklama",
-    "about": "Hakkında"
+    "about": "Hakkında",
+    "liveTranslate": "Canlı çeviri"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -208,6 +209,10 @@
           "command": {
             "name": "Komut modu kısayolu",
             "description": "Bir talimat söyleyin; yapay zeka onu seçili metne uygular ve değiştirir (hiçbir şey seçili değilse yeni metin yazar)."
+          },
+          "live_subtitles": {
+            "name": "Canlı altyazı kısayolu",
+            "description": "Çalınan sesin veya mikrofonunuzun canlı çevrilmiş altyazılarını başlatır veya durdurur."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Canlı çeviri",
+      "startButton": "Canlı altyazıları başlat",
+      "stopButton": "Canlı altyazıları durdur",
+      "source": {
+        "title": "Ses kaynağı",
+        "description": "Mikrofonunuzu veya sistem sesini (çalınan ses, örn. bir görüşmenin diğer tarafı) yakalar. Sistem sesi şu anda yalnızca Windows'ta desteklenmektedir.",
+        "options": {
+          "microphone": "Mikrofon",
+          "systemAudio": "Sistem sesi"
+        }
       }
     }
   },

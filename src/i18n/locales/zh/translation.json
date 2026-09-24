@@ -21,7 +21,8 @@
     "history": "历史记录",
     "scratchpad": "记事本",
     "debug": "调试",
-    "about": "关于"
+    "about": "关于",
+    "liveTranslate": "实时翻译"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -208,6 +209,10 @@
           "command": {
             "name": "命令模式快捷键",
             "description": "说出一条指令，AI 会将其应用到选中的文本并替换（若未选中任何内容则撰写新文本）。"
+          },
+          "live_subtitles": {
+            "name": "实时字幕快捷键",
+            "description": "开始或停止为正在播放的音频或麦克风生成实时翻译字幕。"
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API 密钥",
         "description": "此提供方的 API 密钥。保存在本地，仅发送到该提供方的接口。",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "实时翻译",
+      "startButton": "开始实时字幕",
+      "stopButton": "停止实时字幕",
+      "source": {
+        "title": "音频源",
+        "description": "捕获麦克风或系统音频（正在播放的内容，例如通话的另一方）。系统音频目前仅在 Windows 上受支持。",
+        "options": {
+          "microphone": "麦克风",
+          "systemAudio": "系统音频"
+        }
       }
     }
   },

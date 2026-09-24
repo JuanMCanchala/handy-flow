@@ -21,7 +21,8 @@
     "history": "इतिहास",
     "scratchpad": "स्क्रैचपैड",
     "debug": "डिबग",
-    "about": "के बारे में"
+    "about": "के बारे में",
+    "liveTranslate": "Live translate"
   },
   "onboarding": {
     "subtitle": "शुरू करने के लिए, एक ट्रांसक्रिप्शन मॉडल चुनें",
@@ -188,6 +189,10 @@
           "command": {
             "name": "कमांड मोड शॉर्टकट",
             "description": "एक निर्देश बोलें; AI उसे चुने गए टेक्स्ट पर लागू करके बदल देता है (या कुछ न चुना हो तो नया टेक्स्ट लिखता है)।"
+          },
+          "live_subtitles": {
+            "name": "Live Subtitles Shortcut",
+            "description": "Starts or stops live translated subtitles for what's playing or your microphone."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live Translate",
+      "startButton": "Start live subtitles",
+      "stopButton": "Stop live subtitles",
+      "source": {
+        "title": "Audio source",
+        "description": "Capture your microphone, or system audio (what's playing, e.g. the other side of a call). System audio is currently only supported on Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "System audio"
+        }
       }
     }
   },

@@ -21,7 +21,8 @@
     "history": "Lịch sử",
     "scratchpad": "Sổ ghi chú",
     "debug": "Gỡ lỗi",
-    "about": "Giới thiệu"
+    "about": "Giới thiệu",
+    "liveTranslate": "Live translate"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -208,6 +209,10 @@
           "command": {
             "name": "Phím tắt chế độ lệnh",
             "description": "Nói một chỉ dẫn; AI áp dụng nó cho văn bản đã chọn và thay thế (hoặc viết văn bản mới nếu không có gì được chọn)."
+          },
+          "live_subtitles": {
+            "name": "Live Subtitles Shortcut",
+            "description": "Starts or stops live translated subtitles for what's playing or your microphone."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live Translate",
+      "startButton": "Start live subtitles",
+      "stopButton": "Stop live subtitles",
+      "source": {
+        "title": "Audio source",
+        "description": "Capture your microphone, or system audio (what's playing, e.g. the other side of a call). System audio is currently only supported on Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "System audio"
+        }
       }
     }
   },

@@ -21,7 +21,8 @@
     "history": "歷史紀錄",
     "scratchpad": "記事本",
     "debug": "偵錯",
-    "about": "關於"
+    "about": "關於",
+    "liveTranslate": "即時翻譯"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -188,6 +189,10 @@
           "command": {
             "name": "命令模式快捷鍵",
             "description": "說出一條指令，AI 會將其套用到選取的文字並取代（若未選取任何內容則撰寫新文字）。"
+          },
+          "live_subtitles": {
+            "name": "即時字幕快捷鍵",
+            "description": "開始或停止為正在播放的音訊或麥克風產生即時翻譯字幕。"
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API 金鑰",
         "description": "此提供者的 API 金鑰。儲存在本機，僅傳送至該提供者的端點。",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "即時翻譯",
+      "startButton": "開始即時字幕",
+      "stopButton": "停止即時字幕",
+      "source": {
+        "title": "音訊來源",
+        "description": "擷取麥克風或系統音訊（正在播放的內容，例如通話的另一方）。系統音訊目前僅支援 Windows。",
+        "options": {
+          "microphone": "麥克風",
+          "systemAudio": "系統音訊"
+        }
       }
     }
   },

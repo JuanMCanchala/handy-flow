@@ -13,6 +13,7 @@ mod commands;
 mod helpers;
 mod input;
 mod insights;
+mod live_translate;
 mod llm_client;
 mod managers;
 mod memory;
@@ -212,6 +213,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     );
     let history_manager =
         Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
+    let live_translate_manager = Arc::new(live_translate::LiveTranslateManager::new(
+        app_handle,
+        transcription_manager.clone(),
+    ));
 
     // Initialize the transcribe-cpp native backend (logging + backend module
     // registration) once, before any whisper model is loaded.
@@ -225,6 +230,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(model_manager.clone());
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
+    app_handle.manage(live_translate_manager.clone());
     app_handle.manage(tray::TrayState::new());
 
     // Note: Shortcuts are NOT initialized here.
@@ -376,6 +382,9 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Create the recording overlay window (hidden by default)
     utils::create_recording_overlay(app_handle);
+
+    // Create the live subtitles overlay window (hidden by default)
+    live_translate::create_live_subtitles_window(app_handle);
 }
 
 #[tauri::command]
@@ -788,12 +797,16 @@ pub fn run(cli_args: CliArgs) {
             commands::transforms::update_transform,
             commands::transforms::delete_transform,
             commands::transforms::change_translation_target_setting,
+            commands::live_translate::change_live_translate_source_setting,
+            commands::live_translate::is_live_translate_active,
+            commands::live_translate::toggle_live_translate,
             helpers::clamshell::is_laptop,
         ])
         .events(collect_events![
             managers::history::HistoryUpdatePayload,
             managers::transcription::StreamTextEvent,
             managers::transcription::StreamPhaseEvent,
+            live_translate::LiveSubtitleLine,
         ]);
 
     #[cfg(debug_assertions)] // <- Only export on non-release builds

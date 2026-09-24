@@ -10,6 +10,7 @@ export { ModelsSettings } from "./models/ModelsSettings";
 export { SnippetsSettings } from "./snippets/SnippetsSettings";
 export { TransformsSettings } from "./transforms/TransformsSettings";
 export { StyleSettings } from "./StyleSettings";
+export { LiveTranslateSettings } from "./live-translate/LiveTranslateSettings";
 
 // Individual setting components
 export { MicrophoneSelector } from "./MicrophoneSelector";

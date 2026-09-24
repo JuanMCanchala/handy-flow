@@ -21,7 +21,8 @@
     "history": "Historik",
     "scratchpad": "Anteckningsblock",
     "debug": "Felsökning",
-    "about": "Om"
+    "about": "Om",
+    "liveTranslate": "Direktöversättning"
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
@@ -188,6 +189,10 @@
           "command": {
             "name": "Kortkommando för kommandoläge",
             "description": "Säg en instruktion; AI:n tillämpar den på den markerade texten och ersätter den (eller skriver ny text om inget är markerat)."
+          },
+          "live_subtitles": {
+            "name": "Genväg för direkttextning",
+            "description": "Startar eller stoppar direktöversatt textning för det som spelas upp eller din mikrofon."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Direktöversättning",
+      "startButton": "Starta direkttextning",
+      "stopButton": "Stoppa direkttextning",
+      "source": {
+        "title": "Ljudkälla",
+        "description": "Spelar in din mikrofon, eller systemljud (det som spelas upp, t.ex. andra sidan av ett samtal). Systemljud stöds för närvarande endast på Windows.",
+        "options": {
+          "microphone": "Mikrofon",
+          "systemAudio": "Systemljud"
+        }
       }
     }
   },

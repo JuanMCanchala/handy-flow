@@ -127,6 +127,14 @@ pub struct CloudSttProvider {
     pub allow_base_url_edit: bool,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum LiveTranslateSource {
+    #[default]
+    Microphone,
+    SystemAudio,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum OverlayPosition {
@@ -572,6 +580,11 @@ pub struct AppSettings {
     /// Spanish to English and anything else to Spanish.
     #[serde(default)]
     pub translation_target: TranslationTarget,
+    /// Audio source for the live subtitles feature. System audio loopback is
+    /// only implemented on Windows; other platforms report an error when
+    /// selected (see `live_translate::capture`).
+    #[serde(default)]
+    pub live_translate_source: LiveTranslateSource,
 }
 
 fn default_model() -> String {
@@ -1075,6 +1088,22 @@ pub fn get_default_settings() -> AppSettings {
         },
     );
 
+    #[cfg(target_os = "macos")]
+    let default_live_subtitles_shortcut = "control+option+l";
+    #[cfg(not(target_os = "macos"))]
+    let default_live_subtitles_shortcut = "ctrl+alt+l";
+
+    bindings.insert(
+        "live_subtitles".to_string(),
+        ShortcutBinding {
+            id: "live_subtitles".to_string(),
+            name: "Live Subtitles".to_string(),
+            description: "Starts or stops live translated subtitles.".to_string(),
+            default_binding: default_live_subtitles_shortcut.to_string(),
+            current_binding: default_live_subtitles_shortcut.to_string(),
+        },
+    );
+
     AppSettings {
         settings_schema_version: default_settings_schema_version(),
         bindings,
@@ -1150,6 +1179,7 @@ pub fn get_default_settings() -> AppSettings {
         app_styles: HashMap::new(),
         transforms: default_transforms(),
         translation_target: TranslationTarget::default(),
+        live_translate_source: LiveTranslateSource::default(),
     }
 }
 

@@ -214,7 +214,8 @@ fn parse_commands(tokens: &[Token<'_>]) -> Vec<Command> {
                 if let CommandKind::Punct(_) = kind {
                     let next_pos = pos + len;
                     let is_last = next_pos >= n;
-                    let followed_by_command = !is_last && starts_command_at(&normalized, next_pos, table);
+                    let followed_by_command =
+                        !is_last && starts_command_at(&normalized, next_pos, table);
                     if !is_last && !followed_by_command {
                         continue;
                     }
@@ -346,8 +347,8 @@ fn find_clause_start(tokens: &[Token<'_>], cmd_token_start: usize) -> usize {
         let prev = &tokens[i - 1];
         if prev.kind == TokenKind::Punct && matches!(prev.text, "." | "!" | "?" | ",") {
             return i; // start right after the separator (and any whitespace
-                       // between it and the deleted clause is dropped by
-                       // cleanup_whitespace).
+                      // between it and the deleted clause is dropped by
+                      // cleanup_whitespace).
         }
         i -= 1;
     }

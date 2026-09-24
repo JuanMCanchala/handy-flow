@@ -21,7 +21,8 @@
     "history": "Historial",
     "scratchpad": "Bloc de notas",
     "debug": "Depuración",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "liveTranslate": "Traducción en vivo"
   },
   "onboarding": {
     "subtitle": "Para comenzar, elige un modelo de transcripción",
@@ -234,6 +235,10 @@
           "command": {
             "name": "Atajo del modo comando",
             "description": "Di una instrucción; la IA la aplica al texto seleccionado y lo reemplaza (o escribe texto nuevo si no hay selección)."
+          },
+          "live_subtitles": {
+            "name": "Atajo de subtítulos en vivo",
+            "description": "Inicia o detiene los subtítulos traducidos en vivo para lo que se está reproduciendo o tu micrófono."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
       "whatsNewUpdates": {
         "label": "Mostrar novedades",
         "description": "Mostrar notas de la versión después de las actualizaciones de Handy"
+      }
+    },
+    "liveTranslate": {
+      "title": "Traducción en vivo",
+      "startButton": "Iniciar subtítulos en vivo",
+      "stopButton": "Detener subtítulos en vivo",
+      "source": {
+        "title": "Fuente de audio",
+        "description": "Captura tu micrófono, o el audio del sistema (lo que se está reproduciendo, p. ej. la otra parte de una llamada). El audio del sistema solo es compatible actualmente en Windows.",
+        "options": {
+          "microphone": "Micrófono",
+          "systemAudio": "Audio del sistema"
+        }
       }
     }
   },

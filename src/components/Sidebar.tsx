@@ -7,6 +7,7 @@ import {
   History,
   Home,
   Info,
+  Languages,
   NotebookPen,
   Palette,
   Sparkles,
@@ -19,16 +20,17 @@ import Footer from "./footer";
 import { useSettings } from "../hooks/useSettings";
 import { HomeSettings } from "./home/HomeSettings";
 import {
-  GeneralSettings,
-  AdvancedSettings,
-  HistorySettings,
-  DebugSettings,
   AboutSettings,
-  PostProcessingSettings,
+  AdvancedSettings,
+  DebugSettings,
+  GeneralSettings,
+  HistorySettings,
+  LiveTranslateSettings,
   ModelsSettings,
+  PostProcessingSettings,
   SnippetsSettings,
-  TransformsSettings,
   StyleSettings,
+  TransformsSettings,
 } from "./settings";
 import { ScratchpadSettings } from "./scratchpad";
 
@@ -108,6 +110,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.style",
     icon: Palette,
     component: StyleSettings,
+    enabled: () => true,
+  },
+  liveTranslate: {
+    labelKey: "sidebar.liveTranslate",
+    icon: Languages,
+    component: LiveTranslateSettings,
     enabled: () => true,
   },
   debug: {

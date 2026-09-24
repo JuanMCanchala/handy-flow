@@ -21,7 +21,8 @@
     "history": "Historial",
     "scratchpad": "Bloc de notes",
     "debug": "Depuració",
-    "about": "Quant a"
+    "about": "Quant a",
+    "liveTranslate": "Live translate"
   },
   "onboarding": {
     "subtitle": "Per començar, trieu un model de transcripció",
@@ -188,6 +189,10 @@
           "command": {
             "name": "Drecera del mode ordre",
             "description": "Digues una instrucció; la IA l'aplica al text seleccionat i el substitueix (o escriu text nou si no hi ha selecció)."
+          },
+          "live_subtitles": {
+            "name": "Live Subtitles Shortcut",
+            "description": "Starts or stops live translated subtitles for what's playing or your microphone."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live Translate",
+      "startButton": "Start live subtitles",
+      "stopButton": "Stop live subtitles",
+      "source": {
+        "title": "Audio source",
+        "description": "Capture your microphone, or system audio (what's playing, e.g. the other side of a call). System audio is currently only supported on Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "System audio"
+        }
       }
     }
   },

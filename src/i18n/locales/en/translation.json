@@ -21,7 +21,8 @@
     "history": "History",
     "scratchpad": "Scratchpad",
     "debug": "Debug",
-    "about": "About"
+    "about": "About",
+    "liveTranslate": "Live translate"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -188,6 +189,10 @@
           "command": {
             "name": "Command Mode Hotkey",
             "description": "Speak an instruction; the AI applies it to the selected text and replaces it (or writes new text if nothing is selected)."
+          },
+          "live_subtitles": {
+            "name": "Live Subtitles Shortcut",
+            "description": "Starts or stops live translated subtitles for what's playing or your microphone."
           }
         },
         "errors": {
@@ -536,7 +541,7 @@
         "target": {
           "title": "Target Language",
           "description": "Language the translate hotkey translates to. Auto translates Spanish to English and anything else to Spanish.",
-          "auto": "Auto (Spanish \u2194 English)",
+          "auto": "Auto (Spanish ↔ English)",
           "en": "English",
           "es": "Spanish"
         }
@@ -774,6 +779,19 @@
           "title": "ggml",
           "description": "High-performance tensor library for on-device machine learning inference",
           "details": "Handy's local speech-to-text is built on transcribe.cpp and ggml. Thanks to the amazing work by Georgi Gerganov and contributors."
+        }
+      }
+    },
+    "liveTranslate": {
+      "title": "Live Translate",
+      "startButton": "Start live subtitles",
+      "stopButton": "Stop live subtitles",
+      "source": {
+        "title": "Audio source",
+        "description": "Capture your microphone, or system audio (what's playing, e.g. the other side of a call). System audio is currently only supported on Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "System audio"
         }
       }
     }

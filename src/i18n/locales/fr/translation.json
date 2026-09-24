@@ -21,7 +21,8 @@
     "history": "Historique",
     "scratchpad": "Bloc-notes",
     "debug": "Débogage",
-    "about": "À propos"
+    "about": "À propos",
+    "liveTranslate": "Traduction en direct"
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -208,6 +209,10 @@
           "command": {
             "name": "Raccourci du mode commande",
             "description": "Dictez une instruction ; l'IA l'applique au texte sélectionné et le remplace (ou écrit un nouveau texte si rien n'est sélectionné)."
+          },
+          "live_subtitles": {
+            "name": "Raccourci des sous-titres en direct",
+            "description": "Démarre ou arrête les sous-titres traduits en direct pour ce qui est en cours de lecture ou votre microphone."
           }
         },
         "errors": {
@@ -775,6 +780,19 @@
         "title": "Clé API",
         "description": "Votre clé API pour ce fournisseur. Stockée localement et envoyée uniquement au point de terminaison du fournisseur.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Traduction en direct",
+      "startButton": "Démarrer les sous-titres en direct",
+      "stopButton": "Arrêter les sous-titres en direct",
+      "source": {
+        "title": "Source audio",
+        "description": "Capture votre microphone, ou l'audio système (ce qui est en cours de lecture, par ex. l'autre partie d'un appel). L'audio système n'est actuellement pris en charge que sous Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "Audio système"
+        }
       }
     }
   },
