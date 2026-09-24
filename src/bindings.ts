@@ -1104,6 +1104,70 @@ async toggleLiveTranslate() : Promise<Result<null, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async getCopilotProfile() : Promise<Result<CopilotProfile, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_copilot_profile") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async setCopilotProfileText(text: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("set_copilot_profile_text", { text }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async setCopilotAnswerLanguage(language: CopilotAnswerLanguage) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("set_copilot_answer_language", { language }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async importCopilotProfileFile(path: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("import_copilot_profile_file", { path }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getCopilotHistory() : Promise<Result<CopilotAnswerEntry[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_copilot_history") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async clearCopilotHistory() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("clear_copilot_history") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async isCopilotActive() : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_copilot_active") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async toggleCopilot() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("toggle_copilot") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1112,12 +1176,14 @@ async toggleLiveTranslate() : Promise<Result<null, string>> {
 
 export const events = __makeEvents__<{
 fileImportProgressEvent: FileImportProgressEvent,
+copilotAnswerLine: CopilotAnswerLine,
 historyUpdatePayload: HistoryUpdatePayload,
 liveSubtitleLine: LiveSubtitleLine,
 streamPhaseEvent: StreamPhaseEvent,
 streamTextEvent: StreamTextEvent
 }>({
 fileImportProgressEvent: "file-import-progress-event",
+copilotAnswerLine: "copilot-answer-line",
 historyUpdatePayload: "history-update-payload",
 liveSubtitleLine: "live-subtitle-line",
 streamPhaseEvent: "stream-phase-event",
@@ -1256,6 +1322,17 @@ export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LiveSubtitleLine = { original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
+export type CopilotAnswerLine = { question: string; answer: string }
+export type CopilotAnswerEntry = { id: string; question: string; answer: string; 
+/**
+ * Milliseconds since epoch.
+ */
+timestamp: number }
+/**
+ * Which language(s) the copilot answers in.
+ */
+export type CopilotAnswerLanguage = "auto" | "en" | "es" | "both"
+export type CopilotProfile = { text: string; answer_language: CopilotAnswerLanguage }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
 export type ModelInfo = { id: string; name: string; description: string; filename: string; source: ModelSource; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; engine_type: EngineType; accuracy_score: number; speed_score: number; supports_translation: boolean; is_recommended: boolean; supported_languages: string[]; supports_language_selection: boolean; is_custom: boolean; supports_streaming: boolean; supports_language_detection: boolean }
 export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null }

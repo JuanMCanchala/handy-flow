@@ -22,7 +22,8 @@
     "scratchpad": "メモ帳",
     "debug": "デバッグ",
     "about": "概要",
-    "liveTranslate": "ライブ翻訳"
+    "liveTranslate": "ライブ翻訳",
+    "copilot": "コパイロット"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしのモデルを選択してください",
@@ -798,6 +799,33 @@
           "microphone": "マイク",
           "systemAudio": "システムオーディオ"
         }
+      }
+    },
+    "copilot": {
+      "title": "Copilot",
+      "startButton": "Start copilot",
+      "stopButton": "Stop copilot",
+      "toggleError": "Failed to start or stop the copilot.",
+      "importError": "Failed to import the profile file.",
+      "answerLanguage": {
+        "title": "Answer language",
+        "description": "Language used for suggested answers: automatic (matches the question), English, Spanish, or both.",
+        "options": {
+          "auto": "Auto",
+          "en": "English",
+          "es": "Spanish",
+          "both": "English + Spanish"
+        }
+      },
+      "profile": {
+        "title": "Profile",
+        "importButton": "Import file",
+        "placeholder": "Paste your CV, LinkedIn summary, or notes about yourself here..."
+      },
+      "history": {
+        "title": "History",
+        "empty": "No suggested answers yet.",
+        "clear": "Clear history"
       }
     }
   },

@@ -8,6 +8,7 @@ import {
   Home,
   Info,
   Languages,
+  MessageCircleQuestion,
   NotebookPen,
   Palette,
   Sparkles,
@@ -22,6 +23,7 @@ import { HomeSettings } from "./home/HomeSettings";
 import {
   AboutSettings,
   AdvancedSettings,
+  CopilotSettings,
   DebugSettings,
   GeneralSettings,
   HistorySettings,
@@ -116,6 +118,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.liveTranslate",
     icon: Languages,
     component: LiveTranslateSettings,
+    enabled: () => true,
+  },
+  copilot: {
+    labelKey: "sidebar.copilot",
+    icon: MessageCircleQuestion,
+    component: CopilotSettings,
     enabled: () => true,
   },
   debug: {

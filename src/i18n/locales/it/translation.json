@@ -22,7 +22,8 @@
     "scratchpad": "Blocco note",
     "debug": "Debug",
     "about": "Informazioni",
-    "liveTranslate": "Traduzione dal vivo"
+    "liveTranslate": "Traduzione dal vivo",
+    "copilot": "Copilota"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -798,6 +799,33 @@
           "microphone": "Microfono",
           "systemAudio": "Audio di sistema"
         }
+      }
+    },
+    "copilot": {
+      "title": "Copilota",
+      "startButton": "Avvia copilota",
+      "stopButton": "Arresta copilota",
+      "toggleError": "Impossibile avviare o arrestare il copilota.",
+      "importError": "Impossibile importare il file del profilo.",
+      "answerLanguage": {
+        "title": "Lingua della risposta",
+        "description": "Lingua usata per le risposte suggerite: automatica (come la domanda), inglese, spagnolo o entrambe.",
+        "options": {
+          "auto": "Automatica",
+          "en": "Inglese",
+          "es": "Spagnolo",
+          "both": "Inglese + Spagnolo"
+        }
+      },
+      "profile": {
+        "title": "Profilo",
+        "importButton": "Importa file",
+        "placeholder": "Incolla qui il tuo CV, riepilogo LinkedIn o note su di te..."
+      },
+      "history": {
+        "title": "Cronologia",
+        "empty": "Nessuna risposta suggerita ancora.",
+        "clear": "Cancella cronologia"
       }
     }
   },

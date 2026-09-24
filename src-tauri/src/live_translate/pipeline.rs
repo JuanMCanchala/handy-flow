@@ -37,13 +37,36 @@ pub struct LiveSubtitleLine {
     pub translation: String,
 }
 
+/// One answer suggestion, emitted to the overlay window and appended to the
+/// Copilot history.
+#[derive(Debug, Clone, Serialize, Type, tauri_specta::Event)]
+pub struct CopilotAnswerLine {
+    pub question: String,
+    pub answer: String,
+}
+
+/// Which behavior a capture session runs: translated subtitles, or the
+/// profile copilot's question detection + answer suggestion. The two share
+/// capture/VAD/segmenter/transcription; only what happens with a closed
+/// segment differs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LiveTranslateMode {
+    Subtitles,
+    Copilot,
+}
+
 #[derive(Clone)]
 pub struct LiveTranslateManager {
     app_handle: AppHandle,
     transcription_manager: Arc<TranscriptionManager>,
     active: Arc<AtomicBool>,
+    mode: Arc<Mutex<LiveTranslateMode>>,
     capture: Arc<Mutex<Option<CaptureStream>>>,
     context: Arc<Mutex<Vec<ContextSegment>>>,
+    /// Recent transcript segments (plain text, oldest first), used as
+    /// conversation context for copilot answers. Independent of `context`
+    /// (which pairs original+translation for subtitles).
+    transcript_history: Arc<Mutex<Vec<String>>>,
     /// Live during a capture session so `stop()` can flush the in-progress
     /// segment instead of discarding it.
     segmenter: Arc<Mutex<Option<SpeechSegmenter>>>,
@@ -55,8 +78,10 @@ impl LiveTranslateManager {
             app_handle: app_handle.clone(),
             transcription_manager,
             active: Arc::new(AtomicBool::new(false)),
+            mode: Arc::new(Mutex::new(LiveTranslateMode::Subtitles)),
             capture: Arc::new(Mutex::new(None)),
             context: Arc::new(Mutex::new(Vec::new())),
+            transcript_history: Arc::new(Mutex::new(Vec::new())),
             segmenter: Arc::new(Mutex::new(None)),
         }
     }
@@ -65,15 +90,39 @@ impl LiveTranslateManager {
         self.active.load(Ordering::SeqCst)
     }
 
-    /// Starts live subtitles capturing from `source`. Returns an error
+    /// Active specifically in copilot mode (vs. subtitles). Used by the UI to
+    /// tell the two toggle buttons apart.
+    pub fn is_copilot_active(&self) -> bool {
+        self.is_active() && *self.mode.lock().unwrap() == LiveTranslateMode::Copilot
+    }
+
+    /// Starts live subtitles capturing from `source`.
+    pub fn start(&self, source: LiveTranslateSource) -> Result<(), String> {
+        self.start_with_mode(source, LiveTranslateMode::Subtitles)
+    }
+
+    /// Starts the profile copilot capturing from `source`: same capture/VAD/
+    /// segmenter/transcription pipeline as subtitles, but closed segments are
+    /// checked for questions and answered instead of translated.
+    pub fn start_copilot(&self, source: LiveTranslateSource) -> Result<(), String> {
+        self.start_with_mode(source, LiveTranslateMode::Copilot)
+    }
+
+    /// Starts capturing from `source` in the given `mode`. Returns an error
     /// (surfaced to the UI) if capture could not start, e.g. system audio on
     /// an unsupported platform.
-    pub fn start(&self, source: LiveTranslateSource) -> Result<(), String> {
+    fn start_with_mode(
+        &self,
+        source: LiveTranslateSource,
+        mode: LiveTranslateMode,
+    ) -> Result<(), String> {
         if self.active.swap(true, Ordering::SeqCst) {
             return Ok(());
         }
 
+        *self.mode.lock().unwrap() = mode;
         self.context.lock().unwrap().clear();
+        self.transcript_history.lock().unwrap().clear();
 
         let detector = build_vad(&self.app_handle)?;
         let segmenter_config = SegmenterConfig::default();
@@ -126,7 +175,8 @@ impl LiveTranslateManager {
         Ok(())
     }
 
-    /// Stops live subtitles and tears down the capture stream.
+    /// Stops the active capture session (subtitles or copilot) and tears down
+    /// the capture stream.
     pub fn stop(&self) {
         if !self.active.swap(false, Ordering::SeqCst) {
             return;
@@ -149,9 +199,11 @@ impl LiveTranslateManager {
         super::overlay::hide(&self.app_handle);
     }
 
-    /// Transcribes and translates one closed speech segment, then emits it to
-    /// the overlay window. Runs on the capture thread's callback stack via a
-    /// spawned blocking task so audio capture is never blocked on network I/O.
+    /// Transcribes one closed speech segment, then dispatches it to the
+    /// translation (subtitles) or question-answering (copilot) path
+    /// depending on the active mode. Runs on the capture thread's callback
+    /// stack via a spawned blocking task so audio capture is never blocked on
+    /// network I/O.
     fn process_segment(&self, segment: Vec<f32>) {
         // Ignore segments too short to be meaningful speech (VAD noise).
         if segment.len() < crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as usize / 5 {
@@ -172,37 +224,130 @@ impl LiveTranslateManager {
                 return;
             }
 
-            let settings = get_settings(&manager.app_handle);
-            let source_lang = SubtitleLanguage::from_code(&settings.selected_language);
-            let target_lang = source_lang.other();
-
-            let translation = match manager.translate(&transcript, target_lang).await {
-                Ok(text) => text,
-                Err(e) => {
-                    log::error!("Live subtitles translation failed: {e}");
-                    // Still show the original so the user gets something.
-                    transcript.clone()
-                }
-            };
-
-            {
-                let mut context = manager.context.lock().unwrap();
-                context.push(ContextSegment {
-                    original: transcript.clone(),
-                    translation: translation.clone(),
-                });
-                if context.len() > MAX_CONTEXT_HISTORY {
-                    let excess = context.len() - MAX_CONTEXT_HISTORY;
-                    context.drain(0..excess);
-                }
+            let mode = *manager.mode.lock().unwrap();
+            match mode {
+                LiveTranslateMode::Subtitles => manager.handle_subtitle_segment(transcript).await,
+                LiveTranslateMode::Copilot => manager.handle_copilot_segment(transcript).await,
             }
-
-            let line = LiveSubtitleLine {
-                original: transcript,
-                translation,
-            };
-            let _ = line.emit(&manager.app_handle);
         });
+    }
+
+    async fn handle_subtitle_segment(&self, transcript: String) {
+        let settings = get_settings(&self.app_handle);
+        let source_lang = SubtitleLanguage::from_code(&settings.selected_language);
+        let target_lang = source_lang.other();
+
+        let translation = match self.translate(&transcript, target_lang).await {
+            Ok(text) => text,
+            Err(e) => {
+                log::error!("Live subtitles translation failed: {e}");
+                // Still show the original so the user gets something.
+                transcript.clone()
+            }
+        };
+
+        {
+            let mut context = self.context.lock().unwrap();
+            context.push(ContextSegment {
+                original: transcript.clone(),
+                translation: translation.clone(),
+            });
+            if context.len() > MAX_CONTEXT_HISTORY {
+                let excess = context.len() - MAX_CONTEXT_HISTORY;
+                context.drain(0..excess);
+            }
+        }
+
+        let line = LiveSubtitleLine {
+            original: transcript,
+            translation,
+        };
+        let _ = line.emit(&self.app_handle);
+    }
+
+    /// Runs the copilot's question detector on a closed segment; on a match,
+    /// requests an answer suggestion from the configured LLM (grounded in the
+    /// user's profile) and emits it to the overlay + history.
+    async fn handle_copilot_segment(&self, transcript: String) {
+        self.transcript_history
+            .lock()
+            .unwrap()
+            .push(transcript.clone());
+        self.trim_transcript_history();
+
+        if !crate::copilot::is_question(&transcript) {
+            return;
+        }
+
+        let profile = crate::copilot::get_profile(&self.app_handle);
+        let recent_transcript = {
+            let history = self.transcript_history.lock().unwrap();
+            // Exclude the question itself; the prompt passes it separately.
+            history[..history.len().saturating_sub(1)].to_vec()
+        };
+
+        let settings = get_settings(&self.app_handle);
+        let (provider, model, api_key) = match settings.resolve_llm_target() {
+            Some(target) => target,
+            None => {
+                log::error!("Copilot: no LLM configured for answer generation");
+                return;
+            }
+        };
+
+        let prompt = crate::copilot::build_answer_prompt(
+            &profile.text,
+            &recent_transcript,
+            &transcript,
+            profile.answer_language,
+        );
+
+        let answer =
+            match crate::llm_client::send_chat_completion(&provider, api_key, &model, prompt, true)
+                .await
+            {
+                Ok(Some(text)) => text.trim().to_string(),
+                Ok(None) => {
+                    log::error!("Copilot: empty answer response");
+                    return;
+                }
+                Err(e) => {
+                    log::error!("Copilot: answer generation failed: {e}");
+                    return;
+                }
+            };
+
+        if answer.is_empty() {
+            return;
+        }
+
+        let timestamp = chrono::Utc::now().timestamp_millis();
+        let entry = crate::copilot::CopilotAnswerEntry {
+            id: timestamp.to_string(),
+            question: transcript.clone(),
+            answer: answer.clone(),
+            timestamp,
+        };
+        crate::copilot::append_entry(&self.app_handle, entry);
+
+        let line = CopilotAnswerLine {
+            question: transcript,
+            answer,
+        };
+        let _ = line.emit(&self.app_handle);
+    }
+
+    fn trim_transcript_history(&self) {
+        let mut history = self.transcript_history.lock().unwrap();
+        // Keep one extra slot beyond the context window: the newest entry is
+        // the just-closed segment itself (excluded from context by the
+        // caller), so MAX_CONTEXT_SEGMENTS prior segments need to survive
+        // alongside it.
+        let cap = super::prompt::MAX_CONTEXT_SEGMENTS + 1;
+        if history.len() > cap {
+            let excess = history.len() - cap;
+            history.drain(0..excess);
+        }
     }
 
     async fn translate(&self, text: &str, target: SubtitleLanguage) -> Result<String, String> {

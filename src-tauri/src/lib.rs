@@ -10,6 +10,7 @@ mod clipboard;
 mod cloud_stt;
 mod command_mode;
 mod commands;
+mod copilot;
 mod file_import;
 mod helpers;
 mod input;
@@ -807,6 +808,14 @@ pub fn run(cli_args: CliArgs) {
             commands::live_translate::change_live_translate_source_setting,
             commands::live_translate::is_live_translate_active,
             commands::live_translate::toggle_live_translate,
+            commands::copilot::get_copilot_profile,
+            commands::copilot::set_copilot_profile_text,
+            commands::copilot::set_copilot_answer_language,
+            commands::copilot::import_copilot_profile_file,
+            commands::copilot::get_copilot_history,
+            commands::copilot::clear_copilot_history,
+            commands::copilot::is_copilot_active,
+            commands::copilot::toggle_copilot,
             helpers::clamshell::is_laptop,
         ])
         .events(collect_events![
@@ -815,6 +824,7 @@ pub fn run(cli_args: CliArgs) {
             managers::transcription::StreamPhaseEvent,
             live_translate::LiveSubtitleLine,
             file_import::FileImportProgressEvent,
+            live_translate::CopilotAnswerLine,
         ]);
 
     #[cfg(debug_assertions)] // <- Only export on non-release builds

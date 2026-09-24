@@ -15,7 +15,7 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 | 8   | Scratchpad                                                                                             | done        |
 | 9   | Live translation EN ↔ ES (Transync-style live subtitles + dictate in one language, paste in the other) | done (Windows system audio; mic everywhere) |
 | 9b  | macOS-style sober UI restyle (spec: `docs/design/macos-style.md`) | done |
-| 10  | Profile copilot: load my profile, listen to questions about me, suggest an answer in EN or ES         | todo        |
+| 10  | Profile copilot: load my profile, listen to questions about me, suggest an answer in EN or ES         | done        |
 
 ## Windows build prerequisites
 
@@ -55,7 +55,7 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | 14 | Streaming partial transcript in the overlay (final pass unchanged) | H / M |
 | 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") — **done** (deterministic EN/ES pass) | H / S |
 | 16 | Self-learning dictionary from edits in history | M / M |
-| 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 | H / M |
+| 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 — **done on Windows** | H / M |
 | 18 | Speaker diarization for long recordings | M / L |
 | 19 | Note templates + action items (Granola-style) over a session transcript | H / M |
 | 20 | Ask-your-history (local RAG over history) | M / M |
