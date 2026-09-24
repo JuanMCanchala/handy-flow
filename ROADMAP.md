@@ -52,7 +52,7 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | 11 | Named modes/presets (model + prompt + language + format + optional hotkey); per-app style becomes a mode binding | H / S |
 | 12 | Audio/video file import + batch transcription (drop zone on Home) — **done** (no webm/mkv yet) | H / M |
 | 13 | SRT/VTT export with per-segment timestamps — **done** | M / S |
-| 14 | Streaming partial transcript in the overlay (final pass unchanged) | H / M |
+| 14 | Streaming partial transcript in the overlay (final pass unchanged) — **covered upstream** (Live overlay with streaming models: Parakeet Unified, Nemotron) | H / M |
 | 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") — **done** (deterministic EN/ES pass) | H / S |
 | 16 | Self-learning dictionary from edits in history | M / M |
 | 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 — **done on Windows** | H / M |
@@ -72,9 +72,11 @@ OpenWhispr (Electron) measured ~1 GB in dev mode.
 
 After all features (2026-09-24, Voxa release build, onboarding window open, no model): **647 MB working set / 380 MB private** (9 processes). Next: measure hidden-to-tray and with Parakeet loaded.
 
+## Locales
+Only `en` and `es` are maintained; `python scripts/fill-locales.py` copies English into the other locales.
+
 ## Pending polish
 - App/installer icons still upstream Handy (need a source SVG → `bun tauri icon`).
-- Non-Latin locales: copilot strings mostly English fallback.
 - Legacy classes left in PostProcessingSettings, AboutSettings, AppDataDirectory, LogDirectory.
 - Style detection by window title not available on macOS; system audio capture Windows-only.
 - File import: no webm/mkv.
