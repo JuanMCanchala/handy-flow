@@ -1104,6 +1104,22 @@ pub fn get_default_settings() -> AppSettings {
         },
     );
 
+    #[cfg(target_os = "macos")]
+    let default_copilot_shortcut = "control+option+c";
+    #[cfg(not(target_os = "macos"))]
+    let default_copilot_shortcut = "ctrl+alt+c";
+
+    bindings.insert(
+        "copilot".to_string(),
+        ShortcutBinding {
+            id: "copilot".to_string(),
+            name: "Copilot".to_string(),
+            description: "Starts or stops the profile copilot, which listens for questions and suggests answers.".to_string(),
+            default_binding: default_copilot_shortcut.to_string(),
+            current_binding: default_copilot_shortcut.to_string(),
+        },
+    );
+
     AppSettings {
         settings_schema_version: default_settings_schema_version(),
         bindings,

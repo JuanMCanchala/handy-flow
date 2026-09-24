@@ -22,7 +22,8 @@
     "scratchpad": "记事本",
     "debug": "调试",
     "about": "关于",
-    "liveTranslate": "实时翻译"
+    "liveTranslate": "实时翻译",
+    "copilot": "副驾驶"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -793,6 +794,33 @@
           "microphone": "麦克风",
           "systemAudio": "系统音频"
         }
+      }
+    },
+    "copilot": {
+      "title": "Copilot",
+      "startButton": "Start copilot",
+      "stopButton": "Stop copilot",
+      "toggleError": "Failed to start or stop the copilot.",
+      "importError": "Failed to import the profile file.",
+      "answerLanguage": {
+        "title": "Answer language",
+        "description": "Language used for suggested answers: automatic (matches the question), English, Spanish, or both.",
+        "options": {
+          "auto": "Auto",
+          "en": "English",
+          "es": "Spanish",
+          "both": "English + Spanish"
+        }
+      },
+      "profile": {
+        "title": "Profile",
+        "importButton": "Import file",
+        "placeholder": "Paste your CV, LinkedIn summary, or notes about yourself here..."
+      },
+      "history": {
+        "title": "History",
+        "empty": "No suggested answers yet.",
+        "clear": "Clear history"
       }
     }
   },

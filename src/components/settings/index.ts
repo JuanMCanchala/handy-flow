@@ -11,6 +11,7 @@ export { SnippetsSettings } from "./snippets/SnippetsSettings";
 export { TransformsSettings } from "./transforms/TransformsSettings";
 export { StyleSettings } from "./StyleSettings";
 export { LiveTranslateSettings } from "./live-translate/LiveTranslateSettings";
+export { CopilotSettings } from "./copilot/CopilotSettings";
 
 // Individual setting components
 export { MicrophoneSelector } from "./MicrophoneSelector";

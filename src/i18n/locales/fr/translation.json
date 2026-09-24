@@ -22,7 +22,8 @@
     "scratchpad": "Bloc-notes",
     "debug": "Débogage",
     "about": "À propos",
-    "liveTranslate": "Traduction en direct"
+    "liveTranslate": "Traduction en direct",
+    "copilot": "Copilote"
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -793,6 +794,33 @@
           "microphone": "Microphone",
           "systemAudio": "Audio système"
         }
+      }
+    },
+    "copilot": {
+      "title": "Copilote",
+      "startButton": "Démarrer le copilote",
+      "stopButton": "Arrêter le copilote",
+      "toggleError": "Impossible de démarrer ou d'arrêter le copilote.",
+      "importError": "Impossible d'importer le fichier de profil.",
+      "answerLanguage": {
+        "title": "Langue de réponse",
+        "description": "Langue utilisée pour les réponses suggérées : automatique (comme la question), anglais, espagnol, ou les deux.",
+        "options": {
+          "auto": "Automatique",
+          "en": "Anglais",
+          "es": "Espagnol",
+          "both": "Anglais + Espagnol"
+        }
+      },
+      "profile": {
+        "title": "Profil",
+        "importButton": "Importer un fichier",
+        "placeholder": "Collez ici votre CV, résumé LinkedIn ou notes à votre sujet..."
+      },
+      "history": {
+        "title": "Historique",
+        "empty": "Aucune réponse suggérée pour le moment.",
+        "clear": "Effacer l'historique"
       }
     }
   },

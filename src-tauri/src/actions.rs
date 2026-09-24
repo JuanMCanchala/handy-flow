@@ -1122,6 +1122,28 @@ impl ShortcutAction for LiveSubtitlesAction {
     }
 }
 
+// Copilot Action
+struct CopilotAction;
+
+impl ShortcutAction for CopilotAction {
+    fn start(&self, app: &AppHandle, _binding_id: &str, _shortcut_str: &str) {
+        let manager = app.state::<Arc<crate::live_translate::LiveTranslateManager>>();
+        if manager.is_copilot_active() {
+            manager.stop();
+            return;
+        }
+        let source = get_settings(app).live_translate_source;
+        if let Err(e) = manager.start_copilot(source) {
+            error!("Failed to start copilot: {}", e);
+            let _ = app.emit("live-translate-error", e);
+        }
+    }
+
+    fn stop(&self, _app: &AppHandle, _binding_id: &str, _shortcut_str: &str) {
+        // Toggle binding: start() above handles both start and stop on tap.
+    }
+}
+
 // Static Action Map
 pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::new(|| {
     let mut map = HashMap::new();
@@ -1164,6 +1186,10 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     map.insert(
         "live_subtitles".to_string(),
         Arc::new(LiveSubtitlesAction) as Arc<dyn ShortcutAction>,
+    );
+    map.insert(
+        "copilot".to_string(),
+        Arc::new(CopilotAction) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "test".to_string(),

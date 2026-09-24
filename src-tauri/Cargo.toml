@@ -87,6 +87,9 @@ specta = "=2.0.0-rc.22"
 specta-typescript = "0.0.9"
 tauri-specta = { version = "=2.0.0-rc.21", features = ["derive", "typescript"] }
 tauri-plugin-dialog = "2.6"
+# Profile import (Copilot): plain-text extraction from PDF/DOCX files.
+pdf-extract = "0.7.2"
+docx-rs = "0.4.17"
 hf-hub = { git = "https://github.com/cjpais/hf-hub", branch = "cancellable-downloads", features = [
   "tokio",
 ] }

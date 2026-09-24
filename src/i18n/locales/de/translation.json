@@ -22,7 +22,8 @@
     "scratchpad": "Notizblock",
     "debug": "Debug",
     "about": "Info",
-    "liveTranslate": "Live-Übersetzung"
+    "liveTranslate": "Live-Übersetzung",
+    "copilot": "Copilot"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -793,6 +794,33 @@
           "microphone": "Mikrofon",
           "systemAudio": "Systemaudio"
         }
+      }
+    },
+    "copilot": {
+      "title": "Copilot",
+      "startButton": "Copilot starten",
+      "stopButton": "Copilot stoppen",
+      "toggleError": "Der Copilot konnte nicht gestartet oder gestoppt werden.",
+      "importError": "Die Profildatei konnte nicht importiert werden.",
+      "answerLanguage": {
+        "title": "Antwortsprache",
+        "description": "Sprache für vorgeschlagene Antworten: automatisch (wie die Frage), Englisch, Spanisch oder beides.",
+        "options": {
+          "auto": "Automatisch",
+          "en": "Englisch",
+          "es": "Spanisch",
+          "both": "Englisch + Spanisch"
+        }
+      },
+      "profile": {
+        "title": "Profil",
+        "importButton": "Datei importieren",
+        "placeholder": "Füge hier deinen Lebenslauf, dein LinkedIn-Profil oder Notizen über dich ein..."
+      },
+      "history": {
+        "title": "Verlauf",
+        "empty": "Noch keine vorgeschlagenen Antworten.",
+        "clear": "Verlauf löschen"
       }
     }
   },

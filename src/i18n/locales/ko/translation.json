@@ -22,7 +22,8 @@
     "scratchpad": "스크래치패드",
     "debug": "디버그",
     "about": "정보",
-    "liveTranslate": "실시간 번역"
+    "liveTranslate": "실시간 번역",
+    "copilot": "코파일럿"
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -793,6 +794,33 @@
           "microphone": "마이크",
           "systemAudio": "시스템 오디오"
         }
+      }
+    },
+    "copilot": {
+      "title": "Copilot",
+      "startButton": "Start copilot",
+      "stopButton": "Stop copilot",
+      "toggleError": "Failed to start or stop the copilot.",
+      "importError": "Failed to import the profile file.",
+      "answerLanguage": {
+        "title": "Answer language",
+        "description": "Language used for suggested answers: automatic (matches the question), English, Spanish, or both.",
+        "options": {
+          "auto": "Auto",
+          "en": "English",
+          "es": "Spanish",
+          "both": "English + Spanish"
+        }
+      },
+      "profile": {
+        "title": "Profile",
+        "importButton": "Import file",
+        "placeholder": "Paste your CV, LinkedIn summary, or notes about yourself here..."
+      },
+      "history": {
+        "title": "History",
+        "empty": "No suggested answers yet.",
+        "clear": "Clear history"
       }
     }
   },
