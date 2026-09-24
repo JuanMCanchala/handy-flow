@@ -13,6 +13,7 @@
     "general": "Allmänt",
     "models": "Modeller",
     "advanced": "Avancerat",
+    "snippets": "Textmoduler",
     "postProcessing": "Efterbearbetning",
     "history": "Historik",
     "debug": "Felsökning",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Ta bort utfyllnadsord",
         "description": "Tar bort vanliga tvekljud från transkriberingar. Stäng av för att behålla dem."
+      }
+    },
+    "snippets": {
+      "title": "Textmoduler",
+      "add": {
+        "title": "Lägg till textmodul",
+        "description": "Skapa en utlösarfras som ersätts med din expansionstext varje gång den förekommer i en diktering.",
+        "triggerPlaceholder": "Utlösare",
+        "expansionPlaceholder": "Expansion",
+        "add": "Lägg till"
+      },
+      "list": {
+        "edit": "Redigera {{trigger}}",
+        "save": "Spara",
+        "cancel": "Avbryt",
+        "remove": "Ta bort {{trigger}}"
       }
     },
     "postProcessing": {

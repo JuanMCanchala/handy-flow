@@ -13,6 +13,7 @@
     "general": "Allgemein",
     "models": "Modelle",
     "advanced": "Erweitert",
+    "snippets": "Textbausteine",
     "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
     "debug": "Debug",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Füllwörter entfernen",
         "description": "Entfernt häufige Verzögerungslaute aus Transkriptionen. Deaktivieren Sie diese Option, um sie beizubehalten."
+      }
+    },
+    "snippets": {
+      "title": "Textbausteine",
+      "add": {
+        "title": "Textbaustein hinzufügen",
+        "description": "Erstelle einen Auslösebegriff, der bei jedem Vorkommen in einem Diktat durch deinen Erweiterungstext ersetzt wird.",
+        "triggerPlaceholder": "Auslöser",
+        "expansionPlaceholder": "Erweiterung",
+        "add": "Hinzufügen"
+      },
+      "list": {
+        "edit": "{{trigger}} bearbeiten",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "remove": "{{trigger}} entfernen"
       }
     },
     "postProcessing": {

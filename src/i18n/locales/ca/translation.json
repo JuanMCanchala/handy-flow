@@ -13,6 +13,7 @@
     "general": "General",
     "models": "Models",
     "advanced": "Avançat",
+    "snippets": "Fragments",
     "postProcessing": "Postprocessament",
     "history": "Historial",
     "debug": "Depuració",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Elimina les falques",
         "description": "Elimina les expressions de vacil·lació habituals de les transcripcions. Desactiveu aquesta opció per conservar-les."
+      }
+    },
+    "snippets": {
+      "title": "Fragments",
+      "add": {
+        "title": "Afegir fragment",
+        "description": "Crea una frase activadora que se substitueix pel teu text d'expansió cada vegada que apareix en un dictat.",
+        "triggerPlaceholder": "Activador",
+        "expansionPlaceholder": "Expansió",
+        "add": "Afegir"
+      },
+      "list": {
+        "edit": "Edita {{trigger}}",
+        "save": "Desa",
+        "cancel": "Cancel·la",
+        "remove": "Elimina {{trigger}}"
       }
     },
     "postProcessing": {

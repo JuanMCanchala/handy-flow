@@ -13,6 +13,7 @@
     "general": "일반",
     "models": "모델",
     "advanced": "고급",
+    "snippets": "스니펫",
     "postProcessing": "후처리",
     "history": "히스토리",
     "debug": "디버그",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "군더더기 표현 제거",
         "description": "전사에서 흔한 머뭇거림 표현을 제거합니다. 그대로 두려면 이 옵션을 끄세요."
+      }
+    },
+    "snippets": {
+      "title": "스니펫",
+      "add": {
+        "title": "스니펫 추가",
+        "description": "받아쓰기에 나타날 때 확장 텍스트로 대체되는 트리거 문구를 만드세요.",
+        "triggerPlaceholder": "트리거",
+        "expansionPlaceholder": "확장 텍스트",
+        "add": "추가"
+      },
+      "list": {
+        "edit": "{{trigger}} 편집",
+        "save": "저장",
+        "cancel": "취소",
+        "remove": "{{trigger}} 삭제"
       }
     },
     "postProcessing": {

@@ -13,6 +13,7 @@
     "general": "Chung",
     "models": "Mô hình",
     "advanced": "Nâng cao",
+    "snippets": "Đoạn mã",
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "debug": "Gỡ lỗi",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Loại bỏ từ đệm",
         "description": "Loại bỏ các từ ngập ngừng phổ biến khỏi bản chép lời. Tắt để giữ lại các từ này."
+      }
+    },
+    "snippets": {
+      "title": "Đoạn mã",
+      "add": {
+        "title": "Thêm đoạn mã",
+        "description": "Tạo một cụm từ kích hoạt sẽ được thay thế bằng văn bản mở rộng của bạn mỗi khi nó xuất hiện trong bản ghi.",
+        "triggerPlaceholder": "Kích hoạt",
+        "expansionPlaceholder": "Mở rộng",
+        "add": "Thêm"
+      },
+      "list": {
+        "edit": "Sửa {{trigger}}",
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "remove": "Xóa {{trigger}}"
       }
     },
     "postProcessing": {

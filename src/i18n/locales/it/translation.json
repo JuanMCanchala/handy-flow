@@ -13,6 +13,7 @@
     "general": "Generale",
     "models": "Modelli",
     "advanced": "Avanzate",
+    "snippets": "Snippet",
     "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
     "debug": "Debug",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Rimuovi le parole riempitive",
         "description": "Rimuove le parole di esitazione più comuni dalle trascrizioni. Disattiva per mantenerle."
+      }
+    },
+    "snippets": {
+      "title": "Snippet",
+      "add": {
+        "title": "Aggiungi snippet",
+        "description": "Crea una frase trigger che viene sostituita dal testo di espansione ogni volta che appare in una dettatura.",
+        "triggerPlaceholder": "Trigger",
+        "expansionPlaceholder": "Espansione",
+        "add": "Aggiungi"
+      },
+      "list": {
+        "edit": "Modifica {{trigger}}",
+        "save": "Salva",
+        "cancel": "Annulla",
+        "remove": "Rimuovi {{trigger}}"
       }
     },
     "postProcessing": {

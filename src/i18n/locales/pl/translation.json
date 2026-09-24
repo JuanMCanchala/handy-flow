@@ -13,6 +13,7 @@
     "general": "Ogólne",
     "models": "Modele",
     "advanced": "Zaawansowane",
+    "snippets": "Fragmenty",
     "postProcessing": "Postproces",
     "history": "Historia",
     "debug": "Debugowanie",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Usuń wyrazy wypełniające",
         "description": "Usuwa typowe słowa wyrażające wahanie z transkrypcji. Wyłącz, aby je zachować."
+      }
+    },
+    "snippets": {
+      "title": "Fragmenty",
+      "add": {
+        "title": "Dodaj fragment",
+        "description": "Utwórz frazę wyzwalającą, która zostanie zastąpiona tekstem rozwiniętym, gdy pojawi się w dyktowaniu.",
+        "triggerPlaceholder": "Wyzwalacz",
+        "expansionPlaceholder": "Rozwinięcie",
+        "add": "Dodaj"
+      },
+      "list": {
+        "edit": "Edytuj {{trigger}}",
+        "save": "Zapisz",
+        "cancel": "Anuluj",
+        "remove": "Usuń {{trigger}}"
       }
     },
     "postProcessing": {

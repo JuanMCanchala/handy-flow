@@ -13,6 +13,7 @@
     "general": "Umum",
     "models": "Model",
     "advanced": "Lanjutan",
+    "snippets": "Snippet",
     "postProcessing": "Pascaproses",
     "history": "Riwayat",
     "debug": "Debug",
@@ -398,6 +399,22 @@
       "fillerWordRemoval": {
         "title": "Hapus Kata Pengisi",
         "description": "Menghapus kata pengisi umum dari transkripsi. Nonaktifkan untuk mempertahankannya."
+      }
+    },
+    "snippets": {
+      "title": "Snippet",
+      "add": {
+        "title": "Tambah Snippet",
+        "description": "Buat frasa pemicu yang akan diganti dengan teks perluasan Anda setiap kali muncul dalam dikte.",
+        "triggerPlaceholder": "Pemicu",
+        "expansionPlaceholder": "Perluasan",
+        "add": "Tambah"
+      },
+      "list": {
+        "edit": "Edit {{trigger}}",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "remove": "Hapus {{trigger}}"
       }
     },
     "postProcessing": {

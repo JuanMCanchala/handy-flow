@@ -459,6 +459,8 @@ pub(crate) async fn process_transcription_output(
         post_processed_text = Some(final_text.clone());
     }
 
+    final_text = crate::snippets::apply_snippets(&final_text, &settings.snippets);
+
     ProcessedTranscription {
         final_text,
         post_processed_text,
