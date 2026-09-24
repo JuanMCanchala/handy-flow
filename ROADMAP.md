@@ -4,7 +4,7 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 
 | #   | Item                                                                                                   | Status      |
 | --- | ------------------------------------------------------------------------------------------------------ | ----------- |
-| 0   | Build Handy as-is on Windows, measure RAM                                                              | in progress |
+| 0   | Build Handy as-is on Windows, measure RAM                                                              | done |
 | 1   | Command mode: dedicated hotkey + "Hey <agent>", LLM rewrites selected text in place                    | done        |
 | 2   | Cloud transcription provider (OpenAI-compatible: Fireworks, Groq, OpenAI)                              | todo        |
 | 3   | Style per app (cleanup tone based on the active app)                                                   | todo        |
@@ -59,3 +59,13 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | 18 | Speaker diarization for long recordings | M / L |
 | 19 | Note templates + action items (Granola-style) over a session transcript | H / M |
 | 20 | Ask-your-history (local RAG over history) | M / M |
+
+## RAM baseline (item 0, 2026-09-23, Windows 11, release build, main window open, no model loaded)
+
+| Process | Working set | Private |
+|---|---|---|
+| handy.exe (Rust) | 87 MB | 103 MB |
+| WebView2 (7 processes) | 462 MB | 243 MB |
+| **Total** | **549 MB** | **345 MB** |
+
+OpenWhispr (Electron) measured ~1 GB in dev mode. Next: measure hidden-to-tray and with Parakeet loaded.
