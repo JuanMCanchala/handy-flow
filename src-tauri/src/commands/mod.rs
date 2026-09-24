@@ -5,6 +5,7 @@ pub mod history;
 pub mod insights;
 pub mod live_translate;
 pub mod models;
+pub mod notes;
 pub mod transcription;
 pub mod transforms;
 

@@ -19,6 +19,7 @@ mod live_translate;
 mod llm_client;
 mod managers;
 mod memory;
+mod notes;
 mod overlay;
 mod paste_tx;
 pub mod portable;
@@ -805,6 +806,11 @@ pub fn run(cli_args: CliArgs) {
             commands::transforms::update_transform,
             commands::transforms::delete_transform,
             commands::transforms::change_translation_target_setting,
+            commands::notes::add_note_template,
+            commands::notes::update_note_template,
+            commands::notes::delete_note_template,
+            commands::notes::generate_notes,
+            commands::notes::toggle_note_action_item,
             commands::live_translate::change_live_translate_source_setting,
             commands::live_translate::is_live_translate_active,
             commands::live_translate::toggle_live_translate,

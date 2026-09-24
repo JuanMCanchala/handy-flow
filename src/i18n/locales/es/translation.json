@@ -16,6 +16,7 @@
     "advanced": "Avanzado",
     "snippets": "Fragmentos",
     "transforms": "Transformaciones",
+    "templates": "Plantillas",
     "postProcessing": "Post proceso",
     "style": "Estilo",
     "history": "Historial",
@@ -477,6 +478,22 @@
         "remove": "Eliminar {{name}}"
       }
     },
+    "templates": {
+      "title": "Plantillas",
+      "add": {
+        "title": "Añadir plantilla",
+        "description": "Crea una plantilla de notas que \"Generar notas\" usará para convertir una transcripción en notas estructuradas en markdown.",
+        "namePlaceholder": "Nombre",
+        "promptPlaceholder": "Prompt",
+        "add": "Añadir"
+      },
+      "list": {
+        "edit": "Editar {{name}}",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "remove": "Eliminar {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Tecla de acceso rápido"
@@ -894,6 +911,24 @@
   },
   "whatsNew": {
     "title": "Nuevo en Voxa v{{version}}"
+  },
+  "notes": {
+    "title": "Notas",
+    "generate": "Generar notas",
+    "generateError": "No se pudieron generar las notas",
+    "copy": "Copiar notas",
+    "copyError": "No se pudieron copiar las notas",
+    "export": "Exportar como .md",
+    "exportError": "No se pudieron exportar las notas",
+    "actionItems": "Tareas pendientes",
+    "toggleItemError": "No se pudo actualizar la tarea",
+    "generateDialog": {
+      "title": "Generar notas",
+      "generate": "Generar",
+      "generating": "Generando...",
+      "cancel": "Cancelar",
+      "noTemplates": "Todavía no hay plantillas. Añade una en la sección Plantillas."
+    }
   },
   "secureInput": {
     "blockedWithCulprit_one": "{{name}} puede estar bloqueando 1 atajo",

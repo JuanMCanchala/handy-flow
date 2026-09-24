@@ -5,6 +5,7 @@ import {
   Download,
   FolderOpen,
   RotateCcw,
+  Sparkles,
   Star,
   Trash2,
 } from "lucide-react";
@@ -16,6 +17,8 @@ import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
 import { PageHeader } from "../../ui/PageHeader";
+import { GenerateNotesDialog } from "../../notes/GenerateNotesDialog";
+import { NotesView } from "../../notes/NotesView";
 import { copyToClipboard } from "./clipboard";
 import { useHistoryEntries } from "./useHistoryEntries";
 
@@ -192,6 +195,8 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   const [retrying, setRetrying] = useState(false);
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
+  const [notesMarkdown, setNotesMarkdown] = useState(entry.notes_markdown);
+  const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
 
   const hasTranscription = entry.transcription_text.trim().length > 0;
 
@@ -227,6 +232,15 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
     () => getAudioUrl(entry.file_name),
     [getAudioUrl, entry.file_name],
   );
+
+  const handleGenerateNotes = async (templateId: string) => {
+    const result = await commands.generateNotes(entry.id, templateId);
+    if (result.status === "ok") {
+      setNotesMarkdown(result.data);
+    } else {
+      toast.error(t("notes.generateError"));
+    }
+  };
 
   const handleCopyText = async () => {
     if (!hasTranscription) {
@@ -305,6 +319,13 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
             )}
           </div>
           <IconButton
+            onClick={() => setGenerateDialogOpen(true)}
+            disabled={!hasTranscription || retrying}
+            title={t("notes.generate")}
+          >
+            <Sparkles width={16} height={16} />
+          </IconButton>
+          <IconButton
             onClick={onToggleSaved}
             disabled={retrying}
             active={entry.saved}
@@ -375,6 +396,21 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
       </p>
 
       <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
+
+      {notesMarkdown && (
+        <NotesView
+          entryId={entry.id}
+          entryTitle={entry.title}
+          markdown={notesMarkdown}
+          onMarkdownChange={setNotesMarkdown}
+        />
+      )}
+
+      <GenerateNotesDialog
+        open={generateDialogOpen}
+        onOpenChange={setGenerateDialogOpen}
+        onGenerate={handleGenerateNotes}
+      />
     </div>
   );
 };

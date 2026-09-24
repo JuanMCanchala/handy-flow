@@ -408,6 +408,46 @@ async deleteTransform(id: string) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async addNoteTemplate(name: string, prompt: string) : Promise<Result<NoteTemplate, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("add_note_template", { name, prompt }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async updateNoteTemplate(id: string, name: string, prompt: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_note_template", { id, name, prompt }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async deleteNoteTemplate(id: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("delete_note_template", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async generateNotes(entryId: number, templateId: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("generate_notes", { entryId, templateId }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async toggleNoteActionItem(entryId: number, itemIndex: number) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("toggle_note_action_item", { entryId, itemIndex }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeTranslationTargetSetting(target: TranslationTarget) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_translation_target_setting", { target }) };
@@ -1277,6 +1317,12 @@ app_styles?: Partial<{ [key in string]: string }>;
  */
 transforms?: Transform[]; 
 /**
+ * Templates used by "Generate notes" to turn a transcript into
+ * structured markdown notes (summary, decisions, action items).
+ * Seeded with a few defaults on fresh installs.
+ */
+note_templates?: NoteTemplate[]; 
+/**
  * Target language for the `translate` binding. `Auto` translates
  * Spanish to English and anything else to Spanish.
  */
@@ -1302,7 +1348,7 @@ export type EngineType =
 "TranscribeCpp" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
 export type GpuDeviceOption = { id: string; name: string; total_vram_mb: number }
 export type FileImportProgressEvent = { current_chunk: number; total_chunks: number }
-export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null; post_process_requested: boolean; duration_seconds: number | null }
+export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null; post_process_requested: boolean; duration_seconds: number | null; notes_markdown: string | null; notes_template_id: string | null }
 export type HistoryUpdatePayload = { action: "added"; entry: HistoryEntry } | { action: "updated"; entry: HistoryEntry } | { action: "deleted"; id: number } | { action: "toggled"; id: number }
 /**
  * Result of changing keyboard implementation
@@ -1477,6 +1523,14 @@ export type TranscribeAcceleratorSetting = "auto" | "cpu" | "gpu"
  * Spanish to English and anything else to Spanish.
  */
 export type TranslationTarget = "auto" | "en" | "es"
+/**
+ * A user-defined (or seeded) note-generation template.
+ */
+export type NoteTemplate = { id: string; name: string; prompt: string }
+/**
+ * A single action item parsed from generated notes markdown.
+ */
+export type ActionItem = { text: string; checked: boolean }
 /**
  * User-saved named prompts invocable by name in command mode
  * ("apply bullet list"). Seeded with a few defaults on fresh installs.

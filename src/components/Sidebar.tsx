@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   Cog,
   Cpu,
+  FileText,
   FlaskConical,
   History,
   Home,
@@ -32,6 +33,7 @@ import {
   PostProcessingSettings,
   SnippetsSettings,
   StyleSettings,
+  TemplatesSettings,
   TransformsSettings,
 } from "./settings";
 import { ScratchpadSettings } from "./scratchpad";
@@ -100,6 +102,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.transforms",
     icon: Wand2,
     component: TransformsSettings,
+    enabled: () => true,
+  },
+  templates: {
+    labelKey: "sidebar.templates",
+    icon: FileText,
+    component: TemplatesSettings,
     enabled: () => true,
   },
   postprocessing: {
