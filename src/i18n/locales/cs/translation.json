@@ -20,7 +20,8 @@
     "history": "Historie",
     "scratchpad": "Poznámkový blok",
     "debug": "Ladění",
-    "about": "O aplikaci"
+    "about": "O aplikaci",
+    "liveTranslate": "Živý překlad"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -207,6 +208,10 @@
           "command": {
             "name": "Zkratka režimu příkazů",
             "description": "Vyslovte pokyn; AI jej použije na vybraný text a nahradí ho (nebo napíše nový text, pokud nic není vybráno)."
+          },
+          "live_subtitles": {
+            "name": "Zkratka živých titulků",
+            "description": "Spustí nebo zastaví živě přeložené titulky pro přehrávaný zvuk nebo mikrofon."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Živý překlad",
+      "startButton": "Spustit živé titulky",
+      "stopButton": "Zastavit živé titulky",
+      "source": {
+        "title": "Zdroj zvuku",
+        "description": "Zaznamenává mikrofon nebo systémový zvuk (to, co se právě přehrává, např. druhá strana hovoru). Systémový zvuk je aktuálně podporován pouze na Windows.",
+        "options": {
+          "microphone": "Mikrofon",
+          "systemAudio": "Systémový zvuk"
+        }
       }
     }
   },

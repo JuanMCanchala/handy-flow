@@ -20,7 +20,8 @@
     "scratchpad": "المفكرة",
     "debug": "تصحيح الأخطاء",
     "about": "حول",
-    "models": "النماذج"
+    "models": "النماذج",
+    "liveTranslate": "Live translate"
   },
   "onboarding": {
     "subtitle": "للبدء، اختر نموذج التفريغ الصوتي",
@@ -184,6 +185,10 @@
           "command": {
             "name": "اختصار وضع الأوامر",
             "description": "انطق تعليمة؛ يطبّقها الذكاء الاصطناعي على النص المحدد ويستبدله (أو يكتب نصًا جديدًا إذا لم يكن هناك تحديد)."
+          },
+          "live_subtitles": {
+            "name": "Live Subtitles Shortcut",
+            "description": "Starts or stops live translated subtitles for what's playing or your microphone."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live Translate",
+      "startButton": "Start live subtitles",
+      "stopButton": "Stop live subtitles",
+      "source": {
+        "title": "Audio source",
+        "description": "Capture your microphone, or system audio (what's playing, e.g. the other side of a call). System audio is currently only supported on Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "System audio"
+        }
       }
     }
   },

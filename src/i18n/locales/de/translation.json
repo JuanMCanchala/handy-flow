@@ -20,7 +20,8 @@
     "history": "Verlauf",
     "scratchpad": "Notizblock",
     "debug": "Debug",
-    "about": "Info"
+    "about": "Info",
+    "liveTranslate": "Live-Übersetzung"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -207,6 +208,10 @@
           "command": {
             "name": "Tastenkürzel für den Befehlsmodus",
             "description": "Sprich eine Anweisung; die KI wendet sie auf den markierten Text an und ersetzt ihn (oder schreibt neuen Text, wenn nichts markiert ist)."
+          },
+          "live_subtitles": {
+            "name": "Tastenkombination für Live-Untertitel",
+            "description": "Startet oder stoppt live übersetzte Untertitel für die aktuelle Wiedergabe oder dein Mikrofon."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "API-Schlüssel",
         "description": "Dein API-Schlüssel für diesen Anbieter. Wird lokal gespeichert und nur an den Endpunkt des Anbieters gesendet.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live-Übersetzung",
+      "startButton": "Live-Untertitel starten",
+      "stopButton": "Live-Untertitel stoppen",
+      "source": {
+        "title": "Audioquelle",
+        "description": "Erfasst dein Mikrofon oder die Systemaudioausgabe (was gerade abgespielt wird, z. B. die andere Seite eines Anrufs). Systemaudio wird derzeit nur unter Windows unterstützt.",
+        "options": {
+          "microphone": "Mikrofon",
+          "systemAudio": "Systemaudio"
+        }
       }
     }
   },

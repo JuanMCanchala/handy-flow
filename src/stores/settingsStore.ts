@@ -8,6 +8,7 @@ import type {
   OrtAcceleratorSetting,
   ShortcutActivation,
   VadBackend,
+  LiveTranslateSource,
 } from "@/bindings";
 import { commands } from "@/bindings";
 import { toast } from "sonner";
@@ -200,6 +201,8 @@ const settingUpdaters: {
     commands.changeExtraRecordingBufferSetting(value as number),
   style_per_app_enabled: (value) =>
     commands.changeStylePerAppEnabledSetting(value as boolean),
+  live_translate_source: (value) =>
+    commands.changeLiveTranslateSourceSetting(value as LiveTranslateSource),
 };
 
 export const useSettingsStore = create<SettingsStore>()(

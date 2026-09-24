@@ -20,7 +20,8 @@
     "history": "Geschiedenis",
     "scratchpad": "Kladblok",
     "debug": "Probleemoplossing",
-    "about": "Over Handy"
+    "about": "Over Handy",
+    "liveTranslate": "Live vertaling"
   },
   "onboarding": {
     "subtitle": "Kies een transcriptiemodel om aan de slag te gaan",
@@ -187,6 +188,10 @@
           "command": {
             "name": "Sneltoets opdrachtmodus",
             "description": "Spreek een instructie in; de AI past die toe op de geselecteerde tekst en vervangt die (of schrijft nieuwe tekst als er niets geselecteerd is)."
+          },
+          "live_subtitles": {
+            "name": "Sneltoets live ondertiteling",
+            "description": "Start of stopt live vertaalde ondertiteling voor wat er wordt afgespeeld of je microfoon."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live vertaling",
+      "startButton": "Live ondertiteling starten",
+      "stopButton": "Live ondertiteling stoppen",
+      "source": {
+        "title": "Audiobron",
+        "description": "Neemt je microfoon op, of systeemaudio (wat er wordt afgespeeld, bijv. de andere kant van een gesprek). Systeemaudio wordt momenteel alleen ondersteund op Windows.",
+        "options": {
+          "microphone": "Microfoon",
+          "systemAudio": "Systeemaudio"
+        }
       }
     }
   },

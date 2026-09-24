@@ -20,7 +20,8 @@
     "history": "履歴",
     "scratchpad": "メモ帳",
     "debug": "デバッグ",
-    "about": "概要"
+    "about": "概要",
+    "liveTranslate": "ライブ翻訳"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしのモデルを選択してください",
@@ -207,6 +208,10 @@
           "command": {
             "name": "コマンドモードのショートカット",
             "description": "指示を話すと、AI が選択中のテキストに適用して置き換えます（選択がない場合は新しいテキストを書きます）。"
+          },
+          "live_subtitles": {
+            "name": "ライブ字幕のショートカット",
+            "description": "再生中の音声またはマイクのライブ翻訳字幕を開始または停止します。"
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "APIキー",
         "description": "このプロバイダー用のAPIキーです。ローカルに保存され、プロバイダーのエンドポイント以外には送信されません。",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "ライブ翻訳",
+      "startButton": "ライブ字幕を開始",
+      "stopButton": "ライブ字幕を停止",
+      "source": {
+        "title": "オーディオソース",
+        "description": "マイク、またはシステムオーディオ（再生中の音声、例：通話相手の音声）をキャプチャします。システムオーディオは現在Windowsでのみサポートされています。",
+        "options": {
+          "microphone": "マイク",
+          "systemAudio": "システムオーディオ"
+        }
       }
     }
   },

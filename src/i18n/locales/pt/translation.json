@@ -20,7 +20,8 @@
     "history": "Histórico",
     "scratchpad": "Bloco de notas",
     "debug": "Depuração",
-    "about": "Sobre"
+    "about": "Sobre",
+    "liveTranslate": "Tradução em tempo real"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -187,6 +188,10 @@
           "command": {
             "name": "Atalho do modo de comando",
             "description": "Diga uma instrução; a IA a aplica ao texto selecionado e o substitui (ou escreve um texto novo se nada estiver selecionado)."
+          },
+          "live_subtitles": {
+            "name": "Atalho de legendas em tempo real",
+            "description": "Inicia ou para as legendas traduzidas em tempo real para o que está a ser reproduzido ou para o seu microfone."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "Chave de API",
         "description": "Sua chave de API para este provedor. Armazenada localmente e enviada apenas ao endpoint do provedor.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Tradução em tempo real",
+      "startButton": "Iniciar legendas em tempo real",
+      "stopButton": "Parar legendas em tempo real",
+      "source": {
+        "title": "Fonte de áudio",
+        "description": "Captura o seu microfone, ou o áudio do sistema (o que está a ser reproduzido, por ex. o outro lado de uma chamada). O áudio do sistema atualmente só é suportado no Windows.",
+        "options": {
+          "microphone": "Microfone",
+          "systemAudio": "Áudio do sistema"
+        }
       }
     }
   },

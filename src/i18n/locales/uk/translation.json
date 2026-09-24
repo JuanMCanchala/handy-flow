@@ -20,7 +20,8 @@
     "history": "Історія",
     "scratchpad": "Блокнот",
     "debug": "Дебаг",
-    "about": "Інфо"
+    "about": "Інфо",
+    "liveTranslate": "Живий переклад"
   },
   "onboarding": {
     "subtitle": "Для початку оберіть модель транскрипції",
@@ -187,6 +188,10 @@
           "command": {
             "name": "Гаряча клавіша режиму команд",
             "description": "Промовте інструкцію — ШІ застосує її до виділеного тексту й замінить його (або напише новий текст, якщо нічого не виділено)."
+          },
+          "live_subtitles": {
+            "name": "Комбінація клавіш живих субтитрів",
+            "description": "Запускає або зупиняє живі перекладені субтитри для того, що відтворюється, або мікрофона."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Живий переклад",
+      "startButton": "Запустити живі субтитри",
+      "stopButton": "Зупинити живі субтитри",
+      "source": {
+        "title": "Джерело звуку",
+        "description": "Записує ваш мікрофон або системний звук (те, що відтворюється, напр. інша сторона дзвінка). Системний звук наразі підтримується лише на Windows.",
+        "options": {
+          "microphone": "Мікрофон",
+          "systemAudio": "Системний звук"
+        }
       }
     }
   },

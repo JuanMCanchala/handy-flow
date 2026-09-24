@@ -2,6 +2,7 @@ pub mod audio;
 pub mod cloud_stt;
 pub mod history;
 pub mod insights;
+pub mod live_translate;
 pub mod models;
 pub mod transcription;
 

@@ -543,6 +543,13 @@ impl ShortcutAction for TranscribeAction {
         let start_time = Instant::now();
         debug!("TranscribeAction::start called for binding: {}", binding_id);
 
+        // Live subtitles run on their own audio stream (see live_translate);
+        // stop it before dictation starts so the two features never read the
+        // same microphone or contend for the transcription engine at once.
+        if let Some(live_translate) = app.try_state::<Arc<crate::live_translate::LiveTranslateManager>>() {
+            live_translate.stop();
+        }
+
         // Load model in the background
         let tm = app.state::<Arc<TranscriptionManager>>();
         let rm = app.state::<Arc<AudioRecordingManager>>();
@@ -1032,6 +1039,28 @@ impl ShortcutAction for TestAction {
     }
 }
 
+// Live Subtitles Action
+struct LiveSubtitlesAction;
+
+impl ShortcutAction for LiveSubtitlesAction {
+    fn start(&self, app: &AppHandle, _binding_id: &str, _shortcut_str: &str) {
+        let manager = app.state::<Arc<crate::live_translate::LiveTranslateManager>>();
+        if manager.is_active() {
+            manager.stop();
+            return;
+        }
+        let source = get_settings(app).live_translate_source;
+        if let Err(e) = manager.start(source) {
+            error!("Failed to start live subtitles: {}", e);
+            let _ = app.emit("live-translate-error", e);
+        }
+    }
+
+    fn stop(&self, _app: &AppHandle, _binding_id: &str, _shortcut_str: &str) {
+        // Toggle binding: start() above handles both start and stop on tap.
+    }
+}
+
 // Static Action Map
 pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::new(|| {
     let mut map = HashMap::new();
@@ -1059,6 +1088,10 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     map.insert(
         "cancel".to_string(),
         Arc::new(CancelAction) as Arc<dyn ShortcutAction>,
+    );
+    map.insert(
+        "live_subtitles".to_string(),
+        Arc::new(LiveSubtitlesAction) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "test".to_string(),

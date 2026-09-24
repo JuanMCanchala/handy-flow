@@ -1016,6 +1016,30 @@ async isLaptop() : Promise<Result<boolean, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async changeLiveTranslateSourceSetting(source: LiveTranslateSource) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_live_translate_source_setting", { source }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async isLiveTranslateActive() : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_live_translate_active") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async toggleLiveTranslate() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("toggle_live_translate") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1024,10 +1048,12 @@ async isLaptop() : Promise<Result<boolean, string>> {
 
 export const events = __makeEvents__<{
 historyUpdatePayload: HistoryUpdatePayload,
+liveSubtitleLine: LiveSubtitleLine,
 streamPhaseEvent: StreamPhaseEvent,
 streamTextEvent: StreamTextEvent
 }>({
 historyUpdatePayload: "history-update-payload",
+liveSubtitleLine: "live-subtitle-line",
 streamPhaseEvent: "stream-phase-event",
 streamTextEvent: "stream-text-event"
 })
@@ -1112,7 +1138,13 @@ overlay_style?: OverlayStyle; snippets?: Snippet[]; style_per_app_enabled?: bool
  * ("formal", "casual", "very_casual", "excited"). Missing entries mean
  * no extra tone instruction is appended for that category.
  */
-app_styles?: Partial<{ [key in string]: string }> }
+app_styles?: Partial<{ [key in string]: string }>; 
+/**
+ * Audio source for the live subtitles feature. System audio loopback is
+ * only implemented on Windows; other platforms report an error when
+ * selected (see `live_translate::capture`).
+ */
+live_translate_source?: LiveTranslateSource }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1145,6 +1177,8 @@ key_down: number; key_up: number; flags_changed: number; mouse: number; duration
 export type Insights = { total_words: number; words_today: number; average_wpm: number; day_streak: number }
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
+export type LiveSubtitleLine = { original: string; translation: string }
+export type LiveTranslateSource = "microphone" | "system_audio"
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
 export type ModelInfo = { id: string; name: string; description: string; filename: string; source: ModelSource; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; engine_type: EngineType; accuracy_score: number; speed_score: number; supports_translation: boolean; is_recommended: boolean; supported_languages: string[]; supports_language_selection: boolean; is_custom: boolean; supports_streaming: boolean; supports_language_detection: boolean }
 export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null }

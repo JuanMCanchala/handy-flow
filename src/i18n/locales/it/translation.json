@@ -20,7 +20,8 @@
     "history": "Cronologia",
     "scratchpad": "Blocco note",
     "debug": "Debug",
-    "about": "Informazioni"
+    "about": "Informazioni",
+    "liveTranslate": "Traduzione dal vivo"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -207,6 +208,10 @@
           "command": {
             "name": "Scorciatoia modalità comando",
             "description": "Pronuncia un'istruzione; l'IA la applica al testo selezionato e lo sostituisce (o scrive nuovo testo se non c'è selezione)."
+          },
+          "live_subtitles": {
+            "name": "Scorciatoia sottotitoli dal vivo",
+            "description": "Avvia o interrompe i sottotitoli tradotti dal vivo per ciò che sta venendo riprodotto o per il tuo microfono."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "Chiave API",
         "description": "La tua chiave API per questo provider. Salvata localmente e inviata solo all'endpoint del provider.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Traduzione dal vivo",
+      "startButton": "Avvia sottotitoli dal vivo",
+      "stopButton": "Interrompi sottotitoli dal vivo",
+      "source": {
+        "title": "Sorgente audio",
+        "description": "Cattura il microfono oppure l'audio di sistema (ciò che viene riprodotto, ad es. l'altra parte di una chiamata). L'audio di sistema è attualmente supportato solo su Windows.",
+        "options": {
+          "microphone": "Microfono",
+          "systemAudio": "Audio di sistema"
+        }
       }
     }
   },

@@ -19,6 +19,7 @@
     "style": "Style",
     "history": "History",
     "scratchpad": "Scratchpad",
+    "liveTranslate": "Live translate",
     "debug": "Debug",
     "about": "About"
   },
@@ -187,6 +188,10 @@
           "command": {
             "name": "Command Mode Hotkey",
             "description": "Speak an instruction; the AI applies it to the selected text and replaces it (or writes new text if nothing is selected)."
+          },
+          "live_subtitles": {
+            "name": "Live Subtitles Shortcut",
+            "description": "Starts or stops live translated subtitles for what's playing or your microphone."
           }
         },
         "errors": {
@@ -448,6 +453,19 @@
         "save": "Save",
         "cancel": "Cancel",
         "remove": "Remove {{trigger}}"
+      }
+    },
+    "liveTranslate": {
+      "title": "Live Translate",
+      "startButton": "Start live subtitles",
+      "stopButton": "Stop live subtitles",
+      "source": {
+        "title": "Audio source",
+        "description": "Capture your microphone, or system audio (what's playing, e.g. the other side of a call). System audio is currently only supported on Windows.",
+        "options": {
+          "microphone": "Microphone",
+          "systemAudio": "System audio"
+        }
       }
     },
     "postProcessing": {

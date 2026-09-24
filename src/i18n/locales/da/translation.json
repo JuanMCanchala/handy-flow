@@ -20,7 +20,8 @@
     "history": "Historik",
     "scratchpad": "Notesblok",
     "debug": "Fejlfinding",
-    "about": "Om"
+    "about": "Om",
+    "liveTranslate": "Live-oversættelse"
   },
   "onboarding": {
     "subtitle": "For at komme i gang skal du vælge en transskriptionsmodel",
@@ -187,6 +188,10 @@
           "command": {
             "name": "Genvej til kommandotilstand",
             "description": "Sig en instruktion; AI'en anvender den på den markerede tekst og erstatter den (eller skriver ny tekst, hvis intet er markeret)."
+          },
+          "live_subtitles": {
+            "name": "Genvej til live-undertekster",
+            "description": "Starter eller stopper live-oversatte undertekster for det, der afspilles, eller din mikrofon."
           }
         },
         "errors": {
@@ -744,6 +749,19 @@
         "title": "API Key",
         "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
         "placeholder": "sk-..."
+      }
+    },
+    "liveTranslate": {
+      "title": "Live-oversættelse",
+      "startButton": "Start live-undertekster",
+      "stopButton": "Stop live-undertekster",
+      "source": {
+        "title": "Lydkilde",
+        "description": "Optager din mikrofon eller systemlyd (det, der afspilles, f.eks. den anden side af et opkald). Systemlyd understøttes i øjeblikket kun på Windows.",
+        "options": {
+          "microphone": "Mikrofon",
+          "systemAudio": "Systemlyd"
+        }
       }
     }
   },

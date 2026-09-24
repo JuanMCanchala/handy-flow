@@ -7,6 +7,7 @@ import {
   History,
   Home,
   Info,
+  Languages,
   NotebookPen,
   Palette,
   Sparkles,
@@ -26,6 +27,7 @@ import {
   ModelsSettings,
   SnippetsSettings,
   StyleSettings,
+  LiveTranslateSettings,
 } from "./settings";
 import { ScratchpadSettings } from "./scratchpad";
 
@@ -87,6 +89,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.snippets",
     icon: Type,
     component: SnippetsSettings,
+    enabled: () => true,
+  },
+  liveTranslate: {
+    labelKey: "sidebar.liveTranslate",
+    icon: Languages,
+    component: LiveTranslateSettings,
     enabled: () => true,
   },
   postprocessing: {
