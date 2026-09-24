@@ -729,6 +729,25 @@ impl HistoryManager {
         Ok(segments)
     }
 
+    /// Rename a diarized speaker label for every segment of one history
+    /// entry that currently has `old_label` (e.g. renaming "Speaker 1" to a
+    /// real name renames it everywhere it appears in that transcript).
+    /// No-op if the entry has no segments with `old_label`.
+    pub async fn rename_speaker(
+        &self,
+        history_entry_id: i64,
+        old_label: &str,
+        new_label: &str,
+    ) -> Result<()> {
+        let conn = self.get_connection()?;
+        conn.execute(
+            "UPDATE transcript_segments SET speaker_label = ?1
+             WHERE history_entry_id = ?2 AND speaker_label = ?3",
+            params![new_label, history_entry_id, old_label],
+        )?;
+        Ok(())
+    }
+
     pub async fn delete_entry(&self, id: i64) -> Result<()> {
         let conn = self.get_connection()?;
 

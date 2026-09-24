@@ -1208,6 +1208,22 @@ async deleteDiarizationModel(kind: DiarizationModelKind) : Promise<Result<null, 
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async getTranscriptSegments(id: number) : Promise<Result<TranscriptSegmentView[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_transcript_segments", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async renameSpeaker(id: number, oldLabel: string, newLabel: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("rename_speaker", { id, oldLabel, newLabel }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1378,6 +1394,8 @@ export type LiveTranslateSource = "microphone" | "system_audio"
 export type DiarizationModelKind = "Segmentation" | "Embedding"
 
 export type DiarizationModelInfo = { kind: DiarizationModelKind; filename: string; size_bytes: number; is_downloaded: boolean }
+
+export type TranscriptSegmentView = { start_ms: number; end_ms: number; text: string; speaker: string | null }
 export type CopilotAnswerLine = { question: string; answer: string }
 export type CopilotAnswerEntry = { id: string; question: string; answer: string; 
 /**

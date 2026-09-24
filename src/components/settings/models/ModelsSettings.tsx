@@ -20,6 +20,7 @@ import {
 import type { ModelInfo } from "@/bindings";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CloudSttSettings } from "./CloudSttSettings";
+import { DiarizationSettings } from "./DiarizationSettings";
 
 // check if model supports a language based on its supported_languages list
 const modelSupportsLanguage = (model: ModelInfo, langCode: string): boolean => {
@@ -259,6 +260,7 @@ export const ModelsSettings: React.FC = () => {
       </div>
 
       <CloudSttSettings />
+      <DiarizationSettings />
 
       <div className="space-y-6">
         {/* Downloaded Models Section — header always visible so filter stays accessible */}

@@ -806,6 +806,8 @@ pub fn run(cli_args: CliArgs) {
             commands::history::import_audio_file,
             commands::history::cancel_audio_import,
             commands::history::export_transcript,
+            commands::history::get_transcript_segments,
+            commands::history::rename_speaker,
             commands::insights::get_insights,
             commands::transforms::add_transform,
             commands::transforms::update_transform,

@@ -585,7 +585,8 @@
       "retranscribe": "Transkrybuj ponownie",
       "retranscribeError": "Nie udało się ponownie transkrybować. Spróbuj ponownie.",
       "transcribing": "Transkrybuję...",
-      "transcriptionFailed": "Transkrypcja nie powiodła się. Możesz transkrybować ponownie za pomocą ikony ponowienia."
+      "transcriptionFailed": "Transkrypcja nie powiodła się. Możesz transkrybować ponownie za pomocą ikony ponowienia.",
+      "renameSpeaker": "Rename speaker"
     },
     "scratchpad": {
       "title": "Notatnik",
@@ -826,6 +827,25 @@
         "title": "History",
         "empty": "No suggested answers yet.",
         "clear": "Clear history"
+      }
+    },
+    "diarization": {
+      "title": "Speaker Diarization",
+      "enable": {
+        "label": "Label speakers",
+        "description": "Detect who's speaking in imported files, labeling segments as \"Speaker 1\", \"Speaker 2\", etc. Downloads two small ONNX models on first use."
+      },
+      "threshold": {
+        "title": "Speaker sensitivity",
+        "description": "Lower values create more (stricter) speakers; higher values merge similar voices into fewer speakers."
+      },
+      "models": {
+        "segmentation": "Segmentation model",
+        "embedding": "Speaker embedding model",
+        "description": "{{size}} — required for speaker diarization.",
+        "download": "Download ({{size}})",
+        "downloading": "Downloading…",
+        "delete": "Delete"
       }
     }
   },

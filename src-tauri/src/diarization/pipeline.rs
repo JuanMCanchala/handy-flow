@@ -188,7 +188,7 @@ mod tests {
         }
         assert!(!embeddings.is_empty(), "expected at least one embedding");
 
-        let labels = cluster_embeddings(&embeddings, 0.4);
+        let labels = cluster_embeddings(&embeddings, 0.2);
         let unique: std::collections::HashSet<usize> = labels.iter().copied().collect();
         assert!(
             unique.len() >= 2,

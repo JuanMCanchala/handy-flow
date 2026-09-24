@@ -252,3 +252,57 @@ pub async fn export_transcript(
 
     Ok(())
 }
+
+/// Frontend-facing view of one transcript segment. Mirrors
+/// [`transcript_export::TranscriptSegment`], which stays a pure formatter
+/// type (no Tauri/serde deps) so this command layer owns the conversion.
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug, specta::Type)]
+pub struct TranscriptSegmentView {
+    pub start_ms: u64,
+    pub end_ms: u64,
+    pub text: String,
+    pub speaker: Option<String>,
+}
+
+impl From<TranscriptSegment> for TranscriptSegmentView {
+    fn from(s: TranscriptSegment) -> Self {
+        Self {
+            start_ms: s.start_ms,
+            end_ms: s.end_ms,
+            text: s.text,
+            speaker: s.speaker,
+        }
+    }
+}
+
+/// Fetch a history entry's per-segment transcript (with any diarized speaker
+/// labels) for display in the transcript view. Empty for dictations and for
+/// imports whose engine returned no timestamps.
+#[tauri::command]
+#[specta::specta]
+pub async fn get_transcript_segments(
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+) -> Result<Vec<TranscriptSegmentView>, String> {
+    let segments = history_manager
+        .get_segments(id)
+        .await
+        .map_err(|e| e.to_string())?;
+    Ok(segments.into_iter().map(TranscriptSegmentView::from).collect())
+}
+
+/// Rename a diarized speaker label ("Speaker 1" -> a real name) across every
+/// segment of one history entry that currently has `old_label`.
+#[tauri::command]
+#[specta::specta]
+pub async fn rename_speaker(
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+    old_label: String,
+    new_label: String,
+) -> Result<(), String> {
+    history_manager
+        .rename_speaker(id, &old_label, &new_label)
+        .await
+        .map_err(|e| e.to_string())
+}

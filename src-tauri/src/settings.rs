@@ -957,7 +957,11 @@ fn default_typing_tool() -> TypingTool {
 }
 
 fn default_diarization_cluster_threshold() -> f32 {
-    0.4
+    // Calibrated against real WeSpeaker ResNet34 embeddings (cosine distance):
+    // same-speaker pairs in a real multi-speaker recording cluster below
+    // ~0.15-0.2, cross-speaker pairs sit above ~0.25. See the `#[ignore]`d
+    // integration test in `diarization::pipeline` for the reference recording.
+    0.2
 }
 
 fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
