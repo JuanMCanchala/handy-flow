@@ -407,6 +407,10 @@ impl LiveTranslateManager {
         mut rx: tokio::sync::mpsc::UnboundedReceiver<UtteranceFragment>,
     ) {
         let mut utterance: Vec<String> = Vec::new();
+        // Whether the pending utterance was already held back once because
+        // the VAD still heard speech. Background audio (music, a video) can
+        // keep the VAD busy forever, so a question is held back at most once.
+        let mut deferred = false;
         while let Some(fragment) = rx.recv().await {
             let answering = *self.mode.lock().unwrap() == LiveTranslateMode::Copilot
                 || get_settings(&self.app_handle).live_translate_suggest_answers;
@@ -436,12 +440,16 @@ impl LiveTranslateManager {
                 }
                 // Still talking: keep the fragments and merge them with what
                 // follows instead of answering half a question.
-                if self.is_active()
+                if !deferred
+                    && self.is_active()
                     && self.last_speech_ms.load(Ordering::Relaxed) > fragment.closed_at_ms
                 {
+                    log::debug!("Copilot: speaker still talking, holding the utterance");
+                    deferred = true;
                     continue;
                 }
             }
+            deferred = false;
 
             let text = utterance.join(" ");
             utterance.clear();
@@ -449,6 +457,11 @@ impl LiveTranslateManager {
             tauri::async_runtime::spawn(async move {
                 manager.handle_copilot_utterance(text).await;
             });
+        }
+
+        // Session over: a question still being held back must not be lost.
+        if !utterance.is_empty() {
+            self.handle_copilot_utterance(utterance.join(" ")).await;
         }
     }
 
