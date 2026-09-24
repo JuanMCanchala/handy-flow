@@ -11,7 +11,7 @@ use crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE;
 /// Default trailing-silence duration that closes an in-progress segment.
 pub const DEFAULT_SILENCE_CLOSE_MS: u64 = 400;
 /// Default hard cap on segment length, regardless of continued speech.
-pub const DEFAULT_MAX_SEGMENT_MS: u64 = 4_500;
+pub const DEFAULT_MAX_SEGMENT_MS: u64 = 3_500;
 
 #[derive(Debug, Clone, Copy)]
 pub struct SegmenterConfig {

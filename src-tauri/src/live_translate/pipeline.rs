@@ -206,6 +206,23 @@ impl LiveTranslateManager {
 
         log::info!("Live session capturing audio");
         *self.capture.lock().unwrap() = Some(stream);
+
+        // Keep the STT/LLM connections warm for the whole session: each
+        // segment is a separate request, and re-opening DNS + TLS per segment
+        // was adding seconds of latency on slow resolvers.
+        let keepalive = self.clone();
+        tauri::async_runtime::spawn(async move {
+            while keepalive.is_active() {
+                let settings = get_settings(&keepalive.app_handle);
+                if settings.cloud_stt_enabled {
+                    crate::cloud_stt::prewarm(&settings);
+                }
+                if let Some((provider, _model, api_key)) = settings.resolve_llm_target() {
+                    crate::llm_client::prewarm(&provider, &api_key);
+                }
+                tokio::time::sleep(std::time::Duration::from_secs(45)).await;
+            }
+        });
         super::overlay::create_live_subtitles_window(&self.app_handle);
         Ok(())
     }
