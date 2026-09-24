@@ -116,6 +116,31 @@ fn resolve_provider_config(
 /// provider. `custom_words` becomes the `prompt` field (comma-separated, same
 /// convention as the local whisper initial prompt). `language` is omitted
 /// when the setting is `"auto"`.
+/// Blocking wrapper for synchronous callers such as
+/// `TranscriptionManager::transcribe`, which often run *inside* a Tokio task
+/// (the dictation pipeline, file import, live subtitles). Calling
+/// `block_on` on the shared runtime from there deadlocks, so the request runs
+/// on its own thread with a private current-thread runtime.
+pub fn transcribe_blocking(
+    settings: &AppSettings,
+    audio: Vec<f32>,
+    custom_words: &[String],
+    language: &str,
+) -> Result<String, String> {
+    let settings = settings.clone();
+    let custom_words = custom_words.to_vec();
+    let language = language.to_string();
+    std::thread::spawn(move || {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|e| format!("Failed to start cloud STT runtime: {}", e))?;
+        runtime.block_on(transcribe(&settings, audio, &custom_words, &language))
+    })
+    .join()
+    .map_err(|_| "Cloud STT worker thread panicked".to_string())?
+}
+
 pub async fn transcribe(
     settings: &AppSettings,
     audio: Vec<f32>,
@@ -212,6 +237,47 @@ mod tests {
             Some("Handy, cjpais"),
         );
         assert!(form.is_ok());
+    }
+
+    /// Regression: calling the blocking wrapper from inside a Tokio task (as
+    /// the dictation pipeline does) used to deadlock on `block_on`, leaving the
+    /// overlay stuck on "Transcribing…". It must return (here: a connection
+    /// error) instead of hanging.
+    #[test]
+    fn blocking_call_inside_async_task_does_not_deadlock() {
+        let mut settings = get_default_settings();
+        settings.cloud_stt_provider_id = "custom".to_string();
+        if let Some(provider) = settings
+            .cloud_stt_providers
+            .iter_mut()
+            .find(|p| p.id == "custom")
+        {
+            provider.base_url = "http://127.0.0.1:9/v1".to_string();
+        }
+        settings
+            .cloud_stt_models
+            .insert("custom".to_string(), "test-model".to_string());
+
+        let (tx, rx) = std::sync::mpsc::channel();
+        std::thread::spawn(move || {
+            let runtime = tokio::runtime::Builder::new_multi_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            let result = runtime.block_on(async move {
+                tokio::spawn(
+                    async move { transcribe_blocking(&settings, vec![0.0; 1600], &[], "en") },
+                )
+                .await
+                .unwrap()
+            });
+            let _ = tx.send(result);
+        });
+
+        let result = rx
+            .recv_timeout(std::time::Duration::from_secs(15))
+            .expect("cloud STT call deadlocked inside an async task");
+        assert!(result.is_err());
     }
 
     #[test]

@@ -1204,12 +1204,12 @@ impl TranscriptionManager {
         // engine lock, no local post-processing pipeline below.
         let settings = get_settings(&self.app_handle);
         if settings.cloud_stt_enabled {
-            let result = tauri::async_runtime::block_on(crate::cloud_stt::transcribe(
+            let result = crate::cloud_stt::transcribe_blocking(
                 &settings,
                 audio,
                 &settings.custom_words,
                 &settings.selected_language,
-            ))
+            )
             .map_err(|e| anyhow::anyhow!(e));
             debug!("Cloud transcription completed in {:?}", st.elapsed());
             return result;
