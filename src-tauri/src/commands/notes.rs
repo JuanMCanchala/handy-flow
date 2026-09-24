@@ -104,7 +104,7 @@ pub async fn generate_notes(
     let (provider, model, api_key) = settings
         .resolve_llm_target()
         .ok_or_else(|| "No AI provider/model configured".to_string())?;
-    let disable_reasoning = matches!(provider.id.as_str(), "custom" | "openrouter");
+    let disable_reasoning = crate::llm_client::should_disable_reasoning(&provider);
 
     let chunks = notes::chunk_transcript(&transcript);
     let source_text = if chunks.len() <= 1 {

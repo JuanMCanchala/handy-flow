@@ -55,6 +55,12 @@ impl ReasoningParams {
 }
 
 /// Pick the reasoning-disable request fields an endpoint understands.
+/// Providers whose default models reason before answering, which only adds
+/// latency (and can exhaust `max_tokens`) for cleanup/command/notes prompts.
+pub fn should_disable_reasoning(provider: &PostProcessProvider) -> bool {
+    matches!(provider.id.as_str(), "custom" | "openrouter" | "fireworks")
+}
+
 /// Unknown endpoints get the common OpenAI-style field; if they reject it,
 /// the request is retried without it (see `send_chat_completion_with_schema`).
 fn reasoning_disable_params(provider: &PostProcessProvider) -> ReasoningParams {

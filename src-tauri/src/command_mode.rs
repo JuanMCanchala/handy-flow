@@ -165,7 +165,7 @@ pub async fn run_command(
         build_command_user_message(selection, instruction),
         Some(COMMAND_SYSTEM_PROMPT.to_string()),
         None,
-        matches!(provider.id.as_str(), "custom" | "openrouter"),
+        crate::llm_client::should_disable_reasoning(&provider),
     )
     .await?
     .ok_or_else(|| "The AI provider returned an empty response".to_string())?;
