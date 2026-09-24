@@ -15,6 +15,7 @@
     "advanced": "Lanjutan",
     "postProcessing": "Pascaproses",
     "history": "Riwayat",
+    "scratchpad": "Scratchpad",
     "debug": "Debug",
     "about": "Tentang"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Gagal mentranskripsikan ulang. Silakan coba lagi.",
       "transcribing": "Mentranskripsikan...",
       "transcriptionFailed": "Transkripsi gagal. Anda dapat mentranskripsikan ulang menggunakan ikon coba lagi."
+    },
+    "scratchpad": {
+      "title": "Scratchpad",
+      "newNote": "Catatan Baru",
+      "searchPlaceholder": "Cari catatan...",
+      "loading": "Memuat catatan...",
+      "empty": "Belum ada catatan. Buat satu untuk memulai!",
+      "untitled": "Tanpa judul",
+      "editorPlaceholder": "Tulis atau dikte catatan Anda...",
+      "noNoteSelected": "Pilih catatan atau buat yang baru.",
+      "delete": "Hapus catatan",
+      "deleteTitle": "Hapus Catatan",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus catatan ini? Tindakan ini tidak dapat dibatalkan."
     },
     "debug": {
       "title": "Debug",

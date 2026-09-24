@@ -15,6 +15,7 @@
     "advanced": "Avanceret",
     "postProcessing": "Efterbehandling",
     "history": "Historik",
+    "scratchpad": "Notesblok",
     "debug": "Fejlfinding",
     "about": "Om"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Kunne ikke transskribere igen. Prøv igen.",
       "transcribing": "Transskriberer...",
       "transcriptionFailed": "Transskription mislykkedes. Du kan transskribere igen ved hjælp af genforsøgsikonet."
+    },
+    "scratchpad": {
+      "title": "Notesblok",
+      "newNote": "Ny note",
+      "searchPlaceholder": "Søg i noter...",
+      "loading": "Indlæser noter...",
+      "empty": "Ingen noter endnu. Opret en for at komme i gang!",
+      "untitled": "Uden titel",
+      "editorPlaceholder": "Skriv eller diktér din note...",
+      "noNoteSelected": "Vælg en note, eller opret en ny.",
+      "delete": "Slet note",
+      "deleteTitle": "Slet note",
+      "deleteConfirm": "Er du sikker på, at du vil slette denne note? Dette kan ikke fortrydes."
     },
     "debug": {
       "title": "Fejlfinding",

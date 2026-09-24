@@ -15,6 +15,7 @@
     "advanced": "Avancé",
     "postProcessing": "Post-traitement",
     "history": "Historique",
+    "scratchpad": "Bloc-notes",
     "debug": "Débogage",
     "about": "À propos"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Impossible de re-transcrire. Veuillez réessayer.",
       "transcribing": "Transcription en cours...",
       "transcriptionFailed": "La transcription a échoué. Vous pouvez re-transcrire en utilisant l'icône de réessai."
+    },
+    "scratchpad": {
+      "title": "Bloc-notes",
+      "newNote": "Nouvelle note",
+      "searchPlaceholder": "Rechercher des notes...",
+      "loading": "Chargement des notes...",
+      "empty": "Aucune note pour le moment. Créez-en une pour commencer !",
+      "untitled": "Sans titre",
+      "editorPlaceholder": "Écrivez ou dictez votre note...",
+      "noNoteSelected": "Sélectionnez une note ou créez-en une nouvelle.",
+      "delete": "Supprimer la note",
+      "deleteTitle": "Supprimer la note",
+      "deleteConfirm": "Voulez-vous vraiment supprimer cette note ? Cette action est irréversible."
     },
     "debug": {
       "title": "Débogage",

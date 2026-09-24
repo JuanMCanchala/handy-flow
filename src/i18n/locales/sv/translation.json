@@ -15,6 +15,7 @@
     "advanced": "Avancerat",
     "postProcessing": "Efterbearbetning",
     "history": "Historik",
+    "scratchpad": "Anteckningsblock",
     "debug": "Felsökning",
     "about": "Om"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Misslyckades med att transkribera igen. Försök igen.",
       "transcribing": "Transkriberar...",
       "transcriptionFailed": "Transkribering misslyckades. Du kan transkribera igen med hjälp av ikonen för nytt försök."
+    },
+    "scratchpad": {
+      "title": "Anteckningsblock",
+      "newNote": "Ny anteckning",
+      "searchPlaceholder": "Sök anteckningar...",
+      "loading": "Laddar anteckningar...",
+      "empty": "Inga anteckningar än. Skapa en för att komma igång!",
+      "untitled": "Namnlös",
+      "editorPlaceholder": "Skriv eller diktera din anteckning...",
+      "noNoteSelected": "Välj en anteckning eller skapa en ny.",
+      "delete": "Ta bort anteckning",
+      "deleteTitle": "Ta bort anteckning",
+      "deleteConfirm": "Är du säker på att du vill ta bort den här anteckningen? Detta kan inte ångras."
     },
     "debug": {
       "title": "Felsökning",

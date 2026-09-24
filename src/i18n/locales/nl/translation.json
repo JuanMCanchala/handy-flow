@@ -15,6 +15,7 @@
     "advanced": "Geavanceerd",
     "postProcessing": "Naverwerking",
     "history": "Geschiedenis",
+    "scratchpad": "Kladblok",
     "debug": "Probleemoplossing",
     "about": "Over Handy"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Opnieuw transcriberen mislukt. Probeer het opnieuw.",
       "transcribing": "Transcriberen...",
       "transcriptionFailed": "Transcriptie mislukt. Je kunt het opnieuw proberen via het herlaad-pictogram."
+    },
+    "scratchpad": {
+      "title": "Kladblok",
+      "newNote": "Nieuwe notitie",
+      "searchPlaceholder": "Notities zoeken...",
+      "loading": "Notities laden...",
+      "empty": "Nog geen notities. Maak er een om te beginnen!",
+      "untitled": "Naamloos",
+      "editorPlaceholder": "Schrijf of dicteer je notitie...",
+      "noNoteSelected": "Selecteer een notitie of maak een nieuwe.",
+      "delete": "Notitie verwijderen",
+      "deleteTitle": "Notitie verwijderen",
+      "deleteConfirm": "Weet je zeker dat je deze notitie wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
     },
     "debug": {
       "title": "Probleemoplossing",

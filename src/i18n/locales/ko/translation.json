@@ -15,6 +15,7 @@
     "advanced": "고급",
     "postProcessing": "후처리",
     "history": "히스토리",
+    "scratchpad": "스크래치패드",
     "debug": "디버그",
     "about": "정보"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "다시 전사에 실패했습니다. 다시 시도해주세요.",
       "transcribing": "전사 중...",
       "transcriptionFailed": "전사에 실패했습니다. 재시도 아이콘을 사용하여 다시 전사할 수 있습니다."
+    },
+    "scratchpad": {
+      "title": "스크래치패드",
+      "newNote": "새 메모",
+      "searchPlaceholder": "메모 검색...",
+      "loading": "메모를 불러오는 중...",
+      "empty": "아직 메모가 없습니다. 시작하려면 하나를 만들어보세요!",
+      "untitled": "제목 없음",
+      "editorPlaceholder": "메모를 작성하거나 말로 입력하세요...",
+      "noNoteSelected": "메모를 선택하거나 새로 만드세요.",
+      "delete": "메모 삭제",
+      "deleteTitle": "메모 삭제",
+      "deleteConfirm": "이 메모를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
     },
     "debug": {
       "title": "디버그",

@@ -15,6 +15,7 @@
     "advanced": "Avançado",
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
+    "scratchpad": "Bloco de notas",
     "debug": "Depuração",
     "about": "Sobre"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Falha ao re-transcrever. Por favor, tente novamente.",
       "transcribing": "Transcrevendo...",
       "transcriptionFailed": "A transcrição falhou. Você pode re-transcrever usando o ícone de tentar novamente."
+    },
+    "scratchpad": {
+      "title": "Bloco de notas",
+      "newNote": "Nova nota",
+      "searchPlaceholder": "Pesquisar notas...",
+      "loading": "Carregando notas...",
+      "empty": "Ainda não há notas. Crie uma para começar!",
+      "untitled": "Sem título",
+      "editorPlaceholder": "Escreva ou dite a sua nota...",
+      "noNoteSelected": "Selecione uma nota ou crie uma nova.",
+      "delete": "Excluir nota",
+      "deleteTitle": "Excluir Nota",
+      "deleteConfirm": "Tem certeza de que deseja excluir esta nota? Esta ação não pode ser desfeita."
     },
     "debug": {
       "title": "Depuração",

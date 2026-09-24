@@ -15,6 +15,7 @@
     "advanced": "Zaawansowane",
     "postProcessing": "Postproces",
     "history": "Historia",
+    "scratchpad": "Notatnik",
     "debug": "Debugowanie",
     "about": "O programie"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Nie udało się ponownie transkrybować. Spróbuj ponownie.",
       "transcribing": "Transkrybuję...",
       "transcriptionFailed": "Transkrypcja nie powiodła się. Możesz transkrybować ponownie za pomocą ikony ponowienia."
+    },
+    "scratchpad": {
+      "title": "Notatnik",
+      "newNote": "Nowa notatka",
+      "searchPlaceholder": "Szukaj notatek...",
+      "loading": "Wczytywanie notatek...",
+      "empty": "Brak notatek. Utwórz jedną, aby zacząć!",
+      "untitled": "Bez tytułu",
+      "editorPlaceholder": "Napisz lub podyktuj swoją notatkę...",
+      "noNoteSelected": "Wybierz notatkę lub utwórz nową.",
+      "delete": "Usuń notatkę",
+      "deleteTitle": "Usuń notatkę",
+      "deleteConfirm": "Czy na pewno chcesz usunąć tę notatkę? Tej czynności nie można odwrócić."
     },
     "debug": {
       "title": "Debugowanie",

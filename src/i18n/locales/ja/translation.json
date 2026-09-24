@@ -15,6 +15,7 @@
     "advanced": "詳細設定",
     "postProcessing": "後処理",
     "history": "履歴",
+    "scratchpad": "メモ帳",
     "debug": "デバッグ",
     "about": "概要"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "再文字起こしに失敗しました。もう一度お試しください。",
       "transcribing": "文字起こし中…",
       "transcriptionFailed": "文字起こしに失敗しました。リトライアイコンを使用して再文字起こしできます。"
+    },
+    "scratchpad": {
+      "title": "メモ帳",
+      "newNote": "新しいメモ",
+      "searchPlaceholder": "メモを検索...",
+      "loading": "メモを読み込み中...",
+      "empty": "まだメモがありません。作成してみましょう！",
+      "untitled": "無題",
+      "editorPlaceholder": "メモを入力または音声入力してください...",
+      "noNoteSelected": "メモを選択するか、新しく作成してください。",
+      "delete": "メモを削除",
+      "deleteTitle": "メモを削除",
+      "deleteConfirm": "このメモを削除してもよろしいですか？この操作は元に戻せません。"
     },
     "debug": {
       "title": "デバッグ",

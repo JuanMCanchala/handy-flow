@@ -15,6 +15,7 @@
     "advanced": "Avanzate",
     "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
+    "scratchpad": "Blocco note",
     "debug": "Debug",
     "about": "Informazioni"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Impossibile ri-trascrivere. Riprova.",
       "transcribing": "Trascrizione in corso...",
       "transcriptionFailed": "Trascrizione fallita. Puoi ri-trascrivere usando l'icona di ripetizione."
+    },
+    "scratchpad": {
+      "title": "Blocco note",
+      "newNote": "Nuova nota",
+      "searchPlaceholder": "Cerca note...",
+      "loading": "Caricamento note...",
+      "empty": "Ancora nessuna nota. Creane una per iniziare!",
+      "untitled": "Senza titolo",
+      "editorPlaceholder": "Scrivi o detta la tua nota...",
+      "noNoteSelected": "Seleziona una nota o creane una nuova.",
+      "delete": "Elimina nota",
+      "deleteTitle": "Elimina nota",
+      "deleteConfirm": "Sei sicuro di voler eliminare questa nota? Questa azione non può essere annullata."
     },
     "debug": {
       "title": "Debug",

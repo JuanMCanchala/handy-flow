@@ -15,6 +15,7 @@
     "advanced": "Erweitert",
     "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
+    "scratchpad": "Notizblock",
     "debug": "Debug",
     "about": "Info"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Erneute Transkription fehlgeschlagen. Bitte versuche es erneut.",
       "transcribing": "Transkribiere...",
       "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren."
+    },
+    "scratchpad": {
+      "title": "Notizblock",
+      "newNote": "Neue Notiz",
+      "searchPlaceholder": "Notizen durchsuchen...",
+      "loading": "Notizen werden geladen...",
+      "empty": "Noch keine Notizen. Erstelle eine, um zu beginnen!",
+      "untitled": "Unbenannt",
+      "editorPlaceholder": "Schreibe oder diktiere deine Notiz...",
+      "noNoteSelected": "Wähle eine Notiz aus oder erstelle eine neue.",
+      "delete": "Notiz löschen",
+      "deleteTitle": "Notiz löschen",
+      "deleteConfirm": "Möchtest du diese Notiz wirklich löschen? Dies kann nicht rückgängig gemacht werden."
     },
     "debug": {
       "title": "Debug",

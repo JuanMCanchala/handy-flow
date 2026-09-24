@@ -15,6 +15,7 @@
     "advanced": "Pokročilé",
     "postProcessing": "Následné zpracování",
     "history": "Historie",
+    "scratchpad": "Poznámkový blok",
     "debug": "Ladění",
     "about": "O aplikaci"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "Opětovný přepis se nezdařil. Zkuste to prosím znovu.",
       "transcribing": "Přepisuji...",
       "transcriptionFailed": "Přepis selhal. Můžete zkusit přepis znovu pomocí ikony opakování."
+    },
+    "scratchpad": {
+      "title": "Poznámkový blok",
+      "newNote": "Nová poznámka",
+      "searchPlaceholder": "Hledat v poznámkách...",
+      "loading": "Načítání poznámek...",
+      "empty": "Zatím žádné poznámky. Vytvořte jednu a začněte!",
+      "untitled": "Bez názvu",
+      "editorPlaceholder": "Napište nebo nadiktujte poznámku...",
+      "noNoteSelected": "Vyberte poznámku nebo vytvořte novou.",
+      "delete": "Odstranit poznámku",
+      "deleteTitle": "Odstranit poznámku",
+      "deleteConfirm": "Opravdu chcete odstranit tuto poznámku? Tuto akci nelze vrátit zpět."
     },
     "debug": {
       "title": "Ladění",

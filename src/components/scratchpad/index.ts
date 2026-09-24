@@ -1,0 +1,1 @@
+export { ScratchpadSettings } from "./ScratchpadSettings";

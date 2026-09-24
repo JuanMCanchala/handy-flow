@@ -15,6 +15,7 @@
     "advanced": "高级",
     "postProcessing": "后处理",
     "history": "历史记录",
+    "scratchpad": "记事本",
     "debug": "调试",
     "about": "关于"
   },
@@ -469,6 +470,19 @@
       "retranscribeError": "重新转录失败。请重试。",
       "transcribing": "转录中...",
       "transcriptionFailed": "转录失败。您可以使用重试图标重新转录。"
+    },
+    "scratchpad": {
+      "title": "记事本",
+      "newNote": "新建笔记",
+      "searchPlaceholder": "搜索笔记...",
+      "loading": "正在加载笔记...",
+      "empty": "还没有笔记。创建一个开始吧！",
+      "untitled": "无标题",
+      "editorPlaceholder": "输入或口述你的笔记...",
+      "noNoteSelected": "选择一个笔记或新建一个。",
+      "delete": "删除笔记",
+      "deleteTitle": "删除笔记",
+      "deleteConfirm": "确定要删除这条笔记吗？此操作无法撤销。"
     },
     "debug": {
       "title": "调试",
