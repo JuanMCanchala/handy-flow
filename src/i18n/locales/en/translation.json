@@ -215,6 +215,10 @@
           "push_to_talk": "Records while you hold the shortcut",
           "toggle": "Tap the shortcut to start recording, tap again to stop"
         }
+      },
+      "voiceEdits": {
+        "label": "Voice Editing Commands",
+        "description": "While dictating, spoken commands like \"scratch that\", \"new line\", or \"new paragraph\" are applied instead of typed, in English and Spanish."
       }
     },
     "models": {

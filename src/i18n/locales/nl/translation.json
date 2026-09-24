@@ -215,6 +215,10 @@
           "push_to_talk": "Neemt op zolang je de sneltoets ingedrukt houdt",
           "toggle": "Tik op de sneltoets om de opname te starten, tik opnieuw om te stoppen"
         }
+      },
+      "voiceEdits": {
+        "label": "Stemgestuurde bewerkingsopdrachten",
+        "description": "Tijdens het dicteren worden gesproken opdrachten zoals \"scratch that\", \"nieuwe regel\" of \"nieuwe paragraaf\" toegepast in plaats van getypt, in het Engels en Spaans."
       }
     },
     "models": {

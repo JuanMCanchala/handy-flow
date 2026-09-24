@@ -235,6 +235,10 @@
           "push_to_talk": "Enregistre tant que le raccourci est maintenu",
           "toggle": "Appuyez sur le raccourci pour démarrer l'enregistrement, appuyez à nouveau pour arrêter"
         }
+      },
+      "voiceEdits": {
+        "label": "Commandes d'édition vocale",
+        "description": "Pendant la dictée, des commandes vocales comme « scratch that », « nouvelle ligne » ou « nouveau paragraphe » sont appliquées au lieu d'être tapées, en anglais et en espagnol."
       }
     },
     "sound": {

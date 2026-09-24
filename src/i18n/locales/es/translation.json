@@ -261,6 +261,10 @@
           "push_to_talk": "Graba mientras mantienes pulsado el atajo",
           "toggle": "Toca el atajo para empezar a grabar, tócalo de nuevo para detener"
         }
+      },
+      "voiceEdits": {
+        "label": "Comandos de edición por voz",
+        "description": "Mientras dictas, comandos hablados como \"borra eso\", \"nueva línea\" o \"nuevo párrafo\" se aplican en lugar de escribirse, en inglés y español."
       }
     },
     "sound": {

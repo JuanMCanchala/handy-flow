@@ -235,6 +235,10 @@
           "push_to_talk": "Registra finché tieni premuta la scorciatoia",
           "toggle": "Tocca la scorciatoia per avviare la registrazione, tocca di nuovo per fermarla"
         }
+      },
+      "voiceEdits": {
+        "label": "Comandi di modifica vocale",
+        "description": "Durante la dettatura, comandi vocali come \"scratch that\", \"nuova riga\" o \"nuovo paragrafo\" vengono applicati invece di essere digitati, in inglese e spagnolo."
       }
     },
     "sound": {

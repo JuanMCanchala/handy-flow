@@ -235,6 +235,10 @@
           "push_to_talk": "按住快捷键期间录音",
           "toggle": "轻按快捷键开始录音，再次轻按停止"
         }
+      },
+      "voiceEdits": {
+        "label": "语音编辑命令",
+        "description": "口述时，像 scratch that、换行 或 新段落 这样的语音命令会被执行而不是被输入，支持英语和西班牙语。"
       }
     },
     "sound": {

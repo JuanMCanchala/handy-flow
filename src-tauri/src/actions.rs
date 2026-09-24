@@ -457,6 +457,14 @@ pub(crate) async fn process_transcription_output(
     let mut post_processed_text: Option<String> = None;
     let mut post_process_prompt: Option<String> = None;
 
+    if settings.voice_edits_enabled {
+        let edited = crate::voice_edits::apply_voice_edits(&final_text);
+        if edited != final_text {
+            final_text = edited;
+            post_processed_text = Some(final_text.clone());
+        }
+    }
+
     // Resolve the language the transcription actually ran in (the persisted
     // intent coerced against the loaded model's capabilities) so OpenCC keys off
     // the effective language rather than a possibly-stale intent.

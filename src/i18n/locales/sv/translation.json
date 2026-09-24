@@ -215,6 +215,10 @@
           "push_to_talk": "Spelar in så länge du håller genvägen nedtryckt",
           "toggle": "Tryck på genvägen för att starta inspelningen, tryck igen för att stoppa"
         }
+      },
+      "voiceEdits": {
+        "label": "Röststyrda redigeringskommandon",
+        "description": "Under diktering tillämpas talade kommandon som \"scratch that\", \"ny rad\" eller \"nytt stycke\" i stället för att skrivas ut, på engelska och spanska."
       }
     },
     "models": {

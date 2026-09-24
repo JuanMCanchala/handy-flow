@@ -235,6 +235,10 @@
           "push_to_talk": "Ghi âm trong lúc bạn giữ phím tắt",
           "toggle": "Nhấn phím tắt để bắt đầu ghi âm, nhấn lại để dừng"
         }
+      },
+      "voiceEdits": {
+        "label": "Lệnh chỉnh sửa bằng giọng nói",
+        "description": "Trong khi đọc, các lệnh nói như \"scratch that\", \"dòng mới\" hoặc \"đoạn mới\" được áp dụng thay vì được nhập, bằng tiếng Anh và tiếng Tây Ban Nha."
       }
     },
     "sound": {

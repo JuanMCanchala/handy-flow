@@ -215,6 +215,10 @@
           "push_to_talk": "Optager, mens du holder genvejen nede",
           "toggle": "Tryk på genvejen for at starte optagelsen, tryk igen for at stoppe"
         }
+      },
+      "voiceEdits": {
+        "label": "Stemmestyrede redigeringskommandoer",
+        "description": "Under diktering anvendes talte kommandoer som \"scratch that\", \"ny linje\" eller \"nyt afsnit\" i stedet for at blive skrevet, på engelsk og spansk."
       }
     },
     "models": {

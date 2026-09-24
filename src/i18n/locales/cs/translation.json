@@ -235,6 +235,10 @@
           "push_to_talk": "Nahrává, dokud držíte zkratku",
           "toggle": "Klepněte na zkratku pro zahájení nahrávání, klepněte znovu pro zastavení"
         }
+      },
+      "voiceEdits": {
+        "label": "Hlasové úpravy",
+        "description": "Při diktování se mluvené příkazy jako „scratch that“, „nový řádek“ nebo „nový odstavec“ použijí, místo aby se napsaly, v angličtině a španělštině."
       }
     },
     "sound": {

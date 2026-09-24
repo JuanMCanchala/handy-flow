@@ -435,6 +435,8 @@ pub struct AppSettings {
     pub selected_output_device: Option<String>,
     #[serde(default = "default_translate_to_english")]
     pub translate_to_english: bool,
+    #[serde(default = "default_voice_edits_enabled")]
+    pub voice_edits_enabled: bool,
     #[serde(default = "default_selected_language")]
     pub selected_language: String,
     #[serde(default = "default_overlay_position")]
@@ -582,6 +584,10 @@ fn default_always_on_microphone() -> bool {
 
 fn default_translate_to_english() -> bool {
     false
+}
+
+fn default_voice_edits_enabled() -> bool {
+    true
 }
 
 fn default_start_hidden() -> bool {
@@ -1044,6 +1050,7 @@ pub fn get_default_settings() -> AppSettings {
         clamshell_microphone: None,
         selected_output_device: None,
         translate_to_english: false,
+        voice_edits_enabled: default_voice_edits_enabled(),
         selected_language: "auto".to_string(),
         overlay_position: default_overlay_position(),
         debug_mode: false,
