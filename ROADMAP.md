@@ -43,3 +43,18 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 - Prompt style reference: JWM0203/MeetingCopilot (Apache-2.0, first-person teleprompter answers). Echo cancellation reference: Laxcorp-Research/project-raven (MIT, WebRTC AEC3).
 - GPL-3.0 (pluely, cheating-daddy, glass) are ideas only; Natively is non-commercial — take nothing.
 - Pipeline shared with item 9: mic ("You") + system audio ("Them") → local ASR on "Them" → question detector (rules, optional small-LLM check) after a short pause → profile in prompt (RAG only for long notes) → streamed answer card in the same hidden overlay as the live subtitles.
+
+## Next — from competitor research (`docs/research/competitor-features.md`)
+
+| #  | Item | Value / effort |
+|----|------|----------------|
+| 11 | Named modes/presets (model + prompt + language + format + optional hotkey); per-app style becomes a mode binding | H / S |
+| 12 | Audio/video file import + batch transcription (drop zone on Home) | H / M |
+| 13 | SRT/VTT export with per-segment timestamps | M / S |
+| 14 | Streaming partial transcript in the overlay (final pass unchanged) | H / M |
+| 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") | H / S |
+| 16 | Self-learning dictionary from edits in history | M / M |
+| 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 | H / M |
+| 18 | Speaker diarization for long recordings | M / L |
+| 19 | Note templates + action items (Granola-style) over a session transcript | H / M |
+| 20 | Ask-your-history (local RAG over history) | M / M |
