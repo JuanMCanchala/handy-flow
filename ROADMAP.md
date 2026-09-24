@@ -70,7 +70,9 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 
 OpenWhispr (Electron) measured ~1 GB in dev mode.
 
-After all features (2026-09-24, Voxa release build, onboarding window open, no model): **647 MB working set / 380 MB private** (9 processes). Next: measure hidden-to-tray and with Parakeet loaded.
+After all features (2026-09-24, Voxa release build, onboarding window open, no model): **647 MB working set / 380 MB private** (9 processes). 
+
+After perf pass (see `docs/perf.md`): **532 MB WS / 347 MB private** with the window open, **415 MB WS / 270 MB private** hidden to tray (main WebView2 destroyed on hide, live-subtitles overlay created only per session, lazy-loaded sections). Next: measure with a local model loaded; consider a native (non-WebView) recording pill.
 
 ## Locales
 Only `en` and `es` are maintained; `python scripts/fill-locales.py` copies English into the other locales.
