@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Сочетания клавиш заблокированы Secure Input"
   },
   "sidebar": {
+    "home": "Главная",
     "general": "Общие",
     "models": "Модели",
     "advanced": "Продвинутые",
@@ -464,6 +465,16 @@
           "title": "Имя агента",
           "description": "Начните диктовку с «Hey <имя>», чтобы выполнить её как команду."
         }
+      }
+    },
+    "home": {
+      "welcome": "С возвращением",
+      "today": "Сегодня",
+      "yesterday": "Вчера",
+      "stats": {
+        "totalWords": "Всего слов",
+        "averageWpm": "Среднее СВМ",
+        "dayStreak": "Дней подряд"
       }
     },
     "history": {

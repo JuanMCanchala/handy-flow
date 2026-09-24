@@ -11,6 +11,7 @@ mod command_mode;
 mod commands;
 mod helpers;
 mod input;
+mod insights;
 mod llm_client;
 mod managers;
 mod memory;
@@ -765,6 +766,7 @@ pub fn run(cli_args: CliArgs) {
             commands::history::retry_history_entry_transcription,
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
+            commands::insights::get_insights,
             helpers::clamshell::is_laptop,
         ])
         .events(collect_events![

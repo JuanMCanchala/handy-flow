@@ -10,8 +10,8 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 | 3   | Style per app (cleanup tone based on the active app)                                                   | todo        |
 | 4   | Snippets (trigger phrase → expansion)                                                                  | todo        |
 | 5   | Transforms (saved prompts applied to the selection)                                                    | todo        |
-| 6   | Insights (total words, wpm, day streak from history)                                                   | todo        |
-| 7   | Flow-style Home (history grouped by day, play / copy)                                                  | todo        |
+| 6   | Insights (total words, wpm, day streak from history)                                                   | done        |
+| 7   | Flow-style Home (history grouped by day, play / copy)                                                  | done        |
 | 8   | Scratchpad                                                                                             | done        |
 | 9   | Live translation EN ↔ ES (Transync-style live subtitles + dictate in one language, paste in the other) | todo        |
 | 9b  | macOS-style sober UI restyle (spec: `docs/design/macos-style.md`) — after feature branches merge | todo |

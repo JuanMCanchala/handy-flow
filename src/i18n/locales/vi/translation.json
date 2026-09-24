@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Phím tắt bị Secure Input chặn"
   },
   "sidebar": {
+    "home": "Trang chủ",
     "general": "Chung",
     "models": "Mô hình",
     "advanced": "Nâng cao",
@@ -464,6 +465,16 @@
           "title": "Tên trợ lý",
           "description": "Bắt đầu đọc bằng \"Hey <tên>\" để chạy như một lệnh."
         }
+      }
+    },
+    "home": {
+      "welcome": "Chào mừng trở lại",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "stats": {
+        "totalWords": "Tổng số từ",
+        "averageWpm": "TB từ/phút",
+        "dayStreak": "Số ngày liên tiếp"
       }
     },
     "history": {

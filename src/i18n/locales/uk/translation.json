@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Комбінації клавіш заблоковано Secure Input"
   },
   "sidebar": {
+    "home": "Головна",
     "general": "Загальні",
     "models": "Моделі",
     "advanced": "Розширені",
@@ -464,6 +465,16 @@
           "title": "Ім'я агента",
           "description": "Почніть диктування з «Hey <ім'я>», щоб виконати його як команду."
         }
+      }
+    },
+    "home": {
+      "welcome": "З поверненням",
+      "today": "Сьогодні",
+      "yesterday": "Вчора",
+      "stats": {
+        "totalWords": "Всього слів",
+        "averageWpm": "Середнє СЗХ",
+        "dayStreak": "Днів поспіль"
       }
     },
     "history": {

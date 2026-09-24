@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input ने शॉर्टकट ब्लॉक किए हैं"
   },
   "sidebar": {
+    "home": "होम",
     "general": "सामान्य",
     "models": "मॉडल",
     "advanced": "ऐडवांस",
@@ -464,6 +465,16 @@
           "title": "एजेंट का नाम",
           "description": "डिक्टेशन को कमांड के रूप में चलाने के लिए \"Hey <नाम>\" से शुरू करें।"
         }
+      }
+    },
+    "home": {
+      "welcome": "वापसी पर स्वागत है",
+      "today": "आज",
+      "yesterday": "कल",
+      "stats": {
+        "totalWords": "कुल शब्द",
+        "averageWpm": "औसत WPM",
+        "dayStreak": "दिन की लगातार गिनती"
       }
     },
     "history": {

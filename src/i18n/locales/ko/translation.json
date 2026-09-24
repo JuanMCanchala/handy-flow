@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input으로 단축키가 차단됨"
   },
   "sidebar": {
+    "home": "홈",
     "general": "일반",
     "models": "모델",
     "advanced": "고급",
@@ -464,6 +465,16 @@
           "title": "에이전트 이름",
           "description": "받아쓰기를 \"Hey <이름>\"으로 시작하면 명령으로 실행됩니다."
         }
+      }
+    },
+    "home": {
+      "welcome": "다시 오신 것을 환영합니다",
+      "today": "오늘",
+      "yesterday": "어제",
+      "stats": {
+        "totalWords": "총 단어 수",
+        "averageWpm": "평균 WPM",
+        "dayStreak": "연속 일수"
       }
     },
     "history": {

@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Бързите клавиши са блокирани от Secure Input"
   },
   "sidebar": {
+    "home": "Начало",
     "general": "Общи",
     "models": "Модели",
     "advanced": "Разширени",
@@ -464,6 +465,16 @@
           "title": "Име на агента",
           "description": "Започнете диктовка с „Hey <име>“, за да я изпълните като команда."
         }
+      }
+    },
+    "home": {
+      "welcome": "Добре дошли отново",
+      "today": "Днес",
+      "yesterday": "Вчера",
+      "stats": {
+        "totalWords": "Общо думи",
+        "averageWpm": "Средно ДВМ",
+        "dayStreak": "Дни поред"
       }
     },
     "history": {

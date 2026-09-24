@@ -4,6 +4,7 @@ import {
   Cog,
   FlaskConical,
   History,
+  Home,
   Info,
   Sparkles,
   Cpu,
@@ -12,6 +13,7 @@ import {
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
 import { useSettings } from "../hooks/useSettings";
+import { HomeSettings } from "./home/HomeSettings";
 import {
   GeneralSettings,
   AdvancedSettings,
@@ -41,6 +43,12 @@ interface SectionConfig {
 }
 
 export const SECTIONS_CONFIG = {
+  home: {
+    labelKey: "sidebar.home",
+    icon: Home,
+    component: HomeSettings,
+    enabled: () => true,
+  },
   general: {
     labelKey: "sidebar.general",
     icon: HandyHand,

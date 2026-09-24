@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ קיצורי המקשים חסומים על ידי Secure Input"
   },
   "sidebar": {
+    "home": "בית",
     "general": "כללי",
     "models": "מודלים",
     "advanced": "מתקדם",
@@ -464,6 +465,16 @@
           "title": "שם הסוכן",
           "description": "התחילו הכתבה ב-\"Hey <שם>\" כדי להריץ אותה כפקודה."
         }
+      }
+    },
+    "home": {
+      "welcome": "ברוך שובך",
+      "today": "היום",
+      "yesterday": "אתמול",
+      "stats": {
+        "totalWords": "סך המילים",
+        "averageWpm": "ממוצע מילים לדקה",
+        "dayStreak": "רצף ימים"
       }
     },
     "history": {

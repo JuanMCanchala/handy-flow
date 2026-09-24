@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Shortcuts blocked by Secure Input"
   },
   "sidebar": {
+    "home": "Home",
     "general": "General",
     "models": "Models",
     "advanced": "Advanced",
@@ -464,6 +465,16 @@
           "title": "Agent name",
           "description": "Start a dictation with \"Hey <name>\" to run it as a command."
         }
+      }
+    },
+    "home": {
+      "welcome": "Welcome back",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "stats": {
+        "totalWords": "Total Words",
+        "averageWpm": "Average WPM",
+        "dayStreak": "Day Streak"
       }
     },
     "history": {

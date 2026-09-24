@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input ले सर्टकटहरू रोकेको छ"
   },
   "sidebar": {
+    "home": "गृह",
     "general": "सामान्य",
     "models": "मोडेलहरू",
     "advanced": "उन्नत",
@@ -464,6 +465,16 @@
           "title": "एजेन्टको नाम",
           "description": "डिक्टेसनलाई कमाण्डका रूपमा चलाउन \"Hey <नाम>\" बाट सुरु गर्नुहोस्।"
         }
+      }
+    },
+    "home": {
+      "welcome": "फिर्ता स्वागत छ",
+      "today": "आज",
+      "yesterday": "हिजो",
+      "stats": {
+        "totalWords": "कुल शब्दहरू",
+        "averageWpm": "औसत WPM",
+        "dayStreak": "दिनको स्ट्रिक"
       }
     },
     "history": {

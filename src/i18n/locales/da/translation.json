@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Genveje blokeret af Secure Input"
   },
   "sidebar": {
+    "home": "Hjem",
     "general": "Generelt",
     "models": "Modeller",
     "advanced": "Avanceret",
@@ -464,6 +465,16 @@
           "title": "Agentens navn",
           "description": "Start en diktering med \"Hey <navn>\" for at køre den som en kommando."
         }
+      }
+    },
+    "home": {
+      "welcome": "Velkommen tilbage",
+      "today": "I dag",
+      "yesterday": "I går",
+      "stats": {
+        "totalWords": "Ord i alt",
+        "averageWpm": "Gennemsnitlig OPM",
+        "dayStreak": "Dagsstreak"
       }
     },
     "history": {

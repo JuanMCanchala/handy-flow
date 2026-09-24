@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Skróty zablokowane przez Secure Input"
   },
   "sidebar": {
+    "home": "Strona główna",
     "general": "Ogólne",
     "models": "Modele",
     "advanced": "Zaawansowane",
@@ -464,6 +465,16 @@
           "title": "Nazwa agenta",
           "description": "Zacznij dyktowanie od „Hey <nazwa>”, aby wykonać je jako polecenie."
         }
+      }
+    },
+    "home": {
+      "welcome": "Witamy z powrotem",
+      "today": "Dzisiaj",
+      "yesterday": "Wczoraj",
+      "stats": {
+        "totalWords": "Łącznie słów",
+        "averageWpm": "Średnie SNM",
+        "dayStreak": "Passa dni"
       }
     },
     "history": {

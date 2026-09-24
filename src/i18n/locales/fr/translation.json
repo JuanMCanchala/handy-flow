@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Raccourcis bloqués par Secure Input"
   },
   "sidebar": {
+    "home": "Accueil",
     "general": "Général",
     "models": "Modèles",
     "advanced": "Avancé",
@@ -464,6 +465,16 @@
           "title": "Nom de l'agent",
           "description": "Commencez une dictée par « Hey <nom> » pour l'exécuter comme commande."
         }
+      }
+    },
+    "home": {
+      "welcome": "Bon retour",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "stats": {
+        "totalWords": "Mots totaux",
+        "averageWpm": "MPM moyen",
+        "dayStreak": "Série de jours"
       }
     },
     "history": {

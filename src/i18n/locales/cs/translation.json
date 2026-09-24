@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Zkratky blokuje Secure Input"
   },
   "sidebar": {
+    "home": "Domů",
     "general": "Obecné",
     "models": "Modely",
     "advanced": "Pokročilé",
@@ -464,6 +465,16 @@
           "title": "Jméno agenta",
           "description": "Začněte diktování slovy „Hey <jméno>“, aby se provedlo jako příkaz."
         }
+      }
+    },
+    "home": {
+      "welcome": "Vítejte zpět",
+      "today": "Dnes",
+      "yesterday": "Včera",
+      "stats": {
+        "totalWords": "Celkem slov",
+        "averageWpm": "Průměrné SZM",
+        "dayStreak": "Dny v řadě"
       }
     },
     "history": {

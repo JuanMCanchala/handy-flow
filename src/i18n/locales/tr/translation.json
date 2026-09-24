@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Kısayollar Secure Input tarafından engelleniyor"
   },
   "sidebar": {
+    "home": "Ana Sayfa",
     "general": "Genel",
     "models": "Modeller",
     "advanced": "Gelişmiş",
@@ -464,6 +465,16 @@
           "title": "Asistan adı",
           "description": "Komut olarak çalıştırmak için dikteye \"Hey <ad>\" ile başlayın."
         }
+      }
+    },
+    "home": {
+      "welcome": "Tekrar hoş geldiniz",
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "stats": {
+        "totalWords": "Toplam Kelime",
+        "averageWpm": "Ortalama DKD",
+        "dayStreak": "Gün Serisi"
       }
     },
     "history": {

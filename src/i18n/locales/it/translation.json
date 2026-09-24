@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Scorciatoie bloccate da Secure Input"
   },
   "sidebar": {
+    "home": "Home",
     "general": "Generale",
     "models": "Modelli",
     "advanced": "Avanzate",
@@ -464,6 +465,16 @@
           "title": "Nome dell'agente",
           "description": "Inizia una dettatura con \"Hey <nome>\" per eseguirla come comando."
         }
+      }
+    },
+    "home": {
+      "welcome": "Bentornato",
+      "today": "Oggi",
+      "yesterday": "Ieri",
+      "stats": {
+        "totalWords": "Parole totali",
+        "averageWpm": "PPM medie",
+        "dayStreak": "Giorni consecutivi"
       }
     },
     "history": {

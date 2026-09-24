@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Tastenkürzel durch Secure Input blockiert"
   },
   "sidebar": {
+    "home": "Start",
     "general": "Allgemein",
     "models": "Modelle",
     "advanced": "Erweitert",
@@ -464,6 +465,16 @@
           "title": "Name des Agenten",
           "description": "Beginne ein Diktat mit „Hey <Name>“, um es als Befehl auszuführen."
         }
+      }
+    },
+    "home": {
+      "welcome": "Willkommen zurück",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "stats": {
+        "totalWords": "Wörter insgesamt",
+        "averageWpm": "Durchschnittliche WPM",
+        "dayStreak": "Tage in Folge"
       }
     },
     "history": {

@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ 快捷鍵被 Secure Input 阻擋"
   },
   "sidebar": {
+    "home": "首頁",
     "general": "一般",
     "models": "模型",
     "advanced": "進階",
@@ -464,6 +465,16 @@
           "title": "助理名稱",
           "description": "以「Hey <名稱>」開頭的聽寫將作為命令執行。"
         }
+      }
+    },
+    "home": {
+      "welcome": "歡迎回來",
+      "today": "今天",
+      "yesterday": "昨天",
+      "stats": {
+        "totalWords": "總字數",
+        "averageWpm": "平均語速（字/分鐘）",
+        "dayStreak": "連續天數"
       }
     },
     "history": {

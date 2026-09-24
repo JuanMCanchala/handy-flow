@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input でショートカットがブロック中"
   },
   "sidebar": {
+    "home": "ホーム",
     "general": "一般",
     "models": "モデル",
     "advanced": "詳細設定",
@@ -464,6 +465,16 @@
           "title": "エージェント名",
           "description": "「Hey <名前>」で始めると、音声入力がコマンドとして実行されます。"
         }
+      }
+    },
+    "home": {
+      "welcome": "おかえりなさい",
+      "today": "今日",
+      "yesterday": "昨日",
+      "stats": {
+        "totalWords": "合計単語数",
+        "averageWpm": "平均WPM",
+        "dayStreak": "連続日数"
       }
     },
     "history": {

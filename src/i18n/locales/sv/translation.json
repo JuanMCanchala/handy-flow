@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Kortkommandon blockeras av Secure Input"
   },
   "sidebar": {
+    "home": "Hem",
     "general": "Allmänt",
     "models": "Modeller",
     "advanced": "Avancerat",
@@ -464,6 +465,16 @@
           "title": "Agentens namn",
           "description": "Börja en diktering med \"Hey <namn>\" för att köra den som ett kommando."
         }
+      }
+    },
+    "home": {
+      "welcome": "Välkommen tillbaka",
+      "today": "Idag",
+      "yesterday": "Igår",
+      "stats": {
+        "totalWords": "Totalt antal ord",
+        "averageWpm": "Genomsnittlig OPM",
+        "dayStreak": "Dagsstreak"
       }
     },
     "history": {

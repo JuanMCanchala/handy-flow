@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Sneltoetsen geblokkeerd door Secure Input"
   },
   "sidebar": {
+    "home": "Start",
     "general": "Algemeen",
     "models": "Modellen",
     "advanced": "Geavanceerd",
@@ -464,6 +465,16 @@
           "title": "Naam van de agent",
           "description": "Begin een dictaat met \"Hey <naam>\" om het als opdracht uit te voeren."
         }
+      }
+    },
+    "home": {
+      "welcome": "Welkom terug",
+      "today": "Vandaag",
+      "yesterday": "Gisteren",
+      "stats": {
+        "totalWords": "Totaal woorden",
+        "averageWpm": "Gemiddeld WPM",
+        "dayStreak": "Dagenreeks"
       }
     },
     "history": {

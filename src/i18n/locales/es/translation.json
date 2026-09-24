@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Atajos bloqueados por Secure Input"
   },
   "sidebar": {
+    "home": "Inicio",
     "general": "General",
     "models": "Modelos",
     "advanced": "Avanzado",
@@ -464,6 +465,16 @@
           "title": "Nombre del agente",
           "description": "Empieza un dictado con \"Oye <nombre>\" para ejecutarlo como comando."
         }
+      }
+    },
+    "home": {
+      "welcome": "Bienvenido de nuevo",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "stats": {
+        "totalWords": "Palabras totales",
+        "averageWpm": "PPM promedio",
+        "dayStreak": "Racha de días"
       }
     },
     "history": {

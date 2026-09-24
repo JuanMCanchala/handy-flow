@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Dreceres blocades per l'entrada segura"
   },
   "sidebar": {
+    "home": "Inici",
     "general": "General",
     "models": "Models",
     "advanced": "Avançat",
@@ -464,6 +465,16 @@
           "title": "Nom de l'agent",
           "description": "Comença un dictat amb \"Ei <nom>\" per executar-lo com a ordre."
         }
+      }
+    },
+    "home": {
+      "welcome": "Benvingut de nou",
+      "today": "Avui",
+      "yesterday": "Ahir",
+      "stats": {
+        "totalWords": "Paraules totals",
+        "averageWpm": "PPM mitjana",
+        "dayStreak": "Ratxa de dies"
       }
     },
     "history": {

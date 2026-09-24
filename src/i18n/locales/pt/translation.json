@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Atalhos bloqueados pelo Secure Input"
   },
   "sidebar": {
+    "home": "Início",
     "general": "Geral",
     "models": "Modelos",
     "advanced": "Avançado",
@@ -464,6 +465,16 @@
           "title": "Nome do agente",
           "description": "Comece um ditado com \"Ei <nome>\" para executá-lo como comando."
         }
+      }
+    },
+    "home": {
+      "welcome": "Bem-vindo de volta",
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "stats": {
+        "totalWords": "Total de palavras",
+        "averageWpm": "Média de PPM",
+        "dayStreak": "Sequência de dias"
       }
     },
     "history": {
