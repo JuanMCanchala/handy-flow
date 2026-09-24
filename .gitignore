@@ -45,3 +45,7 @@ result
 
 # Python bytecode (scripts/)
 __pycache__/
+
+# Scratch downloads for diarization model development (not needed by the app;
+# real models are fetched at runtime into the app data dir, see diarization/models.rs)
+/_diar_models/

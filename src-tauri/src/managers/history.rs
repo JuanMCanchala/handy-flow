@@ -84,6 +84,9 @@ static MIGRATIONS: &[M] = &[
             INSERT INTO transcription_history_fts(rowid, transcription_text) VALUES (new.id, new.transcription_text);
         END;",
     ),
+    // Speaker diarization label, e.g. "Speaker 1". NULL for segments that
+    // were never diarized (dictations, or imports with diarization off).
+    M::up("ALTER TABLE transcript_segments ADD COLUMN speaker_label TEXT;"),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -349,8 +352,8 @@ impl HistoryManager {
 
         if !segments.is_empty() {
             let mut stmt = conn.prepare(
-                "INSERT INTO transcript_segments (history_entry_id, ordinal, start_ms, end_ms, text)
-                 VALUES (?1, ?2, ?3, ?4, ?5)",
+                "INSERT INTO transcript_segments (history_entry_id, ordinal, start_ms, end_ms, text, speaker_label)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             )?;
             for (ordinal, segment) in segments.iter().enumerate() {
                 stmt.execute(params![
@@ -359,6 +362,7 @@ impl HistoryManager {
                     segment.start_ms as i64,
                     segment.end_ms as i64,
                     &segment.text,
+                    &segment.speaker,
                 ])?;
             }
         }
@@ -954,7 +958,7 @@ impl HistoryManager {
     ) -> Result<Vec<crate::transcript_export::TranscriptSegment>> {
         let conn = self.get_connection()?;
         let mut stmt = conn.prepare(
-            "SELECT start_ms, end_ms, text FROM transcript_segments
+            "SELECT start_ms, end_ms, text, speaker_label FROM transcript_segments
              WHERE history_entry_id = ?1
              ORDER BY ordinal ASC",
         )?;
@@ -964,11 +968,31 @@ impl HistoryManager {
                 start_ms: row.get::<_, i64>("start_ms")? as u64,
                 end_ms: row.get::<_, i64>("end_ms")? as u64,
                 text: row.get("text")?,
+                speaker: row.get("speaker_label")?,
             })
         })?;
 
         let segments = rows.collect::<std::result::Result<Vec<_>, _>>()?;
         Ok(segments)
+    }
+
+    /// Rename a diarized speaker label for every segment of one history
+    /// entry that currently has `old_label` (e.g. renaming "Speaker 1" to a
+    /// real name renames it everywhere it appears in that transcript).
+    /// No-op if the entry has no segments with `old_label`.
+    pub async fn rename_speaker(
+        &self,
+        history_entry_id: i64,
+        old_label: &str,
+        new_label: &str,
+    ) -> Result<()> {
+        let conn = self.get_connection()?;
+        conn.execute(
+            "UPDATE transcript_segments SET speaker_label = ?1
+             WHERE history_entry_id = ?2 AND speaker_label = ?3",
+            params![new_label, history_entry_id, old_label],
+        )?;
+        Ok(())
     }
 
     pub async fn delete_entry(&self, id: i64) -> Result<()> {

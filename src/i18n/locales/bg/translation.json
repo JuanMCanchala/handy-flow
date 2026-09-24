@@ -613,7 +613,8 @@
       "edit": "Edit transcription",
       "cancelEdit": "Cancel",
       "saveEdit": "Save",
-      "editError": "Failed to save your edit. Please try again."
+      "editError": "Failed to save your edit. Please try again.",
+      "renameSpeaker": "Rename speaker"
     },
     "scratchpad": {
       "title": "Бележник",
@@ -904,6 +905,25 @@
         "save": "Save",
         "cancel": "Cancel",
         "remove": "Remove {{name}}"
+      }
+    },
+    "diarization": {
+      "title": "Speaker Diarization",
+      "enable": {
+        "label": "Label speakers",
+        "description": "Detect who's speaking in imported files, labeling segments as \"Speaker 1\", \"Speaker 2\", etc. Downloads two small ONNX models on first use."
+      },
+      "threshold": {
+        "title": "Speaker sensitivity",
+        "description": "Lower values create more (stricter) speakers; higher values merge similar voices into fewer speakers."
+      },
+      "models": {
+        "segmentation": "Segmentation model",
+        "embedding": "Speaker embedding model",
+        "description": "{{size}} — required for speaker diarization.",
+        "download": "Download ({{size}})",
+        "downloading": "Downloading…",
+        "delete": "Delete"
       }
     }
   },

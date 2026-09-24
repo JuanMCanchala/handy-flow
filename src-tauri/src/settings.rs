@@ -599,6 +599,16 @@ pub struct AppSettings {
     /// post-processing prompt/model/language selection.
     #[serde(default)]
     pub active_mode_id: Option<String>,
+    /// Speaker diarization for imported files and live-subtitle/copilot
+    /// sessions. Off by default: enabling it downloads the segmentation and
+    /// embedding ONNX models on demand (see `diarization::models`).
+    #[serde(default)]
+    pub diarization_enabled: bool,
+    /// Cosine-distance threshold below which two speech segments' embeddings
+    /// are merged into the same speaker cluster. Lower = more (stricter)
+    /// speakers; higher = fewer (looser) speakers.
+    #[serde(default = "default_diarization_cluster_threshold")]
+    pub diarization_cluster_threshold: f32,
 }
 
 fn default_model() -> String {
@@ -1009,6 +1019,14 @@ fn default_typing_tool() -> TypingTool {
     TypingTool::Auto
 }
 
+fn default_diarization_cluster_threshold() -> f32 {
+    // Calibrated against real WeSpeaker ResNet34 embeddings (cosine distance):
+    // same-speaker pairs in a real multi-speaker recording cluster below
+    // ~0.15-0.2, cross-speaker pairs sit above ~0.25. See the `#[ignore]`d
+    // integration test in `diarization::pipeline` for the reference recording.
+    0.2
+}
+
 fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
     let mut changed = false;
     for provider in default_post_process_providers() {
@@ -1262,6 +1280,8 @@ pub fn get_default_settings() -> AppSettings {
         live_translate_source: LiveTranslateSource::default(),
         modes: default_modes(),
         active_mode_id: None,
+        diarization_enabled: false,
+        diarization_cluster_threshold: default_diarization_cluster_threshold(),
     }
 }
 

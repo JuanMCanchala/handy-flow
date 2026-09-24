@@ -1296,6 +1296,62 @@ async toggleCopilot() : Promise<Result<null, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async changeDiarizationEnabledSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_diarization_enabled_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeDiarizationClusterThresholdSetting(threshold: number) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_diarization_cluster_threshold_setting", { threshold }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getDiarizationModelsStatus() : Promise<Result<DiarizationModelInfo[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_diarization_models_status") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async downloadDiarizationModel(kind: DiarizationModelKind) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("download_diarization_model", { kind }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async deleteDiarizationModel(kind: DiarizationModelKind) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("delete_diarization_model", { kind }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getTranscriptSegments(id: number) : Promise<Result<TranscriptSegmentView[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_transcript_segments", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async renameSpeaker(id: number, oldLabel: string, newLabel: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("rename_speaker", { id, oldLabel, newLabel }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1430,7 +1486,19 @@ modes?: Mode[];
  * Id of the currently active mode, or `None` to use the global
  * post-processing prompt/model/language selection.
  */
-active_mode_id?: string | null }
+active_mode_id?: string | null; 
+/**
+ * Speaker diarization for imported files and live-subtitle/copilot
+ * sessions. Off by default: enabling it downloads the segmentation and
+ * embedding ONNX models on demand (see `diarization::models`).
+ */
+diarization_enabled?: boolean; 
+/**
+ * Cosine-distance threshold below which two speech segments' embeddings
+ * are merged into the same speaker cluster. Lower = more (stricter)
+ * speakers; higher = fewer (looser) speakers.
+ */
+diarization_cluster_threshold?: number }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1502,6 +1570,12 @@ hotkey: string | null }
 export type ModeOutputFormat = "plain" | "bullet_list" | "email" | "markdown"
 export type LiveSubtitleLine = { original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
+
+export type DiarizationModelKind = "Segmentation" | "Embedding"
+
+export type DiarizationModelInfo = { kind: DiarizationModelKind; filename: string; size_bytes: number; is_downloaded: boolean }
+
+export type TranscriptSegmentView = { start_ms: number; end_ms: number; text: string; speaker: string | null }
 export type CopilotAnswerLine = { question: string; answer: string }
 export type CopilotAnswerEntry = { id: string; question: string; answer: string; 
 /**

@@ -24,6 +24,7 @@ import { NotesView } from "../../notes/NotesView";
 import { Textarea } from "../../ui/Textarea";
 import { copyToClipboard } from "./clipboard";
 import { useHistoryEntries } from "./useHistoryEntries";
+import { TranscriptSegmentsView } from "./TranscriptSegmentsView";
 
 type ExportFormat = "txt" | "srt" | "vtt";
 const EXPORT_FORMATS: ExportFormat[] = ["txt", "srt", "vtt"];
@@ -461,12 +462,15 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
               }
             `}</style>
           )}
-          {retrying
-            ? t("settings.history.transcribing")
-            : hasTranscription
-              ? entry.transcription_text
-              : t("settings.history.transcriptionFailed")}
+          {retrying ? t("settings.history.transcribing") : null}
         </p>
+      )}
+      {!isEditing && !retrying && (
+        <TranscriptSegmentsView
+          historyEntryId={entry.id}
+          fallbackText={entry.transcription_text}
+          hasTranscription={hasTranscription}
+        />
       )}
 
       <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />

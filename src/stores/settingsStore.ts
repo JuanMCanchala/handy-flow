@@ -208,6 +208,10 @@ const settingUpdaters: {
     commands.changeTranslationTargetSetting(value as TranslationTarget),
   live_translate_source: (value) =>
     commands.changeLiveTranslateSourceSetting(value as LiveTranslateSource),
+  diarization_enabled: (value) =>
+    commands.changeDiarizationEnabledSetting(value as boolean),
+  diarization_cluster_threshold: (value) =>
+    commands.changeDiarizationClusterThresholdSetting(value as number),
 };
 
 export const useSettingsStore = create<SettingsStore>()(

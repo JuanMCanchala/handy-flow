@@ -673,7 +673,8 @@
       "edit": "Editar transcripción",
       "cancelEdit": "Cancelar",
       "saveEdit": "Guardar",
-      "editError": "No se pudo guardar tu edición. Por favor, inténtalo de nuevo."
+      "editError": "No se pudo guardar tu edición. Por favor, inténtalo de nuevo.",
+      "renameSpeaker": "Renombrar hablante"
     },
     "scratchpad": {
       "title": "Bloc de notas",
@@ -904,6 +905,25 @@
         "save": "Guardar",
         "cancel": "Cancelar",
         "remove": "Eliminar {{name}}"
+      }
+    },
+    "diarization": {
+      "title": "Identificación de hablantes",
+      "enable": {
+        "label": "Etiquetar hablantes",
+        "description": "Detecta quién habla en los archivos importados, etiquetando los segmentos como «Hablante 1», «Hablante 2», etc. Descarga dos modelos ONNX pequeños al usarlo por primera vez."
+      },
+      "threshold": {
+        "title": "Sensibilidad de hablantes",
+        "description": "Valores más bajos crean más hablantes (más estrictos); valores más altos fusionan voces similares en menos hablantes."
+      },
+      "models": {
+        "segmentation": "Modelo de segmentación",
+        "embedding": "Modelo de embeddings de hablante",
+        "description": "{{size}} — necesario para la identificación de hablantes.",
+        "download": "Descargar ({{size}})",
+        "downloading": "Descargando…",
+        "delete": "Eliminar"
       }
     }
   },

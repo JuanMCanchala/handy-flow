@@ -8,6 +8,9 @@ pub struct TranscriptSegment {
     pub start_ms: u64,
     pub end_ms: u64,
     pub text: String,
+    /// Diarized speaker label (e.g. "Speaker 1"), when diarization ran for
+    /// this entry. `None` for dictations and non-diarized imports.
+    pub speaker: Option<String>,
 }
 
 /// Supported export formats.
@@ -18,16 +21,18 @@ pub enum ExportFormat {
     Vtt,
 }
 
-/// Render segments as plain text, one line per segment.
+/// Render segments as plain text, one line per segment. Diarized segments
+/// are prefixed with their speaker label ("Speaker 1: ...").
 pub fn format_txt(segments: &[TranscriptSegment]) -> String {
     segments
         .iter()
-        .map(|s| s.text.as_str())
+        .map(|s| speaker_prefixed_text(s))
         .collect::<Vec<_>>()
         .join("\n")
 }
 
-/// Render segments as SRT (SubRip).
+/// Render segments as SRT (SubRip). Diarized segments are prefixed with
+/// their speaker label ("Speaker 1: ...").
 pub fn format_srt(segments: &[TranscriptSegment]) -> String {
     let mut out = String::new();
     for (i, seg) in segments.iter().enumerate() {
@@ -37,13 +42,14 @@ pub fn format_srt(segments: &[TranscriptSegment]) -> String {
         out.push_str(" --> ");
         out.push_str(&srt_timestamp(seg.end_ms));
         out.push('\n');
-        out.push_str(&seg.text);
+        out.push_str(&speaker_prefixed_text(seg));
         out.push_str("\n\n");
     }
     out
 }
 
-/// Render segments as WebVTT.
+/// Render segments as WebVTT. Diarized segments are prefixed with their
+/// speaker label ("Speaker 1: ...").
 pub fn format_vtt(segments: &[TranscriptSegment]) -> String {
     let mut out = String::from("WEBVTT\n\n");
     for seg in segments {
@@ -51,7 +57,7 @@ pub fn format_vtt(segments: &[TranscriptSegment]) -> String {
         out.push_str(" --> ");
         out.push_str(&vtt_timestamp(seg.end_ms));
         out.push('\n');
-        out.push_str(&seg.text);
+        out.push_str(&speaker_prefixed_text(seg));
         out.push_str("\n\n");
     }
     out
@@ -78,6 +84,15 @@ fn vtt_timestamp(ms: u64) -> String {
     format!("{h:02}:{m:02}:{s:02}.{ms:03}")
 }
 
+/// Segment text prefixed with its speaker label, when diarized: "Speaker 1: text".
+/// Undiarized segments (the common case) are returned as-is.
+fn speaker_prefixed_text(seg: &TranscriptSegment) -> String {
+    match &seg.speaker {
+        Some(speaker) => format!("{}: {}", speaker, seg.text),
+        None => seg.text.clone(),
+    }
+}
+
 fn split_ms(total_ms: u64) -> (u64, u64, u64, u64) {
     let ms = total_ms % 1000;
     let total_s = total_ms / 1000;
@@ -97,6 +112,21 @@ mod tests {
             start_ms,
             end_ms,
             text: text.to_string(),
+            speaker: None,
+        }
+    }
+
+    fn seg_with_speaker(
+        start_ms: u64,
+        end_ms: u64,
+        text: &str,
+        speaker: &str,
+    ) -> TranscriptSegment {
+        TranscriptSegment {
+            start_ms,
+            end_ms,
+            text: text.to_string(),
+            speaker: Some(speaker.to_string()),
         }
     }
 
@@ -181,5 +211,19 @@ mod tests {
             format_transcript(&segments, ExportFormat::Vtt),
             format_vtt(&segments)
         );
+    }
+
+    #[test]
+    fn diarized_segments_are_prefixed_with_speaker_label() {
+        let segments = vec![
+            seg_with_speaker(0, 1_000, "Hello", "Speaker 1"),
+            seg_with_speaker(1_000, 2_000, "Hi there", "Speaker 2"),
+        ];
+        assert_eq!(
+            format_txt(&segments),
+            "Speaker 1: Hello\nSpeaker 2: Hi there"
+        );
+        assert!(format_srt(&segments).contains("Speaker 1: Hello"));
+        assert!(format_vtt(&segments).contains("Speaker 2: Hi there"));
     }
 }

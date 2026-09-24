@@ -1,6 +1,7 @@
 pub mod audio;
 pub mod cloud_stt;
 pub mod copilot;
+pub mod diarization;
 pub mod history;
 pub mod insights;
 pub mod live_translate;

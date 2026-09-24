@@ -171,15 +171,17 @@ pub async fn import_audio_file(
     transcription_manager: State<'_, Arc<TranscriptionManager>>,
     history_manager: State<'_, Arc<HistoryManager>>,
     file_import_manager: State<'_, Arc<crate::file_import::FileImportManager>>,
+    diarization_model_manager: State<'_, Arc<crate::diarization::models::DiarizationModelManager>>,
     path: String,
 ) -> Result<HistoryEntry, String> {
     let tm = Arc::clone(&transcription_manager);
     let hm = Arc::clone(&history_manager);
     let fim = Arc::clone(&file_import_manager);
+    let dmm = Arc::clone(&diarization_model_manager);
     let path = PathBuf::from(path);
 
     tauri::async_runtime::spawn_blocking(move || {
-        crate::file_import::import_and_save(&app, &tm, &hm, &fim, &path)
+        crate::file_import::import_and_save(&app, &tm, &hm, &fim, &dmm, &path)
     })
     .await
     .map_err(|e| format!("Import task panicked: {}", e))?
@@ -240,6 +242,7 @@ pub async fn export_transcript(
                 start_ms: 0,
                 end_ms,
                 text,
+                speaker: None,
             });
         }
     }
@@ -369,4 +372,60 @@ pub async fn ask_history(
 pub struct AskHistoryResponse {
     pub answer: String,
     pub matches: Vec<crate::history_search::SearchResult>,
+}
+/// Frontend-facing view of one transcript segment. Mirrors
+/// [`transcript_export::TranscriptSegment`], which stays a pure formatter
+/// type (no Tauri/serde deps) so this command layer owns the conversion.
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug, specta::Type)]
+pub struct TranscriptSegmentView {
+    pub start_ms: u64,
+    pub end_ms: u64,
+    pub text: String,
+    pub speaker: Option<String>,
+}
+
+impl From<TranscriptSegment> for TranscriptSegmentView {
+    fn from(s: TranscriptSegment) -> Self {
+        Self {
+            start_ms: s.start_ms,
+            end_ms: s.end_ms,
+            text: s.text,
+            speaker: s.speaker,
+        }
+    }
+}
+
+/// Fetch a history entry's per-segment transcript (with any diarized speaker
+/// labels) for display in the transcript view. Empty for dictations and for
+/// imports whose engine returned no timestamps.
+#[tauri::command]
+#[specta::specta]
+pub async fn get_transcript_segments(
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+) -> Result<Vec<TranscriptSegmentView>, String> {
+    let segments = history_manager
+        .get_segments(id)
+        .await
+        .map_err(|e| e.to_string())?;
+    Ok(segments
+        .into_iter()
+        .map(TranscriptSegmentView::from)
+        .collect())
+}
+
+/// Rename a diarized speaker label ("Speaker 1" -> a real name) across every
+/// segment of one history entry that currently has `old_label`.
+#[tauri::command]
+#[specta::specta]
+pub async fn rename_speaker(
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+    old_label: String,
+    new_label: String,
+) -> Result<(), String> {
+    history_manager
+        .rename_speaker(id, &old_label, &new_label)
+        .await
+        .map_err(|e| e.to_string())
 }

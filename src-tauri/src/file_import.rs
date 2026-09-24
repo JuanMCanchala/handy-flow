@@ -317,6 +317,7 @@ pub fn run_import(
             start_ms,
             end_ms,
             text: chunk_text,
+            speaker: None,
         });
 
         if guard.cancel_flag.load(Ordering::SeqCst) {
@@ -334,15 +335,41 @@ pub fn run_import(
 
 /// Full import pipeline: decode/transcribe `path`, copy it into the
 /// recordings directory as a WAV, and save the result as a history entry
-/// with its per-chunk segments.
+/// with its per-chunk segments. When `diarization_enabled` is set and the
+/// diarization models are downloaded, each segment is labeled with its
+/// speaker before saving.
 pub fn import_and_save(
     app: &AppHandle,
     transcription_manager: &Arc<TranscriptionManager>,
     history_manager: &Arc<HistoryManager>,
     manager: &FileImportManager,
+    diarization_model_manager: &crate::diarization::models::DiarizationModelManager,
     path: &Path,
 ) -> Result<crate::managers::history::HistoryEntry> {
-    let imported = run_import(app, transcription_manager, manager, path)?;
+    let mut imported = run_import(app, transcription_manager, manager, path)?;
+
+    let settings = crate::settings::get_settings(app);
+    if settings.diarization_enabled && diarization_model_manager.is_ready() {
+        match crate::diarization::pipeline::diarize(
+            diarization_model_manager,
+            &imported.samples,
+            settings.diarization_cluster_threshold,
+        ) {
+            Ok(diarized) if !diarized.is_empty() => {
+                for segment in imported.segments.iter_mut() {
+                    segment.speaker = crate::diarization::pipeline::speaker_for_segment(
+                        &diarized,
+                        segment.start_ms,
+                        segment.end_ms,
+                    );
+                }
+            }
+            Ok(_) => {}
+            Err(e) => {
+                log::warn!("Diarization failed, saving import without speaker labels: {e}");
+            }
+        }
+    }
 
     let file_name = format!("handy-import-{}.wav", chrono::Utc::now().timestamp());
     let dest_path = history_manager.recordings_dir().join(&file_name);
