@@ -49,7 +49,7 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 
 | #  | Item | Value / effort |
 |----|------|----------------|
-| 11 | Named modes/presets (model + prompt + language + format + optional hotkey); per-app style becomes a mode binding | H / S |
+| 11 | Named modes/presets (model + prompt + language + format + optional hotkey) — **done** | H / S |
 | 12 | Audio/video file import + batch transcription (drop zone on Home) — **done** (no webm/mkv yet) | H / M |
 | 13 | SRT/VTT export with per-segment timestamps — **done** | M / S |
 | 14 | Streaming partial transcript in the overlay (final pass unchanged) — **covered upstream** (Live overlay with streaming models: Parakeet Unified, Nemotron) | H / M |
