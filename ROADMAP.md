@@ -68,4 +68,13 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | WebView2 (7 processes) | 462 MB | 243 MB |
 | **Total** | **549 MB** | **345 MB** |
 
-OpenWhispr (Electron) measured ~1 GB in dev mode. Next: measure hidden-to-tray and with Parakeet loaded.
+OpenWhispr (Electron) measured ~1 GB in dev mode.
+
+After all features (2026-09-24, Voxa release build, onboarding window open, no model): **647 MB working set / 380 MB private** (9 processes). Next: measure hidden-to-tray and with Parakeet loaded.
+
+## Pending polish
+- App/installer icons still upstream Handy (need a source SVG → `bun tauri icon`).
+- Non-Latin locales: copilot strings mostly English fallback.
+- Legacy classes left in PostProcessingSettings, AboutSettings, AppDataDirectory, LogDirectory.
+- Style detection by window title not available on macOS; system audio capture Windows-only.
+- File import: no webm/mkv.
