@@ -12,7 +12,7 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 | 5   | Transforms (saved prompts applied to the selection)                                                    | todo        |
 | 6   | Insights (total words, wpm, day streak from history)                                                   | todo        |
 | 7   | Flow-style Home (history grouped by day, play / copy)                                                  | todo        |
-| 8   | Scratchpad                                                                                             | todo        |
+| 8   | Scratchpad                                                                                             | done        |
 | 9   | Live translation EN ↔ ES (Transync-style live subtitles + dictate in one language, paste in the other) | todo        |
 | 10  | Profile copilot: load my profile, listen to questions about me, suggest an answer in EN or ES         | todo        |
 
