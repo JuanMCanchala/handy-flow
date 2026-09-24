@@ -106,31 +106,148 @@ fn build_console_filter() -> env_filter::Filter {
     builder.build()
 }
 
-fn show_main_window(app: &AppHandle) {
-    if let Some(main_window) = app.get_webview_window("main") {
-        if let Err(e) = main_window.unminimize() {
-            log::error!("Failed to unminimize webview window: {}", e);
-        }
-        if let Err(e) = main_window.show() {
-            log::error!("Failed to show webview window: {}", e);
-        }
-        if let Err(e) = main_window.set_focus() {
-            log::error!("Failed to focus webview window: {}", e);
-        }
-        #[cfg(target_os = "macos")]
-        {
-            if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
-                log::error!("Failed to set activation policy to Regular: {}", e);
-            }
-        }
-        return;
+/// Builds the main settings window (same config used at startup and, on
+/// Windows, when recreating it after `destroy_main_window_for_memory`).
+fn build_main_window(app: &AppHandle) -> tauri::Result<tauri::WebviewWindow> {
+    // Create main window programmatically so we can set data_directory
+    // for portable mode (redirects WebView2 cache to portable Data dir)
+    let mut win_builder =
+        tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
+            .title("Voxa")
+            .inner_size(880.0, 620.0)
+            .min_inner_size(720.0, 540.0)
+            .resizable(true)
+            .maximizable(true)
+            .visible(false);
+
+    // macOS: content sits under the titlebar (hidden title, traffic
+    // lights kept and repositioned) with a native sidebar vibrancy
+    // effect that follows the window's active/theme state. See
+    // docs/design/macos-style.md section 4.
+    #[cfg(target_os = "macos")]
+    {
+        win_builder = win_builder
+            .title_bar_style(tauri::TitleBarStyle::Overlay)
+            .hidden_title(true)
+            .traffic_light_position(tauri::LogicalPosition::new(18.0, 22.0))
+            .transparent(true)
+            .effects(tauri::utils::config::WindowEffectsConfig {
+                effects: vec![tauri::window::Effect::Sidebar],
+                state: Some(tauri::window::EffectState::FollowsWindowActiveState),
+                radius: None,
+                color: None,
+            });
     }
 
-    let webview_labels = app.webview_windows().keys().cloned().collect::<Vec<_>>();
-    log::error!(
-        "Main window not found. Webview labels: {:?}",
-        webview_labels
-    );
+    // Windows 11 22H2+: Mica behind the window. Older Windows ignores
+    // the effect and the CSS canvas background stays opaque.
+    #[cfg(target_os = "windows")]
+    {
+        win_builder = win_builder.effects(tauri::utils::config::WindowEffectsConfig {
+            effects: vec![tauri::window::Effect::Mica],
+            state: None,
+            radius: None,
+            color: None,
+        });
+    }
+
+    if let Some(data_dir) = portable::data_dir() {
+        win_builder = win_builder.data_directory(data_dir.join("webview"));
+    }
+
+    // Only used on Windows, to disable WebView2 browser accelerators.
+    #[cfg_attr(not(target_os = "windows"), allow(unused_variables))]
+    let main_window = win_builder.build()?;
+
+    // Disable WebView2 browser accelerators (F5, F6, Ctrl+F, F12, ...).
+    // A settings window has no use for them, and pressing F6 while
+    // recording a shortcut was reported to turn the whole window white
+    // (cjpais/Handy#1940), likely by triggering WebView2 focus cycling.
+    // DevTools stays enabled; only the F12 accelerator is lost.
+    #[cfg(target_os = "windows")]
+    {
+        let _ = main_window.with_webview(|webview| unsafe {
+            use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings3;
+            use windows::core::Interface;
+
+            let result = webview
+                .controller()
+                .CoreWebView2()
+                .and_then(|core| core.Settings())
+                .and_then(|settings| settings.cast::<ICoreWebView2Settings3>())
+                .and_then(|settings| settings.SetAreBrowserAcceleratorKeysEnabled(false));
+
+            if let Err(error) = result {
+                log::warn!("Failed to disable WebView2 browser accelerators: {error}");
+            }
+        });
+    }
+
+    #[cfg(any(target_os = "windows", target_os = "macos"))]
+    shortcut::apply_window_theme(app, settings::get_settings(app).theme);
+
+    Ok(main_window)
+}
+
+/// Destroys the main window's WebView2 process to release its memory (~460 MB
+/// of the app's idle working set on Windows — see docs/perf.md) while the
+/// window is hidden to the tray. Recreated on demand by `show_main_window`.
+///
+/// Windows-only: WebView2 is the only backend where a hidden webview keeps
+/// its full renderer/GPU process resident. macOS's WKWebView and Linux's
+/// WebKitGTK do not exhibit the same idle cost, and destroying/recreating
+/// those would risk platform-specific regressions (lost GTK layer-shell
+/// state, NSPanel-adjacent quirks) for no measured benefit.
+#[cfg(target_os = "windows")]
+fn destroy_main_window_for_memory(app: &AppHandle) {
+    if let Some(main_window) = app.get_webview_window("main") {
+        if let Err(e) = main_window.destroy() {
+            log::error!("Failed to destroy main window for memory release: {}", e);
+        }
+    }
+}
+
+fn show_main_window(app: &AppHandle) {
+    let main_window = match app.get_webview_window("main") {
+        Some(window) => window,
+        None => {
+            // Windows: the window is destroyed (not just hidden) while
+            // parked in the tray to release WebView2's memory; rebuild it.
+            #[cfg(target_os = "windows")]
+            match build_main_window(app) {
+                Ok(window) => window,
+                Err(e) => {
+                    log::error!("Failed to recreate main window: {}", e);
+                    return;
+                }
+            }
+            #[cfg(not(target_os = "windows"))]
+            {
+                let webview_labels = app.webview_windows().keys().cloned().collect::<Vec<_>>();
+                log::error!(
+                    "Main window not found. Webview labels: {:?}",
+                    webview_labels
+                );
+                return;
+            }
+        }
+    };
+
+    if let Err(e) = main_window.unminimize() {
+        log::error!("Failed to unminimize webview window: {}", e);
+    }
+    if let Err(e) = main_window.show() {
+        log::error!("Failed to show webview window: {}", e);
+    }
+    if let Err(e) = main_window.set_focus() {
+        log::error!("Failed to focus webview window: {}", e);
+    }
+    #[cfg(target_os = "macos")]
+    {
+        if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
+            log::error!("Failed to set activation policy to Regular: {}", e);
+        }
+    }
 }
 
 /// Choose the macOS activation policy the process *launches* with.
@@ -385,11 +502,11 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // tauri-plugin-autostart elsewhere)
     autostart::apply_autostart(app_handle, settings.autostart_enabled);
 
-    // Create the recording overlay window (hidden by default)
+    // Create the recording overlay window (hidden by default). The live
+    // subtitles overlay is intentionally not created here — it has no
+    // instant-show latency requirement, so it's created/destroyed per
+    // session by LiveTranslateManager (see live_translate/overlay.rs).
     utils::create_recording_overlay(app_handle);
-
-    // Create the live subtitles overlay window (hidden by default)
-    live_translate::create_live_subtitles_window(app_handle);
 }
 
 #[tauri::command]
@@ -994,88 +1111,9 @@ pub fn run(cli_args: CliArgs) {
                 return Ok(());
             }
 
-            // Create main window programmatically so we can set data_directory
-            // for portable mode (redirects WebView2 cache to portable Data dir)
-            let mut win_builder =
-                tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
-                    .title("Voxa")
-                    .inner_size(880.0, 620.0)
-                    .min_inner_size(720.0, 540.0)
-                    .resizable(true)
-                    .maximizable(true)
-                    .visible(false);
-
-            // macOS: content sits under the titlebar (hidden title, traffic
-            // lights kept and repositioned) with a native sidebar vibrancy
-            // effect that follows the window's active/theme state. See
-            // docs/design/macos-style.md section 4.
-            #[cfg(target_os = "macos")]
-            {
-                win_builder = win_builder
-                    .title_bar_style(tauri::TitleBarStyle::Overlay)
-                    .hidden_title(true)
-                    .traffic_light_position(tauri::LogicalPosition::new(18.0, 22.0))
-                    .transparent(true)
-                    .effects(tauri::utils::config::WindowEffectsConfig {
-                        effects: vec![tauri::window::Effect::Sidebar],
-                        state: Some(tauri::window::EffectState::FollowsWindowActiveState),
-                        radius: None,
-                        color: None,
-                    });
-            }
-
-            // Windows 11 22H2+: Mica behind the window. Older Windows ignores
-            // the effect and the CSS canvas background stays opaque.
-            #[cfg(target_os = "windows")]
-            {
-                win_builder = win_builder.effects(tauri::utils::config::WindowEffectsConfig {
-                    effects: vec![tauri::window::Effect::Mica],
-                    state: None,
-                    radius: None,
-                    color: None,
-                });
-            }
-
-            if let Some(data_dir) = portable::data_dir() {
-                win_builder = win_builder.data_directory(data_dir.join("webview"));
-            }
-
-            // Only used on Windows, to disable WebView2 browser accelerators.
-            #[cfg_attr(not(target_os = "windows"), allow(unused_variables))]
-            let main_window = win_builder.build()?;
-
-            // Disable WebView2 browser accelerators (F5, F6, Ctrl+F, F12, ...).
-            // A settings window has no use for them, and pressing F6 while
-            // recording a shortcut was reported to turn the whole window white
-            // (cjpais/Handy#1940), likely by triggering WebView2 focus cycling.
-            // DevTools stays enabled; only the F12 accelerator is lost.
-            #[cfg(target_os = "windows")]
-            {
-                let _ = main_window.with_webview(|webview| unsafe {
-                    use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings3;
-                    use windows::core::Interface;
-
-                    let result = webview
-                        .controller()
-                        .CoreWebView2()
-                        .and_then(|core| core.Settings())
-                        .and_then(|settings| settings.cast::<ICoreWebView2Settings3>())
-                        .and_then(|settings| settings.SetAreBrowserAcceleratorKeysEnabled(false));
-
-                    if let Err(error) = result {
-                        log::warn!("Failed to disable WebView2 browser accelerators: {error}");
-                    }
-                });
-            }
+            build_main_window(app.handle())?;
 
             let mut settings = get_settings(app.handle());
-
-            // Apply the persisted appearance theme to the native title bar before
-            // the window is shown, so it matches the in-app palette without a flash
-            // of the wrong theme. See `apply_window_theme` for what this does per
-            // platform.
-            #[cfg(any(target_os = "windows", target_os = "macos"))]
-            shortcut::apply_window_theme(app.handle(), settings.theme);
 
             // CLI --debug flag overrides debug_mode and log level (runtime-only, not persisted)
             if cli_args.debug {
@@ -1143,6 +1181,14 @@ pub fn run(cli_args: CliArgs) {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
                 let _res = window.hide();
+
+                // Windows: release WebView2's memory (~460 MB of idle working
+                // set) while the main window is parked in the tray. Recreated
+                // transparently by `show_main_window` next time it's opened.
+                #[cfg(target_os = "windows")]
+                if window.label() == "main" {
+                    destroy_main_window_for_memory(window.app_handle());
+                }
 
                 #[cfg(target_os = "macos")]
                 {

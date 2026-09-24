@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Cog,
@@ -19,22 +19,77 @@ import VoxaTextLogo from "./icons/VoxaTextLogo";
 import VoxaWaveformIcon from "./icons/VoxaWaveformIcon";
 import Footer from "./footer";
 import { useSettings } from "../hooks/useSettings";
-import { HomeSettings } from "./home/HomeSettings";
-import {
-  AboutSettings,
-  AdvancedSettings,
-  CopilotSettings,
-  DebugSettings,
-  GeneralSettings,
-  HistorySettings,
-  LiveTranslateSettings,
-  ModelsSettings,
-  PostProcessingSettings,
-  SnippetsSettings,
-  StyleSettings,
-  TransformsSettings,
-} from "./settings";
-import { ScratchpadSettings } from "./scratchpad";
+
+// Each sidebar section's settings UI is code-split into its own chunk:
+// only the active section's JS/CSS is fetched, keeping the initial bundle
+// (and WebView2 parse/compile cost) small. `DebugSettings` is loaded eagerly
+// via the barrel in `App.tsx` for the onboarding-preview flow, so it is
+// exempt here.
+const HomeSettings = lazy(() =>
+  import("./home/HomeSettings").then((m) => ({ default: m.HomeSettings })),
+);
+const GeneralSettings = lazy(() =>
+  import("./settings/general/GeneralSettings").then((m) => ({
+    default: m.GeneralSettings,
+  })),
+);
+const HistorySettings = lazy(() =>
+  import("./settings/history/HistorySettings").then((m) => ({
+    default: m.HistorySettings,
+  })),
+);
+const ScratchpadSettings = lazy(() =>
+  import("./scratchpad").then((m) => ({ default: m.ScratchpadSettings })),
+);
+const ModelsSettings = lazy(() =>
+  import("./settings/models/ModelsSettings").then((m) => ({
+    default: m.ModelsSettings,
+  })),
+);
+const AdvancedSettings = lazy(() =>
+  import("./settings/advanced/AdvancedSettings").then((m) => ({
+    default: m.AdvancedSettings,
+  })),
+);
+const SnippetsSettings = lazy(() =>
+  import("./settings/snippets/SnippetsSettings").then((m) => ({
+    default: m.SnippetsSettings,
+  })),
+);
+const TransformsSettings = lazy(() =>
+  import("./settings/transforms/TransformsSettings").then((m) => ({
+    default: m.TransformsSettings,
+  })),
+);
+const PostProcessingSettings = lazy(() =>
+  import("./settings/post-processing/PostProcessingSettings").then((m) => ({
+    default: m.PostProcessingSettings,
+  })),
+);
+const StyleSettings = lazy(() =>
+  import("./settings/StyleSettings").then((m) => ({
+    default: m.StyleSettings,
+  })),
+);
+const LiveTranslateSettings = lazy(() =>
+  import("./settings/live-translate/LiveTranslateSettings").then((m) => ({
+    default: m.LiveTranslateSettings,
+  })),
+);
+const CopilotSettings = lazy(() =>
+  import("./settings/copilot/CopilotSettings").then((m) => ({
+    default: m.CopilotSettings,
+  })),
+);
+const AboutSettings = lazy(() =>
+  import("./settings/about/AboutSettings").then((m) => ({
+    default: m.AboutSettings,
+  })),
+);
+// DebugSettings stays a normal (non-lazy) import: App.tsx already renders it
+// directly for the onboarding preview flow, so it is on the eager path
+// regardless.
+import { DebugSettings } from "./settings";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
 

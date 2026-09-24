@@ -171,7 +171,7 @@ impl LiveTranslateManager {
         };
 
         *self.capture.lock().unwrap() = Some(stream);
-        super::overlay::show(&self.app_handle);
+        super::overlay::create_live_subtitles_window(&self.app_handle);
         Ok(())
     }
 
@@ -196,7 +196,7 @@ impl LiveTranslateManager {
         if let Some(segment) = flushed {
             self.process_segment(segment);
         }
-        super::overlay::hide(&self.app_handle);
+        super::overlay::destroy_live_subtitles_window(&self.app_handle);
     }
 
     /// Transcribes one closed speech segment, then dispatches it to the

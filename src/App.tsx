@@ -1,4 +1,5 @@
 import {
+  Suspense,
   useEffect,
   useLayoutEffect,
   useState,
@@ -368,7 +369,9 @@ function App() {
             <div className="mx-auto w-full max-w-[720px] px-8 pb-12 flex flex-col gap-8">
               <AccessibilityPermissions />
               <SecureInputWarning />
-              {renderSettingsContent(currentSection, setOnboardingPreview)}
+              <Suspense fallback={null}>
+                {renderSettingsContent(currentSection, setOnboardingPreview)}
+              </Suspense>
             </div>
           </div>
         </main>
