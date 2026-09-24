@@ -15,6 +15,7 @@
     "advanced": "進階",
     "postProcessing": "後處理",
     "history": "歷史紀錄",
+    "scratchpad": "記事本",
     "debug": "偵錯",
     "about": "關於"
   },
@@ -480,6 +481,19 @@
       "retranscribeError": "重新轉錄失敗，請重試。",
       "transcribing": "轉錄中...",
       "transcriptionFailed": "轉錄失敗。您可以使用重試圖示重新轉錄。"
+    },
+    "scratchpad": {
+      "title": "記事本",
+      "newNote": "新增筆記",
+      "searchPlaceholder": "搜尋筆記...",
+      "loading": "正在載入筆記...",
+      "empty": "還沒有筆記。建立一則開始吧！",
+      "untitled": "無標題",
+      "editorPlaceholder": "輸入或口述你的筆記...",
+      "noNoteSelected": "選擇一則筆記或新增一則。",
+      "delete": "刪除筆記",
+      "deleteTitle": "刪除筆記",
+      "deleteConfirm": "確定要刪除這則筆記嗎？此操作無法復原。"
     },
     "debug": {
       "title": "偵錯",

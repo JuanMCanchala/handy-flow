@@ -15,6 +15,7 @@
     "advanced": "Avançat",
     "postProcessing": "Postprocessament",
     "history": "Historial",
+    "scratchpad": "Bloc de notes",
     "debug": "Depuració",
     "about": "Quant a"
   },
@@ -480,6 +481,19 @@
       "retranscribeError": "No s'ha pogut tornar a transcriure. Torneu-ho a provar.",
       "transcribing": "S'està transcrivint...",
       "transcriptionFailed": "La transcripció ha fallat. Podeu tornar a transcriure amb la icona de reintent."
+    },
+    "scratchpad": {
+      "title": "Bloc de notes",
+      "newNote": "Nota nova",
+      "searchPlaceholder": "Cerca notes...",
+      "loading": "Carregant notes...",
+      "empty": "Encara no hi ha notes. Crea'n una per començar!",
+      "untitled": "Sense títol",
+      "editorPlaceholder": "Escriu o dicta la teva nota...",
+      "noNoteSelected": "Selecciona una nota o crea'n una nova.",
+      "delete": "Suprimeix la nota",
+      "deleteTitle": "Suprimeix la nota",
+      "deleteConfirm": "Segur que vols suprimir aquesta nota? Aquesta acció no es pot desfer."
     },
     "debug": {
       "title": "Depuració",

@@ -15,6 +15,7 @@
     "advanced": "מתקדם",
     "postProcessing": "עיבוד משלים",
     "history": "היסטוריה",
+    "scratchpad": "בלוק פתקים",
     "debug": "ניפוי שגיאות",
     "about": "אודות"
   },
@@ -480,6 +481,19 @@
       "retranscribeError": "תמלול מחדש נכשל. נסה שוב.",
       "transcribing": "מתמלל...",
       "transcriptionFailed": "התמלול נכשל. אפשר לתמלל מחדש באמצעות אייקון הניסיון החוזר."
+    },
+    "scratchpad": {
+      "title": "בלוק פתקים",
+      "newNote": "פתק חדש",
+      "searchPlaceholder": "חיפוש פתקים...",
+      "loading": "טוען פתקים...",
+      "empty": "אין פתקים עדיין. צור אחד כדי להתחיל!",
+      "untitled": "ללא כותרת",
+      "editorPlaceholder": "כתוב או הקלט את הפתק שלך...",
+      "noNoteSelected": "בחר פתק או צור פתק חדש.",
+      "delete": "מחיקת פתק",
+      "deleteTitle": "מחיקת פתק",
+      "deleteConfirm": "האם אתה בטוח שברצונך למחוק פתק זה? לא ניתן לשחזר פעולה זו."
     },
     "debug": {
       "title": "ניפוי שגיאות",

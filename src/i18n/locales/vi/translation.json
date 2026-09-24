@@ -15,6 +15,7 @@
     "advanced": "Nâng cao",
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
+    "scratchpad": "Sổ ghi chú",
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu"
   },
@@ -480,6 +481,19 @@
       "retranscribeError": "Không thể phiên âm lại. Vui lòng thử lại.",
       "transcribing": "Đang phiên âm...",
       "transcriptionFailed": "Phiên âm thất bại. Bạn có thể phiên âm lại bằng biểu tượng thử lại."
+    },
+    "scratchpad": {
+      "title": "Sổ ghi chú",
+      "newNote": "Ghi chú mới",
+      "searchPlaceholder": "Tìm kiếm ghi chú...",
+      "loading": "Đang tải ghi chú...",
+      "empty": "Chưa có ghi chú nào. Tạo một ghi chú để bắt đầu!",
+      "untitled": "Không có tiêu đề",
+      "editorPlaceholder": "Viết hoặc đọc ghi chú của bạn...",
+      "noNoteSelected": "Chọn một ghi chú hoặc tạo ghi chú mới.",
+      "delete": "Xóa ghi chú",
+      "deleteTitle": "Xóa Ghi Chú",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa ghi chú này không? Hành động này không thể hoàn tác."
     },
     "debug": {
       "title": "Gỡ lỗi",
