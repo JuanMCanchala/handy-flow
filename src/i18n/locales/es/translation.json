@@ -14,6 +14,7 @@
     "general": "General",
     "models": "Modelos",
     "advanced": "Avanzado",
+    "snippets": "Fragmentos",
     "postProcessing": "Post proceso",
     "history": "Historial",
     "scratchpad": "Bloc de notas",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Eliminar muletillas",
         "description": "Elimina las muletillas más comunes de las transcripciones. Desactívalo para conservarlas."
+      }
+    },
+    "snippets": {
+      "title": "Fragmentos",
+      "add": {
+        "title": "Agregar fragmento",
+        "description": "Crea una frase disparadora que se reemplaza con tu texto de expansión cada vez que aparece en un dictado.",
+        "triggerPlaceholder": "Disparador",
+        "expansionPlaceholder": "Expansión",
+        "add": "Agregar"
+      },
+      "list": {
+        "edit": "Editar {{trigger}}",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "remove": "Eliminar {{trigger}}"
       }
     },
     "postProcessing": {

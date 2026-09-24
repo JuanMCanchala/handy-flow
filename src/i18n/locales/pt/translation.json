@@ -14,6 +14,7 @@
     "general": "Geral",
     "models": "Modelos",
     "advanced": "Avançado",
+    "snippets": "Trechos",
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
     "scratchpad": "Bloco de notas",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Remover palavras de preenchimento",
         "description": "Remove hesitações comuns das transcrições. Desative para mantê-las."
+      }
+    },
+    "snippets": {
+      "title": "Trechos",
+      "add": {
+        "title": "Adicionar trecho",
+        "description": "Crie uma frase de gatilho que é substituída pelo seu texto de expansão sempre que aparecer em um ditado.",
+        "triggerPlaceholder": "Gatilho",
+        "expansionPlaceholder": "Expansão",
+        "add": "Adicionar"
+      },
+      "list": {
+        "edit": "Editar {{trigger}}",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "remove": "Remover {{trigger}}"
       }
     },
     "postProcessing": {

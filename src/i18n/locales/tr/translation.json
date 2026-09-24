@@ -14,6 +14,7 @@
     "general": "Genel",
     "models": "Modeller",
     "advanced": "Gelişmiş",
+    "snippets": "Snippet'ler",
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
     "scratchpad": "Not Defteri",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Dolgu Sözcüklerini Kaldır",
         "description": "Transkripsiyonlardaki yaygın duraksama sözcüklerini kaldırır. Bunları korumak için kapatın."
+      }
+    },
+    "snippets": {
+      "title": "Snippet'ler",
+      "add": {
+        "title": "Snippet Ekle",
+        "description": "Bir dikte içinde göründüğünde genişletme metninizle değiştirilecek bir tetikleyici ifade oluşturun.",
+        "triggerPlaceholder": "Tetikleyici",
+        "expansionPlaceholder": "Genişletme",
+        "add": "Ekle"
+      },
+      "list": {
+        "edit": "{{trigger}} düzenle",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "remove": "{{trigger}} kaldır"
       }
     },
     "postProcessing": {

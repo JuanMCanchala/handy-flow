@@ -842,6 +842,64 @@ pub fn update_custom_words(app: AppHandle, words: Vec<String>) -> Result<(), Str
 
 #[tauri::command]
 #[specta::specta]
+pub fn add_snippet(
+    app: AppHandle,
+    trigger: String,
+    expansion: String,
+) -> Result<settings::Snippet, String> {
+    let mut settings = settings::get_settings(&app);
+
+    let id = format!("snippet_{}", chrono::Utc::now().timestamp_millis());
+    let new_snippet = settings::Snippet {
+        id: id.clone(),
+        trigger,
+        expansion,
+    };
+
+    settings.snippets.push(new_snippet.clone());
+    settings::write_settings(&app, settings);
+
+    Ok(new_snippet)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn update_snippet(
+    app: AppHandle,
+    id: String,
+    trigger: String,
+    expansion: String,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+
+    if let Some(existing) = settings.snippets.iter_mut().find(|s| s.id == id) {
+        existing.trigger = trigger;
+        existing.expansion = expansion;
+        settings::write_settings(&app, settings);
+        Ok(())
+    } else {
+        Err(format!("Snippet with id '{}' not found", id))
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn delete_snippet(app: AppHandle, id: String) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+
+    let original_len = settings.snippets.len();
+    settings.snippets.retain(|s| s.id != id);
+
+    if settings.snippets.len() == original_len {
+        return Err(format!("Snippet with id '{}' not found", id));
+    }
+
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_word_correction_threshold_setting(
     app: AppHandle,
     threshold: f64,

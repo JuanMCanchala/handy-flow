@@ -13,6 +13,7 @@
     "home": "الرئيسية",
     "general": "عام",
     "advanced": "متقدم",
+    "snippets": "المقتطفات",
     "postProcessing": "معالجة لاحقة",
     "history": "السجل",
     "scratchpad": "المفكرة",
@@ -381,6 +382,22 @@
       "fillerWordRemoval": {
         "title": "إزالة كلمات الحشو",
         "description": "يزيل كلمات التردد الشائعة من النصوص. عطّل هذا الخيار للاحتفاظ بها."
+      }
+    },
+    "snippets": {
+      "title": "المقتطفات",
+      "add": {
+        "title": "إضافة مقتطف",
+        "description": "أنشئ عبارة محفزة يتم استبدالها بنص التوسيع الخاص بك كل مرة تظهر في نص مُملى.",
+        "triggerPlaceholder": "المحفز",
+        "expansionPlaceholder": "التوسيع",
+        "add": "إضافة"
+      },
+      "list": {
+        "edit": "تعديل {{trigger}}",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "remove": "إزالة {{trigger}}"
       }
     },
     "postProcessing": {

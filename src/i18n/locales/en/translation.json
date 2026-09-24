@@ -14,6 +14,7 @@
     "general": "General",
     "models": "Models",
     "advanced": "Advanced",
+    "snippets": "Snippets",
     "postProcessing": "Post Process",
     "history": "History",
     "scratchpad": "Scratchpad",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Remove Filler Words",
         "description": "Removes common hesitation words from transcriptions. Turn off to keep them."
+      }
+    },
+    "snippets": {
+      "title": "Snippets",
+      "add": {
+        "title": "Add Snippet",
+        "description": "Create a trigger phrase that gets replaced with your expansion text whenever it appears in a dictation.",
+        "triggerPlaceholder": "Trigger",
+        "expansionPlaceholder": "Expansion",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{trigger}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{trigger}}"
       }
     },
     "postProcessing": {

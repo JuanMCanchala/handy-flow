@@ -14,6 +14,7 @@
     "general": "כללי",
     "models": "מודלים",
     "advanced": "מתקדם",
+    "snippets": "קטעי טקסט",
     "postProcessing": "עיבוד משלים",
     "history": "היסטוריה",
     "scratchpad": "בלוק פתקים",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "הסרת מילות מילוי",
         "description": "מסיר מילות היסוס נפוצות מתמלולים. השבת כדי להשאיר אותן."
+      }
+    },
+    "snippets": {
+      "title": "קטעי טקסט",
+      "add": {
+        "title": "הוספת קטע טקסט",
+        "description": "צור ביטוי מפעיל שיוחלף בטקסט ההרחבה שלך בכל פעם שהוא מופיע בתמלול.",
+        "triggerPlaceholder": "מפעיל",
+        "expansionPlaceholder": "הרחבה",
+        "add": "הוסף"
+      },
+      "list": {
+        "edit": "ערוך {{trigger}}",
+        "save": "שמור",
+        "cancel": "ביטול",
+        "remove": "הסר {{trigger}}"
       }
     },
     "postProcessing": {

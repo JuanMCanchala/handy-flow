@@ -14,6 +14,7 @@
     "general": "सामान्य",
     "models": "मॉडल",
     "advanced": "ऐडवांस",
+    "snippets": "स्निपेट",
     "postProcessing": "पोस्ट प्रोसेस",
     "history": "इतिहास",
     "scratchpad": "स्क्रैचपैड",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "फिलर शब्द हटाएं",
         "description": "ट्रांसक्रिप्शन से आम हिचकिचाहट वाले शब्द हटाता है। उन्हें बनाए रखने के लिए इसे बंद करें।"
+      }
+    },
+    "snippets": {
+      "title": "स्निपेट",
+      "add": {
+        "title": "स्निपेट जोड़ें",
+        "description": "एक ट्रिगर वाक्यांश बनाएं जो डिक्टेशन में दिखाई देने पर आपके विस्तार टेक्स्ट से बदल दिया जाता है।",
+        "triggerPlaceholder": "ट्रिगर",
+        "expansionPlaceholder": "विस्तार",
+        "add": "जोड़ें"
+      },
+      "list": {
+        "edit": "{{trigger}} संपादित करें",
+        "save": "सहेजें",
+        "cancel": "रद्द करें",
+        "remove": "{{trigger}} हटाएं"
       }
     },
     "postProcessing": {

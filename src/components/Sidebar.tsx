@@ -2,13 +2,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   Cog,
+  Cpu,
   FlaskConical,
   History,
   Home,
   Info,
-  Sparkles,
-  Cpu,
   NotebookPen,
+  Sparkles,
+  Type,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
@@ -22,6 +23,7 @@ import {
   AboutSettings,
   PostProcessingSettings,
   ModelsSettings,
+  SnippetsSettings,
 } from "./settings";
 import { ScratchpadSettings } from "./scratchpad";
 
@@ -77,6 +79,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.advanced",
     icon: Cog,
     component: AdvancedSettings,
+    enabled: () => true,
+  },
+  snippets: {
+    labelKey: "sidebar.snippets",
+    icon: Type,
+    component: SnippetsSettings,
     enabled: () => true,
   },
   postprocessing: {

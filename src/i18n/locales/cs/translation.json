@@ -14,6 +14,7 @@
     "general": "Obecné",
     "models": "Modely",
     "advanced": "Pokročilé",
+    "snippets": "Úryvky",
     "postProcessing": "Následné zpracování",
     "history": "Historie",
     "scratchpad": "Poznámkový blok",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Odstranit výplňová slova",
         "description": "Odstraňuje běžná slova vyjadřující váhání z přepisů. Vypnutím je zachováte."
+      }
+    },
+    "snippets": {
+      "title": "Úryvky",
+      "add": {
+        "title": "Přidat úryvek",
+        "description": "Vytvořte spouštěcí frázi, která se nahradí vaším rozšířeným textem, kdykoli se objeví v diktátu.",
+        "triggerPlaceholder": "Spouštěč",
+        "expansionPlaceholder": "Rozšíření",
+        "add": "Přidat"
+      },
+      "list": {
+        "edit": "Upravit {{trigger}}",
+        "save": "Uložit",
+        "cancel": "Zrušit",
+        "remove": "Odstranit {{trigger}}"
       }
     },
     "postProcessing": {

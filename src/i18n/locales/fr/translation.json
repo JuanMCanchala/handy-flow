@@ -14,6 +14,7 @@
     "general": "Général",
     "models": "Modèles",
     "advanced": "Avancé",
+    "snippets": "Extraits",
     "postProcessing": "Post-traitement",
     "history": "Historique",
     "scratchpad": "Bloc-notes",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Supprimer les mots de remplissage",
         "description": "Supprime les hésitations courantes des transcriptions. Désactivez cette option pour les conserver."
+      }
+    },
+    "snippets": {
+      "title": "Extraits",
+      "add": {
+        "title": "Ajouter un extrait",
+        "description": "Créez une expression déclencheuse qui sera remplacée par votre texte d'expansion chaque fois qu'elle apparaît dans une dictée.",
+        "triggerPlaceholder": "Déclencheur",
+        "expansionPlaceholder": "Expansion",
+        "add": "Ajouter"
+      },
+      "list": {
+        "edit": "Modifier {{trigger}}",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "remove": "Supprimer {{trigger}}"
       }
     },
     "postProcessing": {

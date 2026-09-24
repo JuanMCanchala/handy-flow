@@ -14,6 +14,7 @@
     "general": "Generelt",
     "models": "Modeller",
     "advanced": "Avanceret",
+    "snippets": "Tekststykker",
     "postProcessing": "Efterbehandling",
     "history": "Historik",
     "scratchpad": "Notesblok",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Fjern fyldord",
         "description": "Fjerner almindelige tøveord fra transskriptioner. Slå fra for at beholde dem."
+      }
+    },
+    "snippets": {
+      "title": "Tekststykker",
+      "add": {
+        "title": "Tilføj tekststykke",
+        "description": "Opret en udløserfrase, der udskiftes med din udvidelsestekst, når den forekommer i en diktering.",
+        "triggerPlaceholder": "Udløser",
+        "expansionPlaceholder": "Udvidelse",
+        "add": "Tilføj"
+      },
+      "list": {
+        "edit": "Rediger {{trigger}}",
+        "save": "Gem",
+        "cancel": "Annuller",
+        "remove": "Fjern {{trigger}}"
       }
     },
     "postProcessing": {

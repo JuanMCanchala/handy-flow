@@ -14,6 +14,7 @@
     "general": "Algemeen",
     "models": "Modellen",
     "advanced": "Geavanceerd",
+    "snippets": "Snippets",
     "postProcessing": "Naverwerking",
     "history": "Geschiedenis",
     "scratchpad": "Kladblok",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "Opvulwoorden verwijderen",
         "description": "Verwijdert veelvoorkomende aarzelwoorden uit transcripties. Schakel dit uit om ze te behouden."
+      }
+    },
+    "snippets": {
+      "title": "Snippets",
+      "add": {
+        "title": "Snippet toevoegen",
+        "description": "Maak een triggerzin die wordt vervangen door je uitgebreide tekst zodra deze in een dictaat voorkomt.",
+        "triggerPlaceholder": "Trigger",
+        "expansionPlaceholder": "Uitgebreide tekst",
+        "add": "Toevoegen"
+      },
+      "list": {
+        "edit": "{{trigger}} bewerken",
+        "save": "Opslaan",
+        "cancel": "Annuleren",
+        "remove": "{{trigger}} verwijderen"
       }
     },
     "postProcessing": {

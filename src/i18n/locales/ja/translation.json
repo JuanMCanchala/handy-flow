@@ -14,6 +14,7 @@
     "general": "一般",
     "models": "モデル",
     "advanced": "詳細設定",
+    "snippets": "スニペット",
     "postProcessing": "後処理",
     "history": "履歴",
     "scratchpad": "メモ帳",
@@ -404,6 +405,22 @@
       "fillerWordRemoval": {
         "title": "フィラー語を削除",
         "description": "文字起こしから一般的なフィラー語を削除します。残すにはオフにしてください。"
+      }
+    },
+    "snippets": {
+      "title": "スニペット",
+      "add": {
+        "title": "スニペットを追加",
+        "description": "ディクテーションに出現すると展開テキストに置き換えられるトリガーフレーズを作成します。",
+        "triggerPlaceholder": "トリガー",
+        "expansionPlaceholder": "展開テキスト",
+        "add": "追加"
+      },
+      "list": {
+        "edit": "{{trigger}} を編集",
+        "save": "保存",
+        "cancel": "キャンセル",
+        "remove": "{{trigger}} を削除"
       }
     },
     "postProcessing": {
