@@ -53,7 +53,7 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | 12 | Audio/video file import + batch transcription (drop zone on Home) | H / M |
 | 13 | SRT/VTT export with per-segment timestamps | M / S |
 | 14 | Streaming partial transcript in the overlay (final pass unchanged) | H / M |
-| 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") | H / S |
+| 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") — **done** (deterministic EN/ES pass) | H / S |
 | 16 | Self-learning dictionary from edits in history | M / M |
 | 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 | H / M |
 | 18 | Speaker diarization for long recordings | M / L |
