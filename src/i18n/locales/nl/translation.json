@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Sneltoetsen geblokkeerd door Secure Input"
   },
   "sidebar": {
+    "home": "Start",
     "general": "Algemeen",
     "models": "Modellen",
     "advanced": "Geavanceerd",
@@ -452,6 +453,16 @@
         "cancel": "Annuleren",
         "selectToEdit": "Selecteer hierboven een prompt om de details te bekijken en te bewerken.",
         "createFirst": "Klik hierboven op 'Nieuwe prompt maken' om je eerste naverwerkingsprompt aan te maken."
+      }
+    },
+    "home": {
+      "welcome": "Welkom terug",
+      "today": "Vandaag",
+      "yesterday": "Gisteren",
+      "stats": {
+        "totalWords": "Totaal woorden",
+        "averageWpm": "Gemiddeld WPM",
+        "dayStreak": "Dagenreeks"
       }
     },
     "history": {

@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input ने शॉर्टकट ब्लॉक किए हैं"
   },
   "sidebar": {
+    "home": "होम",
     "general": "सामान्य",
     "models": "मॉडल",
     "advanced": "ऐडवांस",
@@ -452,6 +453,16 @@
         "cancel": "रद्द करें",
         "selectToEdit": "जानकारी देखने और बदलाव करने के लिए, ऊपर कोई प्रॉम्प्ट चुनें.",
         "createFirst": "अपना पहला पोस्ट-प्रोसेसिंग प्रॉम्प्ट बनाने के लिए, ऊपर 'नया प्रॉम्प्ट बनाएं' पर क्लिक करें."
+      }
+    },
+    "home": {
+      "welcome": "वापसी पर स्वागत है",
+      "today": "आज",
+      "yesterday": "कल",
+      "stats": {
+        "totalWords": "कुल शब्द",
+        "averageWpm": "औसत WPM",
+        "dayStreak": "दिन की लगातार गिनती"
       }
     },
     "history": {

@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Raccourcis bloqués par Secure Input"
   },
   "sidebar": {
+    "home": "Accueil",
     "general": "Général",
     "models": "Modèles",
     "advanced": "Avancé",
@@ -452,6 +453,16 @@
         "cancel": "Annuler",
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
+      }
+    },
+    "home": {
+      "welcome": "Bon retour",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "stats": {
+        "totalWords": "Mots totaux",
+        "averageWpm": "MPM moyen",
+        "dayStreak": "Série de jours"
       }
     },
     "history": {

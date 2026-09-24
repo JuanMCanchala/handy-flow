@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Kısayollar Secure Input tarafından engelleniyor"
   },
   "sidebar": {
+    "home": "Ana Sayfa",
     "general": "Genel",
     "models": "Modeller",
     "advanced": "Gelişmiş",
@@ -452,6 +453,16 @@
         "cancel": "İptal",
         "selectToEdit": "Ayrıntılarını görüntülemek ve düzenlemek için yukarıdan bir prompt seçin.",
         "createFirst": "İlk son işlem promptunuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."
+      }
+    },
+    "home": {
+      "welcome": "Tekrar hoş geldiniz",
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "stats": {
+        "totalWords": "Toplam Kelime",
+        "averageWpm": "Ortalama DKD",
+        "dayStreak": "Gün Serisi"
       }
     },
     "history": {

@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Phím tắt bị Secure Input chặn"
   },
   "sidebar": {
+    "home": "Trang chủ",
     "general": "Chung",
     "models": "Mô hình",
     "advanced": "Nâng cao",
@@ -452,6 +453,16 @@
         "cancel": "Hủy",
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
+      }
+    },
+    "home": {
+      "welcome": "Chào mừng trở lại",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "stats": {
+        "totalWords": "Tổng số từ",
+        "averageWpm": "TB từ/phút",
+        "dayStreak": "Số ngày liên tiếp"
       }
     },
     "history": {

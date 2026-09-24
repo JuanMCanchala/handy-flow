@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input でショートカットがブロック中"
   },
   "sidebar": {
+    "home": "ホーム",
     "general": "一般",
     "models": "モデル",
     "advanced": "詳細設定",
@@ -452,6 +453,16 @@
         "cancel": "キャンセル",
         "selectToEdit": "上からプロンプトを選択して、詳細を表示・編集します。",
         "createFirst": "上の「新しいプロンプトを作成」をクリックして、最初の後処理プロンプトを作成してください。"
+      }
+    },
+    "home": {
+      "welcome": "おかえりなさい",
+      "today": "今日",
+      "yesterday": "昨日",
+      "stats": {
+        "totalWords": "合計単語数",
+        "averageWpm": "平均WPM",
+        "dayStreak": "連続日数"
       }
     },
     "history": {

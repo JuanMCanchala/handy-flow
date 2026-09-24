@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Dreceres blocades per l'entrada segura"
   },
   "sidebar": {
+    "home": "Inici",
     "general": "General",
     "models": "Models",
     "advanced": "Avançat",
@@ -452,6 +453,16 @@
         "cancel": "Cancel·leu",
         "selectToEdit": "Seleccioneu una indicació more amunt per veure'n i editar-ne els detalls.",
         "createFirst": "Feu clic a «Creeu una indicació nova» més amunt per crear la primera indicació de postprocessament."
+      }
+    },
+    "home": {
+      "welcome": "Benvingut de nou",
+      "today": "Avui",
+      "yesterday": "Ahir",
+      "stats": {
+        "totalWords": "Paraules totals",
+        "averageWpm": "PPM mitjana",
+        "dayStreak": "Ratxa de dies"
       }
     },
     "history": {

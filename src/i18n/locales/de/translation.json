@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Tastenkürzel durch Secure Input blockiert"
   },
   "sidebar": {
+    "home": "Start",
     "general": "Allgemein",
     "models": "Modelle",
     "advanced": "Erweitert",
@@ -452,6 +453,16 @@
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
         "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."
+      }
+    },
+    "home": {
+      "welcome": "Willkommen zurück",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "stats": {
+        "totalWords": "Wörter insgesamt",
+        "averageWpm": "Durchschnittliche WPM",
+        "dayStreak": "Tage in Folge"
       }
     },
     "history": {

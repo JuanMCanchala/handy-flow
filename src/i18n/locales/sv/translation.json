@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Kortkommandon blockeras av Secure Input"
   },
   "sidebar": {
+    "home": "Hem",
     "general": "Allmänt",
     "models": "Modeller",
     "advanced": "Avancerat",
@@ -452,6 +453,16 @@
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning."
+      }
+    },
+    "home": {
+      "welcome": "Välkommen tillbaka",
+      "today": "Idag",
+      "yesterday": "Igår",
+      "stats": {
+        "totalWords": "Totalt antal ord",
+        "averageWpm": "Genomsnittlig OPM",
+        "dayStreak": "Dagsstreak"
       }
     },
     "history": {

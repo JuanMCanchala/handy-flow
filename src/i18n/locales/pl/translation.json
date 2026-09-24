@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Skróty zablokowane przez Secure Input"
   },
   "sidebar": {
+    "home": "Strona główna",
     "general": "Ogólne",
     "models": "Modele",
     "advanced": "Zaawansowane",
@@ -452,6 +453,16 @@
         "cancel": "Anuluj",
         "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu."
+      }
+    },
+    "home": {
+      "welcome": "Witamy z powrotem",
+      "today": "Dzisiaj",
+      "yesterday": "Wczoraj",
+      "stats": {
+        "totalWords": "Łącznie słów",
+        "averageWpm": "Średnie SNM",
+        "dayStreak": "Passa dni"
       }
     },
     "history": {

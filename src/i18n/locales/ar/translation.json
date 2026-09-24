@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ الاختصارات محجوبة بواسطة Secure Input"
   },
   "sidebar": {
+    "home": "الرئيسية",
     "general": "عام",
     "advanced": "متقدم",
     "postProcessing": "معالجة لاحقة",
@@ -429,6 +430,16 @@
         "cancel": "إلغاء",
         "selectToEdit": ".اختر مطالبة أعلاه لعرض وتعديل تفاصيلها",
         "createFirst": ".انقر على 'إنشاء مطالبة جديدة' أعلاه لإنشاء أول مطالبة معالجة لاحقة لك"
+      }
+    },
+    "home": {
+      "welcome": "مرحبًا بعودتك",
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "stats": {
+        "totalWords": "إجمالي الكلمات",
+        "averageWpm": "متوسط الكلمات في الدقيقة",
+        "dayStreak": "أيام متتالية"
       }
     },
     "history": {

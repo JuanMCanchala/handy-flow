@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Zkratky blokuje Secure Input"
   },
   "sidebar": {
+    "home": "Domů",
     "general": "Obecné",
     "models": "Modely",
     "advanced": "Pokročilé",
@@ -452,6 +453,16 @@
         "cancel": "Zrušit",
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
+      }
+    },
+    "home": {
+      "welcome": "Vítejte zpět",
+      "today": "Dnes",
+      "yesterday": "Včera",
+      "stats": {
+        "totalWords": "Celkem slov",
+        "averageWpm": "Průměrné SZM",
+        "dayStreak": "Dny v řadě"
       }
     },
     "history": {

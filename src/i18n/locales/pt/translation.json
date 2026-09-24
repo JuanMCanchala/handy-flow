@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Atalhos bloqueados pelo Secure Input"
   },
   "sidebar": {
+    "home": "Início",
     "general": "Geral",
     "models": "Modelos",
     "advanced": "Avançado",
@@ -452,6 +453,16 @@
         "cancel": "Cancelar",
         "selectToEdit": "Selecione um prompt acima para visualizar e editar seus detalhes.",
         "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento."
+      }
+    },
+    "home": {
+      "welcome": "Bem-vindo de volta",
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "stats": {
+        "totalWords": "Total de palavras",
+        "averageWpm": "Média de PPM",
+        "dayStreak": "Sequência de dias"
       }
     },
     "history": {

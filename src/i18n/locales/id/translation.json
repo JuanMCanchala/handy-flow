@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Pintasan diblokir oleh Secure Input"
   },
   "sidebar": {
+    "home": "Beranda",
     "general": "Umum",
     "models": "Model",
     "advanced": "Lanjutan",
@@ -452,6 +453,16 @@
         "cancel": "Batal",
         "selectToEdit": "Pilih prompt di atas untuk melihat dan mengedit detailnya.",
         "createFirst": "Klik 'Buat Prompt Baru' di atas untuk membuat prompt pascaproses pertama Anda."
+      }
+    },
+    "home": {
+      "welcome": "Selamat datang kembali",
+      "today": "Hari Ini",
+      "yesterday": "Kemarin",
+      "stats": {
+        "totalWords": "Total Kata",
+        "averageWpm": "Rata-rata KPM",
+        "dayStreak": "Rangkaian Hari"
       }
     },
     "history": {

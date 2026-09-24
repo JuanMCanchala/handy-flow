@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Scorciatoie bloccate da Secure Input"
   },
   "sidebar": {
+    "home": "Home",
     "general": "Generale",
     "models": "Modelli",
     "advanced": "Avanzate",
@@ -452,6 +453,16 @@
         "cancel": "Annulla",
         "selectToEdit": "Scegli un prompt qui sopra per visualizzare o modificare i dettagli.",
         "createFirst": "Clicca 'Crea un nuovo prompt' qui sopra per creare il tuo primo prompt di post-elaborazione."
+      }
+    },
+    "home": {
+      "welcome": "Bentornato",
+      "today": "Oggi",
+      "yesterday": "Ieri",
+      "stats": {
+        "totalWords": "Parole totali",
+        "averageWpm": "PPM medie",
+        "dayStreak": "Giorni consecutivi"
       }
     },
     "history": {

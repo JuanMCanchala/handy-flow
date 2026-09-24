@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Shortcuts blocked by Secure Input"
   },
   "sidebar": {
+    "home": "Home",
     "general": "General",
     "models": "Models",
     "advanced": "Advanced",
@@ -452,6 +453,16 @@
         "cancel": "Cancel",
         "selectToEdit": "Select a prompt above to view and edit its details.",
         "createFirst": "Click 'Create New Prompt' above to create your first post-processing prompt."
+      }
+    },
+    "home": {
+      "welcome": "Welcome back",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "stats": {
+        "totalWords": "Total Words",
+        "averageWpm": "Average WPM",
+        "dayStreak": "Day Streak"
       }
     },
     "history": {

@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Genveje blokeret af Secure Input"
   },
   "sidebar": {
+    "home": "Hjem",
     "general": "Generelt",
     "models": "Modeller",
     "advanced": "Avanceret",
@@ -452,6 +453,16 @@
         "cancel": "Annuller",
         "selectToEdit": "Vælg en prompt ovenfor for at se og redigere dens detaljer.",
         "createFirst": "Klik på 'Opret ny prompt' ovenfor for at oprette din første efterbehandlingsprompt."
+      }
+    },
+    "home": {
+      "welcome": "Velkommen tilbage",
+      "today": "I dag",
+      "yesterday": "I går",
+      "stats": {
+        "totalWords": "Ord i alt",
+        "averageWpm": "Gennemsnitlig OPM",
+        "dayStreak": "Dagsstreak"
       }
     },
     "history": {

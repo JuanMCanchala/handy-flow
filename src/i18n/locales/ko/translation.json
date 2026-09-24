@@ -10,6 +10,7 @@
     "secureInputWarning": "⚠ Secure Input으로 단축키가 차단됨"
   },
   "sidebar": {
+    "home": "홈",
     "general": "일반",
     "models": "모델",
     "advanced": "고급",
@@ -452,6 +453,16 @@
         "cancel": "취소",
         "selectToEdit": "세부 정보를 보고 편집하려면 위에서 프롬프트를 선택하세요.",
         "createFirst": "첫 번째 후처리 프롬프트를 만들려면 위의 '새 프롬프트 만들기'를 클릭하세요."
+      }
+    },
+    "home": {
+      "welcome": "다시 오신 것을 환영합니다",
+      "today": "오늘",
+      "yesterday": "어제",
+      "stats": {
+        "totalWords": "총 단어 수",
+        "averageWpm": "평균 WPM",
+        "dayStreak": "연속 일수"
       }
     },
     "history": {
