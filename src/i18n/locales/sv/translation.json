@@ -524,6 +524,14 @@
         "totalWords": "Totalt antal ord",
         "averageWpm": "Genomsnittlig OPM",
         "dayStreak": "Dagsstreak"
+      },
+      "import": {
+        "button": "Importera fil",
+        "dropHint": "Dra och släpp en ljud- eller videofil här, eller",
+        "starting": "Startar import...",
+        "progress": "Transkriberar del {{current}} av {{total}}...",
+        "cancel": "Avbryt",
+        "error": "Det gick inte att importera \"{{file}}\". Prova en filtyp som stöds för ljud eller video."
       }
     },
     "style": {
@@ -562,6 +570,8 @@
       "empty": "Inga transkriptioner ännu. Börja spela in för att bygga upp din historik!",
       "copyToClipboard": "Kopiera transkription till urklipp",
       "copyError": "Det gick inte att kopiera transkriptionen till urklipp.",
+      "export": "Exportera transkription",
+      "exportError": "Det gick inte att exportera transkriptionen. Försök igen.",
       "save": "Spara transkription",
       "unsave": "Ta bort från sparade",
       "delete": "Ta bort post",

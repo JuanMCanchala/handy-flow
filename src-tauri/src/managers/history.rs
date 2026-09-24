@@ -32,6 +32,19 @@ static MIGRATIONS: &[M] = &[
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_prompt TEXT;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_requested BOOLEAN NOT NULL DEFAULT 0;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN duration_seconds REAL;"),
+    M::up(
+        "CREATE TABLE IF NOT EXISTS transcript_segments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            history_entry_id INTEGER NOT NULL,
+            ordinal INTEGER NOT NULL,
+            start_ms INTEGER NOT NULL,
+            end_ms INTEGER NOT NULL,
+            text TEXT NOT NULL,
+            FOREIGN KEY (history_entry_id) REFERENCES transcription_history (id) ON DELETE CASCADE
+        );
+        CREATE INDEX IF NOT EXISTS idx_transcript_segments_history_entry_id
+            ON transcript_segments (history_entry_id);",
+    ),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -228,6 +241,30 @@ impl HistoryManager {
         post_process_prompt: Option<String>,
         duration_seconds: Option<f64>,
     ) -> Result<HistoryEntry> {
+        self.save_entry_with_segments(
+            file_name,
+            transcription_text,
+            post_process_requested,
+            post_processed_text,
+            post_process_prompt,
+            duration_seconds,
+            &[],
+        )
+    }
+
+    /// Save a new history entry along with per-segment timestamps (used by
+    /// file import; dictation entries have no segments and go through
+    /// `save_entry` above).
+    pub fn save_entry_with_segments(
+        &self,
+        file_name: String,
+        transcription_text: String,
+        post_process_requested: bool,
+        post_processed_text: Option<String>,
+        post_process_prompt: Option<String>,
+        duration_seconds: Option<f64>,
+        segments: &[crate::transcript_export::TranscriptSegment],
+    ) -> Result<HistoryEntry> {
         let timestamp = Utc::now().timestamp();
         let title = self.format_timestamp_title(timestamp);
 
@@ -257,8 +294,26 @@ impl HistoryManager {
             ],
         )?;
 
+        let entry_id = conn.last_insert_rowid();
+
+        if !segments.is_empty() {
+            let mut stmt = conn.prepare(
+                "INSERT INTO transcript_segments (history_entry_id, ordinal, start_ms, end_ms, text)
+                 VALUES (?1, ?2, ?3, ?4, ?5)",
+            )?;
+            for (ordinal, segment) in segments.iter().enumerate() {
+                stmt.execute(params![
+                    entry_id,
+                    ordinal as i64,
+                    segment.start_ms as i64,
+                    segment.end_ms as i64,
+                    &segment.text,
+                ])?;
+            }
+        }
+
         let entry = HistoryEntry {
-            id: conn.last_insert_rowid(),
+            id: entry_id,
             file_name,
             timestamp,
             saved: false,
@@ -640,6 +695,33 @@ impl HistoryManager {
         let entry = stmt.query_row([id], Self::map_history_entry).optional()?;
 
         Ok(entry)
+    }
+
+    /// Fetch the stored per-segment timestamps for a history entry, ordered
+    /// by their original position. Empty for dictation entries and for
+    /// imports whose engine did not return timestamps beyond a single
+    /// whole-file segment.
+    pub async fn get_segments(
+        &self,
+        history_entry_id: i64,
+    ) -> Result<Vec<crate::transcript_export::TranscriptSegment>> {
+        let conn = self.get_connection()?;
+        let mut stmt = conn.prepare(
+            "SELECT start_ms, end_ms, text FROM transcript_segments
+             WHERE history_entry_id = ?1
+             ORDER BY ordinal ASC",
+        )?;
+
+        let rows = stmt.query_map(params![history_entry_id], |row| {
+            Ok(crate::transcript_export::TranscriptSegment {
+                start_ms: row.get::<_, i64>("start_ms")? as u64,
+                end_ms: row.get::<_, i64>("end_ms")? as u64,
+                text: row.get("text")?,
+            })
+        })?;
+
+        let segments = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        Ok(segments)
     }
 
     pub async fn delete_entry(&self, id: i64) -> Result<()> {

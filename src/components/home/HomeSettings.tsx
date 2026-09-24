@@ -5,6 +5,7 @@ import { copyToClipboard } from "../settings/history/clipboard";
 import { HistoryEntryComponent } from "../settings/history/HistorySettings";
 import { useHistoryEntries } from "../settings/history/useHistoryEntries";
 import { AudioPlayerGroup } from "../ui/AudioPlayer";
+import { FileImportDropZone } from "./FileImportDropZone";
 
 const StatCard: React.FC<{ label: string; value: string }> = ({
   label,
@@ -116,6 +117,8 @@ export const HomeSettings: React.FC = () => {
       <h1 className="text-xl font-semibold">{t("settings.home.welcome")}</h1>
 
       <StatsCard />
+
+      <FileImportDropZone />
 
       <div className="space-y-4">
         {loading ? (

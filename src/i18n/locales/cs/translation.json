@@ -524,6 +524,14 @@
         "totalWords": "Celkem slov",
         "averageWpm": "Průměrné SZM",
         "dayStreak": "Dny v řadě"
+      },
+      "import": {
+        "button": "Importovat soubor",
+        "dropHint": "Přetáhněte sem zvukový nebo video soubor, nebo",
+        "starting": "Zahajuji import...",
+        "progress": "Přepisuji část {{current}} z {{total}}...",
+        "cancel": "Zrušit",
+        "error": "Import souboru „{{file}}“ se nezdařil. Zkuste podporovaný zvukový nebo video soubor."
       }
     },
     "style": {
@@ -562,6 +570,8 @@
       "empty": "Zatím žádné přepisy. Začněte nahrávat a vytvořte si historii!",
       "copyToClipboard": "Kopírovat přepis do schránky",
       "copyError": "Přepis se nepodařilo zkopírovat do schránky.",
+      "export": "Exportovat přepis",
+      "exportError": "Export přepisu se nezdařil. Zkuste to prosím znovu.",
       "save": "Uložit přepis",
       "unsave": "Odebrat z uložených",
       "delete": "Smazat záznam",

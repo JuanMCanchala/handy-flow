@@ -524,6 +524,14 @@
         "totalWords": "Totaal woorden",
         "averageWpm": "Gemiddeld WPM",
         "dayStreak": "Dagenreeks"
+      },
+      "import": {
+        "button": "Bestand importeren",
+        "dropHint": "Sleep hier een audio- of videobestand naartoe, of",
+        "starting": "Import wordt gestart...",
+        "progress": "Fragment {{current}} van {{total}} wordt getranscribeerd...",
+        "cancel": "Annuleren",
+        "error": "Importeren van \"{{file}}\" mislukt. Probeer een ondersteund audio- of videobestand."
       }
     },
     "style": {
@@ -562,6 +570,8 @@
       "empty": "Nog geen transcripties. Start met opnemen om je geschiedenis op te bouwen!",
       "copyToClipboard": "Transcriptie naar klembord kopiëren",
       "copyError": "Transcriptie naar het klembord kopiëren mislukt.",
+      "export": "Transcriptie exporteren",
+      "exportError": "Transcriptie exporteren mislukt. Probeer het opnieuw.",
       "save": "Transcriptie opslaan",
       "unsave": "Verwijderen uit opgeslagen",
       "delete": "Item verwijderen",

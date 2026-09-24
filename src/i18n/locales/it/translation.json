@@ -524,6 +524,14 @@
         "totalWords": "Parole totali",
         "averageWpm": "PPM medie",
         "dayStreak": "Giorni consecutivi"
+      },
+      "import": {
+        "button": "Importa file",
+        "dropHint": "Trascina e rilascia qui un file audio o video, oppure",
+        "starting": "Avvio importazione...",
+        "progress": "Trascrizione del segmento {{current}} di {{total}}...",
+        "cancel": "Annulla",
+        "error": "Impossibile importare \"{{file}}\". Prova con un file audio o video supportato."
       }
     },
     "style": {
@@ -562,6 +570,8 @@
       "empty": "Non ci sono ancora trascrizioni. Comincia a registrare per costruire la tua cronologia!",
       "copyToClipboard": "Copia la trascrizione negli appunti",
       "copyError": "Impossibile copiare la trascrizione negli appunti.",
+      "export": "Esporta trascrizione",
+      "exportError": "Impossibile esportare la trascrizione. Riprova.",
       "save": "Salva la trascrizione",
       "unsave": "Rimuovi dai salvataggi",
       "delete": "Elimina elemento",

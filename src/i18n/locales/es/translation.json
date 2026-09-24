@@ -550,6 +550,14 @@
         "totalWords": "Palabras totales",
         "averageWpm": "PPM promedio",
         "dayStreak": "Racha de días"
+      },
+      "import": {
+        "button": "Importar archivo",
+        "dropHint": "Arrastra y suelta un archivo de audio o video aquí, o",
+        "starting": "Iniciando importación...",
+        "progress": "Transcribiendo fragmento {{current}} de {{total}}...",
+        "cancel": "Cancelar",
+        "error": "No se pudo importar \"{{file}}\". Intenta con un archivo de audio o video compatible."
       }
     },
     "style": {
@@ -588,6 +596,8 @@
       "empty": "Aún no hay transcripciones. ¡Comienza a grabar para crear tu historial!",
       "copyToClipboard": "Copiar transcripción al portapapeles",
       "copyError": "No se pudo copiar la transcripción al portapapeles.",
+      "export": "Exportar transcripción",
+      "exportError": "No se pudo exportar la transcripción. Por favor, inténtalo de nuevo.",
       "save": "Guardar transcripción",
       "unsave": "Eliminar de guardados",
       "delete": "Eliminar entrada",

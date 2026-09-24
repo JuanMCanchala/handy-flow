@@ -524,6 +524,14 @@
         "totalWords": "Paraules totals",
         "averageWpm": "PPM mitjana",
         "dayStreak": "Ratxa de dies"
+      },
+      "import": {
+        "button": "Importa un fitxer",
+        "dropHint": "Arrossegueu i deixeu anar un fitxer d'àudio o vídeo aquí, o",
+        "starting": "S'està iniciant la importació...",
+        "progress": "S'està transcrivint el fragment {{current}} de {{total}}...",
+        "cancel": "Cancel·la",
+        "error": "No s'ha pogut importar «{{file}}». Proveu amb un fitxer d'àudio o vídeo compatible."
       }
     },
     "style": {
@@ -562,6 +570,8 @@
       "empty": "Encara no hi ha transcripcions. Comenceu a enregistrar per crear l'historial!",
       "copyToClipboard": "Copia la transcripció al porta-retalls",
       "copyError": "No s'ha pogut copiar la transcripció al porta-retalls.",
+      "export": "Exporta la transcripció",
+      "exportError": "No s'ha pogut exportar la transcripció. Torneu-ho a provar.",
       "save": "Desa la transcripció",
       "unsave": "Treu de les desades",
       "delete": "Suprimeix l'entrada",
