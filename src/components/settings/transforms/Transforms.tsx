@@ -121,7 +121,7 @@ const TransformsComponent: React.FC = () => {
             editingId === transform.id ? (
               <div
                 key={transform.id}
-                className="flex flex-col gap-2 p-2 rounded-lg border border-mid-gray/20"
+                className="flex flex-col gap-2 p-2 rounded-lg border border-border"
               >
                 <Input
                   type="text"
@@ -157,12 +157,12 @@ const TransformsComponent: React.FC = () => {
             ) : (
               <div
                 key={transform.id}
-                className="flex items-center gap-2 p-2 rounded-lg border border-mid-gray/20"
+                className="flex items-center gap-2 p-2 rounded-lg border border-border"
               >
                 <span className="font-medium shrink-0 max-w-40 truncate">
                   {transform.name}
                 </span>
-                <span className="flex-1 truncate text-mid-gray">
+                <span className="flex-1 truncate text-text-tertiary">
                   {transform.prompt}
                 </span>
                 <Button

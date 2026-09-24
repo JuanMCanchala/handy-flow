@@ -163,7 +163,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
     <div className="h-screen w-full flex flex-col p-6 gap-4">
       <div className="flex flex-col items-center gap-2 shrink-0">
         <HandyTextLogo width={200} />
-        <p className="text-text/70 max-w-md font-medium mx-auto">
+        <p className="text-text-secondary max-w-md font-medium mx-auto">
           {t("onboarding.subtitle")}
         </p>
       </div>
@@ -173,7 +173,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
           {models.some((m: ModelInfo) => m.is_downloaded) && (
             <div className="space-y-3">
               <div className="text-left">
-                <h2 className="text-sm font-medium text-text/60">
+                <h2 className="text-small font-medium text-text-secondary">
                   {t("onboarding.existingModelsTitle")}
                 </h2>
               </div>
@@ -195,7 +195,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
           {downloadable.length > 0 && (
             <div className="space-y-3">
               <div className="text-left">
-                <h2 className="text-sm font-medium text-text/60">
+                <h2 className="text-small font-medium text-text-secondary">
                   {t("onboarding.downloadModelsTitle")}
                 </h2>
               </div>
@@ -235,7 +235,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAll((v) => !v)}
-                  className="flex items-center justify-center gap-1.5 mx-auto py-1 text-sm font-medium text-text/60 hover:text-text transition-colors"
+                  className="flex items-center justify-center gap-1.5 mx-auto py-1 text-small font-medium text-text-secondary hover:text-text transition-colors"
                 >
                   {showAll
                     ? t("onboarding.showFewerModels")

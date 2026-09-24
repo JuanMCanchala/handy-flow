@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { commands, type KeyboardDiagnosticReport } from "@/bindings";
 import { useOsType } from "../../../hooks/useOsType";
+import { Button } from "../../ui/Button";
 
 /**
  * Count-only keyboard capture test (macOS).
@@ -74,33 +75,35 @@ export const KeyboardDiagnostic: React.FC = () => {
     <div className="p-4 space-y-2">
       <div className="flex justify-between items-center gap-2">
         <div>
-          <p className="text-sm font-medium">
+          <p className="text-body font-medium">
             {t("settings.debug.keyboardDiagnostic.title")}
           </p>
-          <p className="text-xs text-mid-gray">
+          <p className="text-caption text-text-tertiary">
             {t("settings.debug.keyboardDiagnostic.description")}
           </p>
         </div>
-        <button
+        <Button
           onClick={runDiagnostic}
           disabled={running}
-          className="px-2 py-1 text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 hover:bg-logo-primary/10 rounded cursor-pointer hover:border-logo-primary disabled:opacity-50 disabled:cursor-default whitespace-nowrap"
+          variant="secondary"
+          size="sm"
+          className="whitespace-nowrap"
         >
           {t("settings.debug.keyboardDiagnostic.run")}
-        </button>
+        </Button>
       </div>
       {running && (
-        <p className="text-sm animate-pulse">
+        <p className="text-body animate-pulse">
           {t("settings.debug.keyboardDiagnostic.running")}
         </p>
       )}
       {error !== null && (
-        <p className="text-sm text-red-500">
+        <p className="text-body text-error">
           {t("settings.debug.keyboardDiagnostic.failed", { error })}
         </p>
       )}
       {report !== null && (
-        <div className="text-sm font-mono space-y-1">
+        <div className="text-body font-mono space-y-1">
           <p>
             {t("settings.debug.keyboardDiagnostic.secureInputLabel")}:{" "}
             {secureInputLine(report)}

@@ -128,7 +128,7 @@ const SnippetsComponent: React.FC = () => {
             editingId === snippet.id ? (
               <div
                 key={snippet.id}
-                className="flex items-center gap-2 p-2 rounded-lg border border-mid-gray/20"
+                className="flex items-center gap-2 p-2 rounded-lg border border-border"
               >
                 <Input
                   type="text"
@@ -168,12 +168,12 @@ const SnippetsComponent: React.FC = () => {
             ) : (
               <div
                 key={snippet.id}
-                className="flex items-center gap-2 p-2 rounded-lg border border-mid-gray/20"
+                className="flex items-center gap-2 p-2 rounded-lg border border-border"
               >
                 <span className="font-medium shrink-0 max-w-40 truncate">
                   {snippet.trigger}
                 </span>
-                <span className="text-mid-gray shrink-0">→</span>
+                <span className="text-text-tertiary shrink-0">→</span>
                 <span className="flex-1 truncate">{snippet.expansion}</span>
                 <Button
                   onClick={() =>

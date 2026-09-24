@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { commands } from "@/bindings";
 import { SettingsGroup } from "../../ui/SettingsGroup";
+import { PageHeader } from "../../ui/PageHeader";
 import { Button } from "../../ui/Button";
 import { ShortcutInput } from "../ShortcutInput";
 import { LiveTranslateSourceSelector } from "../LiveTranslateSourceSelector";
@@ -39,7 +40,8 @@ export const LiveTranslateSettings: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("sidebar.liveTranslate")} />
       <SettingsGroup title={t("settings.liveTranslate.title")}>
         <ShortcutInput shortcutId="live_subtitles" grouped={true} />
         <LiveTranslateSourceSelector descriptionMode="tooltip" grouped={true} />

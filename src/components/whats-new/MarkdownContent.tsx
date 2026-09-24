@@ -66,23 +66,23 @@ const components: Components = {
     <h3 className="text-sm font-semibold leading-snug text-text">{children}</h3>
   ),
   p: ({ children }) => (
-    <p className="text-sm leading-relaxed text-text/80">{children}</p>
+    <p className="text-small leading-relaxed text-text-secondary">{children}</p>
   ),
   ul: ({ children }) => (
-    <ul className="list-disc space-y-1 ps-5 text-sm leading-relaxed text-text/80">
+    <ul className="list-disc space-y-1 ps-5 text-small leading-relaxed text-text-secondary">
       {children}
     </ul>
   ),
   li: ({ children }) => (
-    <li className="pl-1 marker:text-text/50">{children}</li>
+    <li className="pl-1 marker:text-text-tertiary">{children}</li>
   ),
   ol: ({ children }) => (
-    <ol className="list-decimal space-y-1 ps-5 text-sm leading-relaxed text-text/80">
+    <ol className="list-decimal space-y-1 ps-5 text-small leading-relaxed text-text-secondary">
       {children}
     </ol>
   ),
   br: () => <br />,
-  hr: () => <hr className="border-mid-gray/20" />,
+  hr: () => <hr className="border-border" />,
   img: ({ alt, src }) => {
     if (!src || !isSafeImageSrc(src)) return null;
 
@@ -97,7 +97,7 @@ const components: Components = {
     );
   },
   blockquote: ({ children }) => (
-    <blockquote className="border-s-2 border-logo-primary/50 ps-3 text-sm leading-relaxed text-text/70">
+    <blockquote className="border-s-2 border-border-strong ps-3 text-small leading-relaxed text-text-secondary">
       {children}
     </blockquote>
   ),
@@ -106,20 +106,20 @@ const components: Components = {
 
     if (isBlock) {
       return (
-        <code className="block whitespace-pre font-mono text-xs">
+        <code className="block whitespace-pre font-mono text-caption">
           {children}
         </code>
       );
     }
 
     return (
-      <code className="rounded bg-mid-gray/10 px-1 py-0.5 font-mono text-[0.85em]">
+      <code className="rounded-sm bg-surface-sunken px-1 py-0.5 font-mono text-[0.85em]">
         {children}
       </code>
     );
   },
   pre: ({ children }) => (
-    <pre className="overflow-x-auto rounded-md bg-mid-gray/10 p-3 text-xs leading-relaxed text-text/80">
+    <pre className="overflow-x-auto rounded-md bg-surface-sunken p-3 text-caption leading-relaxed text-text-secondary">
       {children}
     </pre>
   ),
@@ -136,7 +136,7 @@ const components: Components = {
           event.preventDefault();
           void openSafeUrl(href);
         }}
-        className="text-logo-primary underline decoration-logo-primary/40 underline-offset-2 hover:decoration-logo-primary"
+        className="text-text underline decoration-border-strong underline-offset-2 hover:decoration-text"
       >
         {children}
       </a>
