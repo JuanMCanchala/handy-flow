@@ -21,7 +21,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use symphonia::core::audio::{AudioBufferRef, Signal};
-use symphonia::core::codecs::{DecoderOptions, CODEC_TYPE_NULL};
+use symphonia::core::codecs::{DecoderOptions, CODEC_TYPE_NULL, CODEC_TYPE_OPUS};
 use symphonia::core::conv::IntoSample;
 use symphonia::core::formats::FormatOptions;
 use symphonia::core::io::MediaSourceStream;
@@ -32,9 +32,17 @@ use tauri_specta::Event;
 
 /// File extensions accepted by the import dialog and drop zone. Kept in sync
 /// with the symphonia bundles enabled in Cargo.toml (mp3, flac, aac/mp4/mov,
-/// ogg/vorbis, wav/riff). Containers like webm/mkv are intentionally not
-/// listed: no demuxer/codec for them is in the dependency tree.
-pub const SUPPORTED_EXTENSIONS: &[&str] = &["wav", "mp3", "m4a", "flac", "ogg", "mp4", "mov"];
+/// ogg/vorbis, wav/riff, mkv/webm demuxing). webm/mkv files that use Opus
+/// audio are accepted here but rejected with a clear error at decode time:
+/// symphonia has no Opus decoder, only Vorbis, for the mkv/webm container.
+pub const SUPPORTED_EXTENSIONS: &[&str] = &[
+    "wav", "mp3", "m4a", "flac", "ogg", "mp4", "mov", "webm", "mkv",
+];
+
+/// Returned when a webm/mkv file's audio track is Opus: symphonia (as
+/// configured here) can demux mkv/webm but only decode Vorbis audio inside it.
+const OPUS_UNSUPPORTED_MESSAGE: &str =
+    "Opus audio in webm/mkv files is not supported yet; re-encode with Vorbis audio or use another format";
 
 /// Each imported chunk covers this much source audio before being handed to
 /// the transcription engine. 30s matches Whisper's native context window.
@@ -144,6 +152,9 @@ fn decode_and_resample(path: &Path) -> Result<(Vec<f32>, f64)> {
         .find(|t| t.codec_params.codec != CODEC_TYPE_NULL)
         .ok_or_else(|| anyhow!("No decodable audio track found in file"))?;
     let track_id = track.id;
+    if track.codec_params.codec == CODEC_TYPE_OPUS {
+        return Err(anyhow!(OPUS_UNSUPPORTED_MESSAGE));
+    }
     let source_hz = track
         .codec_params
         .sample_rate
@@ -380,12 +391,13 @@ mod tests {
         assert!(is_supported_file(Path::new("clip.m4a")));
         assert!(is_supported_file(Path::new("clip.mp4")));
         assert!(is_supported_file(Path::new("clip.mov")));
+        assert!(is_supported_file(Path::new("clip.webm")));
+        assert!(is_supported_file(Path::new("clip.WEBM")));
+        assert!(is_supported_file(Path::new("clip.mkv")));
     }
 
     #[test]
     fn unsupported_extensions_are_rejected() {
-        assert!(!is_supported_file(Path::new("clip.webm")));
-        assert!(!is_supported_file(Path::new("clip.mkv")));
         assert!(!is_supported_file(Path::new("clip.txt")));
         assert!(!is_supported_file(Path::new("clip")));
     }
@@ -425,6 +437,25 @@ mod tests {
     fn decode_rejects_missing_file() {
         let result = decode_and_resample(Path::new("/no/such/file.wav"));
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn mkv_format_is_registered_for_webm_and_mkv_extensions() {
+        use symphonia::core::probe::{Descriptor, QueryDescriptor};
+        use symphonia_format_mkv::MkvReader;
+
+        let descriptors: &[Descriptor] = MkvReader::query();
+        let mkv_descriptor = descriptors
+            .iter()
+            .find(|d| d.extensions.contains(&"mkv"))
+            .expect("mkv format descriptor should be registered");
+        assert!(mkv_descriptor.extensions.contains(&"webm"));
+    }
+
+    #[test]
+    fn mkv_opus_track_is_rejected_with_clear_error() {
+        assert!(OPUS_UNSUPPORTED_MESSAGE.contains("Opus"));
+        assert!(OPUS_UNSUPPORTED_MESSAGE.contains("Vorbis"));
     }
 
     #[test]

@@ -13,6 +13,8 @@ export const SUPPORTED_IMPORT_EXTENSIONS = [
   "ogg",
   "mp4",
   "mov",
+  "webm",
+  "mkv",
 ];
 
 const isSupportedFile = (fileName: string): boolean => {
