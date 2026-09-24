@@ -529,6 +529,14 @@
         "totalWords": "Ord i alt",
         "averageWpm": "Gennemsnitlig OPM",
         "dayStreak": "Dagsstreak"
+      },
+      "import": {
+        "button": "Importer fil",
+        "dropHint": "Træk og slip en lyd- eller videofil her, eller",
+        "starting": "Starter import...",
+        "progress": "Transskriberer del {{current}} af {{total}}...",
+        "cancel": "Annuller",
+        "error": "Kunne ikke importere \"{{file}}\". Prøv en understøttet lyd- eller videofil."
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "Ingen transskriptioner endnu. Start optagelse for at opbygge din historik!",
       "copyToClipboard": "Kopiér transskription til udklipsholder",
       "copyError": "Kunne ikke kopiere transskriptionen til udklipsholderen.",
+      "export": "Eksportér transskription",
+      "exportError": "Kunne ikke eksportere transskriptionen. Prøv igen.",
       "save": "Gem transskription",
       "unsave": "Fjern fra gemte",
       "delete": "Slet post",

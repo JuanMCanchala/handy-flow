@@ -10,6 +10,7 @@ mod clipboard;
 mod cloud_stt;
 mod command_mode;
 mod commands;
+mod file_import;
 mod helpers;
 mod input;
 mod insights;
@@ -26,6 +27,7 @@ mod shortcut;
 mod signal_handle;
 mod snippets;
 mod style;
+mod transcript_export;
 mod transcription_coordinator;
 mod transforms;
 mod translate;
@@ -217,6 +219,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
         app_handle,
         transcription_manager.clone(),
     ));
+    let file_import_manager = Arc::new(file_import::FileImportManager::new());
 
     // Initialize the transcribe-cpp native backend (logging + backend module
     // registration) once, before any whisper model is loaded.
@@ -231,6 +234,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
     app_handle.manage(live_translate_manager.clone());
+    app_handle.manage(file_import_manager.clone());
     app_handle.manage(tray::TrayState::new());
 
     // Note: Shortcuts are NOT initialized here.
@@ -792,6 +796,9 @@ pub fn run(cli_args: CliArgs) {
             commands::history::retry_history_entry_transcription,
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
+            commands::history::import_audio_file,
+            commands::history::cancel_audio_import,
+            commands::history::export_transcript,
             commands::insights::get_insights,
             commands::transforms::add_transform,
             commands::transforms::update_transform,
@@ -807,6 +814,7 @@ pub fn run(cli_args: CliArgs) {
             managers::transcription::StreamTextEvent,
             managers::transcription::StreamPhaseEvent,
             live_translate::LiveSubtitleLine,
+            file_import::FileImportProgressEvent,
         ]);
 
     #[cfg(debug_assertions)] // <- Only export on non-release builds

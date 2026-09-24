@@ -529,6 +529,14 @@
         "totalWords": "Mots totaux",
         "averageWpm": "MPM moyen",
         "dayStreak": "Série de jours"
+      },
+      "import": {
+        "button": "Importer un fichier",
+        "dropHint": "Glissez-déposez un fichier audio ou vidéo ici, ou",
+        "starting": "Démarrage de l'importation...",
+        "progress": "Transcription du segment {{current}} sur {{total}}...",
+        "cancel": "Annuler",
+        "error": "Échec de l'importation de « {{file}} ». Essayez un fichier audio ou vidéo pris en charge."
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "Pas encore de transcriptions. Commencez à enregistrer pour créer votre historique !",
       "copyToClipboard": "Copier la transcription dans le presse-papiers",
       "copyError": "Impossible de copier la transcription dans le presse-papiers.",
+      "export": "Exporter la transcription",
+      "exportError": "Échec de l'exportation de la transcription. Veuillez réessayer.",
       "save": "Enregistrer la transcription",
       "unsave": "Retirer des favoris",
       "delete": "Supprimer l'entrée",

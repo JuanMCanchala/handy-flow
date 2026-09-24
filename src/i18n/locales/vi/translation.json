@@ -529,6 +529,14 @@
         "totalWords": "Tổng số từ",
         "averageWpm": "TB từ/phút",
         "dayStreak": "Số ngày liên tiếp"
+      },
+      "import": {
+        "button": "Nhập tệp",
+        "dropHint": "Kéo và thả tệp âm thanh hoặc video vào đây, hoặc",
+        "starting": "Đang bắt đầu nhập...",
+        "progress": "Đang phiên âm đoạn {{current}} trong {{total}}...",
+        "cancel": "Hủy",
+        "error": "Không thể nhập \"{{file}}\". Vui lòng thử tệp âm thanh hoặc video được hỗ trợ."
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "Chưa có bản ghi nào. Bắt đầu ghi âm để xây dựng lịch sử của bạn!",
       "copyToClipboard": "Sao chép bản ghi vào clipboard",
       "copyError": "Không thể sao chép bản ghi vào bộ nhớ tạm.",
+      "export": "Xuất bản ghi",
+      "exportError": "Không thể xuất bản ghi. Vui lòng thử lại.",
       "save": "Lưu bản ghi",
       "unsave": "Xóa khỏi đã lưu",
       "delete": "Xóa mục",

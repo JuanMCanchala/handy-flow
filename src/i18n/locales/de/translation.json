@@ -529,6 +529,14 @@
         "totalWords": "Wörter insgesamt",
         "averageWpm": "Durchschnittliche WPM",
         "dayStreak": "Tage in Folge"
+      },
+      "import": {
+        "button": "Datei importieren",
+        "dropHint": "Ziehe eine Audio- oder Videodatei hierher, oder",
+        "starting": "Import wird gestartet...",
+        "progress": "Transkribiere Abschnitt {{current}} von {{total}}...",
+        "cancel": "Abbrechen",
+        "error": "Import von „{{file}}“ fehlgeschlagen. Bitte versuche eine unterstützte Audio- oder Videodatei."
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "Noch keine Transkriptionen. Starte eine Aufnahme, um deinen Verlauf aufzubauen!",
       "copyToClipboard": "Transkription in Zwischenablage kopieren",
       "copyError": "Transkription konnte nicht in die Zwischenablage kopiert werden.",
+      "export": "Transkription exportieren",
+      "exportError": "Transkription konnte nicht exportiert werden. Bitte versuche es erneut.",
       "save": "Transkription speichern",
       "unsave": "Aus Gespeicherten entfernen",
       "delete": "Eintrag löschen",

@@ -555,6 +555,14 @@
         "totalWords": "Total Words",
         "averageWpm": "Average WPM",
         "dayStreak": "Day Streak"
+      },
+      "import": {
+        "button": "Import file",
+        "dropHint": "Drag and drop an audio or video file here, or",
+        "starting": "Starting import...",
+        "progress": "Transcribing chunk {{current}} of {{total}}...",
+        "cancel": "Cancel",
+        "error": "Failed to import \"{{file}}\". Please try a supported audio or video file."
       }
     },
     "style": {
@@ -593,6 +601,8 @@
       "empty": "No transcriptions yet. Start recording to build your history!",
       "copyToClipboard": "Copy transcription to clipboard",
       "copyError": "Failed to copy transcription to clipboard.",
+      "export": "Export transcript",
+      "exportError": "Failed to export transcript. Please try again.",
       "save": "Save transcription",
       "unsave": "Remove from saved",
       "delete": "Delete entry",

@@ -7,6 +7,7 @@ import { useHistoryEntries } from "../settings/history/useHistoryEntries";
 import { AudioPlayerGroup } from "../ui/AudioPlayer";
 import { PageHeader } from "../ui/PageHeader";
 import { StatCard } from "../ui/StatCard";
+import { FileImportDropZone } from "./FileImportDropZone";
 
 const StatsRow: React.FC = () => {
   const { t } = useTranslation();
@@ -106,6 +107,8 @@ export const HomeSettings: React.FC = () => {
       <PageHeader title={t("settings.home.welcome")} />
 
       <StatsRow />
+
+      <FileImportDropZone />
 
       <div className="space-y-4">
         {loading ? (

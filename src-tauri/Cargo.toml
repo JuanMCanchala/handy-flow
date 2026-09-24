@@ -60,6 +60,18 @@ vad-rs = { git = "https://github.com/cjpais/vad-rs", default-features = false }
 earshot = "1.2.2"
 enigo = "0.6.1"
 rodio = { git = "https://github.com/cjpais/rodio.git" }
+# Container/codec decoding for imported audio/video files. Features match the
+# bundles rodio already pulls in transitively (see Cargo.lock), so this adds
+# no new dependency surface — just a direct handle to decode files ourselves.
+symphonia = { version = "0.5.5", default-features = false, features = [
+  "aac",
+  "flac",
+  "isomp4",
+  "mp3",
+  "ogg",
+  "pcm",
+  "vorbis",
+] }
 reqwest = { version = "0.12", features = ["json", "stream", "gzip", "brotli", "deflate", "multipart"] }
 futures-util = "0.3"
 rustfft = "6.4.0"

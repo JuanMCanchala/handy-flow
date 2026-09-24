@@ -1,7 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Check, Copy, FolderOpen, RotateCcw, Star, Trash2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Download,
+  FolderOpen,
+  RotateCcw,
+  Star,
+  Trash2,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { save } from "@tauri-apps/plugin-dialog";
 import { commands, type HistoryEntry } from "@/bindings";
 import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
@@ -9,6 +18,9 @@ import { Button } from "../../ui/Button";
 import { PageHeader } from "../../ui/PageHeader";
 import { copyToClipboard } from "./clipboard";
 import { useHistoryEntries } from "./useHistoryEntries";
+
+type ExportFormat = "txt" | "srt" | "vtt";
+const EXPORT_FORMATS: ExportFormat[] = ["txt", "srt", "vtt"];
 
 const IconButton: React.FC<{
   onClick: () => void;
@@ -178,8 +190,38 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   const { t, i18n } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
   const [retrying, setRetrying] = useState(false);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
 
   const hasTranscription = entry.transcription_text.trim().length > 0;
+
+  useEffect(() => {
+    if (!exportMenuOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        exportMenuRef.current &&
+        !exportMenuRef.current.contains(event.target as Node)
+      ) {
+        setExportMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [exportMenuOpen]);
+
+  const handleExport = async (format: ExportFormat) => {
+    setExportMenuOpen(false);
+    const destPath = await save({
+      defaultPath: `${entry.title}.${format}`,
+      filters: [{ name: format.toUpperCase(), extensions: [format] }],
+    });
+    if (!destPath) return;
+
+    const result = await commands.exportTranscript(entry.id, format, destPath);
+    if (result.status !== "ok") {
+      toast.error(t("settings.history.exportError"));
+    }
+  };
 
   const handleLoadAudio = useCallback(
     () => getAudioUrl(entry.file_name),
@@ -240,6 +282,28 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
               <Copy width={16} height={16} />
             )}
           </IconButton>
+          <div className="relative" ref={exportMenuRef}>
+            <IconButton
+              onClick={() => setExportMenuOpen((open) => !open)}
+              disabled={!hasTranscription || retrying}
+              title={t("settings.history.export")}
+            >
+              <Download width={16} height={16} />
+            </IconButton>
+            {exportMenuOpen && (
+              <div className="absolute right-0 top-full mt-1 z-10 bg-background border border-mid-gray/20 rounded-md shadow-lg overflow-hidden">
+                {EXPORT_FORMATS.map((format) => (
+                  <button
+                    key={format}
+                    onClick={() => handleExport(format)}
+                    className="block w-full px-3 py-1.5 text-left text-xs text-text/80 hover:bg-mid-gray/10 cursor-pointer"
+                  >
+                    {format.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <IconButton
             onClick={onToggleSaved}
             disabled={retrying}

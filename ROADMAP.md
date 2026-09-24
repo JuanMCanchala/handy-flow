@@ -14,7 +14,7 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 | 7   | Flow-style Home (history grouped by day, play / copy)                                                  | done        |
 | 8   | Scratchpad                                                                                             | done        |
 | 9   | Live translation EN ↔ ES (Transync-style live subtitles + dictate in one language, paste in the other) | done (Windows system audio; mic everywhere) |
-| 9b  | macOS-style sober UI restyle (spec: `docs/design/macos-style.md`) | done — polish pending (onboarding, model cards, 11 files) |
+| 9b  | macOS-style sober UI restyle (spec: `docs/design/macos-style.md`) | done |
 | 10  | Profile copilot: load my profile, listen to questions about me, suggest an answer in EN or ES         | todo        |
 
 ## Windows build prerequisites
@@ -50,8 +50,8 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | #  | Item | Value / effort |
 |----|------|----------------|
 | 11 | Named modes/presets (model + prompt + language + format + optional hotkey); per-app style becomes a mode binding | H / S |
-| 12 | Audio/video file import + batch transcription (drop zone on Home) | H / M |
-| 13 | SRT/VTT export with per-segment timestamps | M / S |
+| 12 | Audio/video file import + batch transcription (drop zone on Home) — **done** (no webm/mkv yet) | H / M |
+| 13 | SRT/VTT export with per-segment timestamps — **done** | M / S |
 | 14 | Streaming partial transcript in the overlay (final pass unchanged) | H / M |
 | 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") — **done** (deterministic EN/ES pass) | H / S |
 | 16 | Self-learning dictionary from edits in history | M / M |

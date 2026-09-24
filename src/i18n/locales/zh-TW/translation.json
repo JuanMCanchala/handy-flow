@@ -529,6 +529,14 @@
         "totalWords": "總字數",
         "averageWpm": "平均語速（字/分鐘）",
         "dayStreak": "連續天數"
+      },
+      "import": {
+        "button": "匯入檔案",
+        "dropHint": "將音訊或視訊檔案拖放到這裡，或",
+        "starting": "正在開始匯入...",
+        "progress": "正在轉錄第 {{current}} / {{total}} 段...",
+        "cancel": "取消",
+        "error": "匯入「{{file}}」失敗。請嘗試支援的音訊或視訊檔案。"
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "還沒有轉錄紀錄。開始錄製以建立您的歷史紀錄！",
       "copyToClipboard": "複製轉錄到剪貼簿",
       "copyError": "無法將轉錄複製到剪貼簿。",
+      "export": "匯出轉錄",
+      "exportError": "匯出轉錄失敗。請再試一次。",
       "save": "儲存轉錄",
       "unsave": "從已儲存中移除",
       "delete": "刪除條目",

@@ -529,6 +529,14 @@
         "totalWords": "Total Kata",
         "averageWpm": "Rata-rata KPM",
         "dayStreak": "Rangkaian Hari"
+      },
+      "import": {
+        "button": "Impor file",
+        "dropHint": "Seret dan lepas file audio atau video di sini, atau",
+        "starting": "Memulai impor...",
+        "progress": "Mentranskripsikan bagian {{current}} dari {{total}}...",
+        "cancel": "Batal",
+        "error": "Gagal mengimpor \"{{file}}\". Coba file audio atau video yang didukung."
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "Belum ada transkripsi. Mulai merekam untuk mengisi riwayat Anda!",
       "copyToClipboard": "Salin transkripsi ke papan klip",
       "copyError": "Gagal menyalin transkripsi ke papan klip.",
+      "export": "Ekspor transkripsi",
+      "exportError": "Gagal mengekspor transkripsi. Silakan coba lagi.",
       "save": "Simpan transkripsi",
       "unsave": "Hapus dari daftar tersimpan",
       "delete": "Hapus entri",

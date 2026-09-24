@@ -529,6 +529,14 @@
         "totalWords": "Łącznie słów",
         "averageWpm": "Średnie SNM",
         "dayStreak": "Passa dni"
+      },
+      "import": {
+        "button": "Importuj plik",
+        "dropHint": "Przeciągnij i upuść tutaj plik audio lub wideo, lub",
+        "starting": "Rozpoczynanie importu...",
+        "progress": "Transkrybowanie fragmentu {{current}} z {{total}}...",
+        "cancel": "Anuluj",
+        "error": "Nie udało się zaimportować „{{file}}”. Wypróbuj obsługiwany plik audio lub wideo."
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "Brak transkrypcji. Rozpocznij nagrywanie, aby zbudować historię!",
       "copyToClipboard": "Kopiuj transkrypcję do schowka",
       "copyError": "Nie udało się skopiować transkrypcji do schowka.",
+      "export": "Eksportuj transkrypcję",
+      "exportError": "Nie udało się wyeksportować transkrypcji. Spróbuj ponownie.",
       "save": "Zapisz transkrypcję",
       "unsave": "Usuń z zapisanych",
       "delete": "Usuń wpis",

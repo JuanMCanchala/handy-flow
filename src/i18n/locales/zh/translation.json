@@ -529,6 +529,14 @@
         "totalWords": "总字数",
         "averageWpm": "平均语速（词/分钟）",
         "dayStreak": "连续天数"
+      },
+      "import": {
+        "button": "导入文件",
+        "dropHint": "将音频或视频文件拖放到此处，或",
+        "starting": "正在开始导入...",
+        "progress": "正在转录第 {{current}} / {{total}} 段...",
+        "cancel": "取消",
+        "error": "导入“{{file}}”失败。请尝试使用受支持的音频或视频文件。"
       }
     },
     "style": {
@@ -567,6 +575,8 @@
       "empty": "还没有转录记录。开始录制以建立您的历史记录！",
       "copyToClipboard": "复制转录到剪贴板",
       "copyError": "无法将转录复制到剪贴板。",
+      "export": "导出转录",
+      "exportError": "导出转录失败。请重试。",
       "save": "保存转录",
       "unsave": "从已保存中移除",
       "delete": "删除条目",
