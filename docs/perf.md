@@ -13,15 +13,14 @@ alone over-counted for this reason).
 
 | State | Processes | Working set | Private |
 | --- | --- | --- | --- |
-| Window open | 8 | 648.1 MB | 413.8 MB |
-| Hidden to tray (before this change — `window.hide()` only) | 8 | ~648 MB (WebView2 stays fully resident; no measurement needed, code path was a no-op hide) | ~414 MB |
-| **Hidden to tray (after — WebView2 destroyed)** | 8 | **609.2 MB** | **371.3 MB** |
+| Window open | 7 | 532.3 MB | 347.0 MB |
+| **Hidden to tray (main window's WebView2 destroyed)** | 6 | **415.1 MB** | **269.9 MB** |
 
-The saving from destroying the main window's WebView2 on hide is real but
-modest (~39 MB working set / ~43 MB private on this machine), because the
-main window's own renderer process is only one of several WebView2
-processes the app keeps resident. See "What we found" below for why the
-saving isn't larger, and why we didn't chase it further.
+(Process count dropped from 9 in the original brief's baseline to 7 mainly
+because the live-subtitles overlay is no longer created at startup — see
+"2. Make the live-subtitles overlay lazy" below; it used to add a permanent
+WebView2 renderer. The 7→6 drop on hide is the main-window destroy from the
+first pass.)
 
 Model-loaded states (per the brief: "after one dictation with a local model
 loaded (Parakeet/Canary if present)" and "60s after the model unload
@@ -80,34 +79,102 @@ the window risks platform-specific regressions (NSPanel plumbing, GTK
 layer-shell/X11 main-thread constraints already called out in `overlay.rs`)
 for a cost that isn't the dominant one on those platforms.
 
-**What we found while measuring, and didn't chase:** the app also creates
-two more WebView2 windows at startup — the recording overlay
-(`utils::create_recording_overlay`) and the live-subtitles overlay
-(`live_translate::create_live_subtitles_window`) — both hidden, both kept
-alive indefinitely (per the existing comments in `overlay.rs` about issue
-#1279 and the need for the overlay to react to `mic-level`/`recording-ready`
-events instantly). Their renderer processes, plus one always-shared
-GPU/network/storage utility process each webview implicitly needs, account
-for most of the ~600 MB that *doesn't* go away when `main` is destroyed.
-Making those two windows lazy (create on first recording, destroy after N
-seconds idle) would save more memory than this change, but it trades away
-the near-zero recording-overlay show latency the current always-resident
-design was deliberately built for (see `overlay.rs`'s `show_overlay_state`
-and `emit_recording_ready` comments) — that's a latency/memory trade-off
-outside this task's "keep behaviour" constraint, so we left it as a
-documented opportunity rather than implementing it.
+**What we found while measuring, and didn't chase further:** the app also
+creates the recording overlay (`utils::create_recording_overlay`) at
+startup, hidden, kept alive indefinitely (per the existing comments in
+`overlay.rs` about issue #1279 and the need to react to
+`mic-level`/`recording-ready` events instantly). Its renderer process, plus
+the always-shared GPU/network/storage utility processes every webview
+implicitly needs, account for most of the memory that doesn't go away when
+`main` is destroyed. We *did* act on the second always-resident window we
+found (the live-subtitles overlay) — see "2. Make the live-subtitles overlay
+lazy" below — but left the recording overlay resident, since instant-show
+latency is core to its purpose (see "3. Recording overlay tweaks" for what
+we checked there).
 
 **Caveat on the recreate path:** we verified functionally that (a) closing
 the main window drops one WebView2 renderer process and reduces total
-working set/private bytes as shown in the table, and (b) the code compiles
-and `cargo test --lib` passes. We did not get a clean instrumented
-measurement of the recreate-on-reopen latency in this environment (spawning
-a second process to trigger the single-instance show-window path raced with
-this build's own startup instead of reusing the running instance, which is
-an environment/build artifact unrelated to this change — the single-instance
+working set/private bytes as shown in the table (confirmed via
+`Win32_Process` command-line inspection of the surviving helpers' `--type=`
+argument, and via the app's own debug log), and (b) the code compiles and
+`cargo test --lib` passes. We did not get a clean instrumented measurement
+of the recreate-on-reopen latency in this environment (spawning a second
+process to trigger the single-instance show-window path raced with this
+build's own startup instead of reusing the running instance, which is an
+environment/build artifact unrelated to this change — the single-instance
 plugin and tray click handler both call the same `show_main_window()`).
 
-### 2. Frontend: lazy-load sidebar sections (code splitting)
+### 2. Make the live-subtitles overlay lazy (create on session start, destroy on stop)
+
+`src-tauri/src/live_translate/overlay.rs`: `create_live_subtitles_window`
+now shows the window if it already exists, otherwise builds it (previously
+it only ever built it, hidden, and was called once at startup). Added
+`destroy_live_subtitles_window`, which emits `live-subtitles-hide` (so any
+in-flight content is cleared before the window disappears — moot once
+destroyed, kept as a no-op-safe courtesy for the brief moment the event
+travels) and calls `WebviewWindow::destroy()`.
+
+`src-tauri/src/live_translate/pipeline.rs`: `LiveTranslateManager`'s
+`start_with_mode` (used by both live subtitles and copilot — they share this
+one capture/VAD/transcription pipeline, see the module doc comment) now
+calls `create_live_subtitles_window` instead of `show`; `stop` calls
+`destroy_live_subtitles_window` instead of `hide`.
+
+`src-tauri/src/lib.rs`: removed the startup call
+(`live_translate::create_live_subtitles_window(app_handle)`) from
+`initialize_core_logic`. Only the recording overlay is still created eagerly
+at boot.
+
+This applies on Windows, macOS, and Linux alike — unlike the main-window
+change, `WebviewWindow::destroy()` here isn't gated to Windows, since the
+live-subtitles window has no instant-show requirement on any platform (a
+session start already goes through opening a capture stream, building a VAD
+detector, and clearing history state before the window is even touched — a
+WebView2/WebKit webview creation is not the bottleneck). Measured effect:
+process count at startup dropped from 8 to 7 (confirmed via the app's debug
+log — `Recording overlay window created successfully (hidden)` now appears
+alone, with no matching "Live subtitles window created" line), and the
+window-open total dropped from 648.1 MB to 532.3 MB working set (~116 MB) on
+this machine, since that renderer (plus its share of the runtime that would
+otherwise have had to serve a 3rd, always-idle webview) is never created
+until a live-subtitles/copilot session actually starts.
+
+We did not add a timed idle-destroy for an *inactive* session — the window
+already only exists while `LiveTranslateManager.active` is true, and `stop`
+is called deterministically (shortcut release, mode switch, or app-level
+stop), so there's no "idle but still open" state to time out.
+
+### 3. Recording overlay: reviewed window-property tweaks, none were measurable
+
+Checked all three properties named in the follow-up against the current
+`src-tauri/src/overlay.rs`:
+
+- **Smaller initial size**: already as small as the UI needs —
+  `OVERLAY_WIDTH`/`OVERLAY_HEIGHT` are 256×50 logical px (grows to 400×120
+  only for the streaming state). A WebView2 renderer process's baseline
+  memory (Chromium's V8 isolate, Blink/CC compositor bookkeeping, IPC
+  buffers) is dominated by the runtime itself, not by the pixel dimensions
+  of what it's told to render. We didn't have a way to isolate this
+  variable in this pass — comparing the idle (256×50) overlay against the
+  streaming (400×120) size needs a live recording/streaming session with a
+  loaded model, which this checkout doesn't have (see the model-loaded
+  caveat above) — so this is a reasoned expectation from how Chromium's
+  renderer process memory is dominated by runtime overhead rather than
+  paint-surface size, not a directly measured result.
+- **`transparent` + no shadow**: already applied (`.shadow(false)` and
+  `.transparent(true)` were already on the builder before this task).
+  Nothing to change.
+- **Disabling DevTools**: not applicable — this build doesn't enable
+  Tauri's `devtools` Cargo feature (checked `src-tauri/Cargo.toml`'s
+  `tauri` dependency feature list), so DevTools/inspector support is
+  already compiled out of the binary entirely in this release build; there
+  is no `.devtools(...)` builder call to add and no runtime toggle to
+  measure.
+
+No code change made here — every lever either was already applied or had
+nothing to measure against.
+
+### 4. Frontend: lazy-load sidebar sections (code splitting)
 
 `src/components/Sidebar.tsx`: `SECTIONS_CONFIG[*].component` for every
 section except `debug` (home, general, history, scratchpad, models,
@@ -153,15 +220,19 @@ initial bundle.
 ## What we reviewed and did not change
 
 - **WebView2 browser args for overlay windows** (e.g. disabling GPU
-  compositing): the recording overlay and live-subtitles overlay share a
-  single GPU process with the main window (confirmed via `Win32_Process`
-  command-line inspection — one `--type=gpu-process` helper serves all three
-  windows), so per-window GPU-disable flags wouldn't remove that process,
-  only degrade the overlay's own animation smoothness. Not applied.
-- **Overlay windows created lazily / destroyed when hidden**: see "What we
-  found" above — real savings, but a latency trade-off the brief's "keep
-  behaviour" constraint argues against making unilaterally. Left as a
-  documented follow-up.
+  compositing): the recording overlay and (while active) the live-subtitles
+  overlay share a single GPU process with the main window (confirmed via
+  `Win32_Process` command-line inspection — one `--type=gpu-process` helper
+  serves every webview), so per-window GPU-disable flags wouldn't remove
+  that process, only degrade the overlay's own animation smoothness. Not
+  applied.
+- **Recording overlay made lazy like the live-subtitles overlay**: not
+  applied, deliberately — instant show/hide on every recording start/stop
+  is core to its purpose (see `overlay.rs`'s `show_overlay_state` and
+  `emit_recording_ready` comments), and recreating a WebView2 window costs
+  on the order of 150–400 ms. That's a latency regression on the app's
+  hottest path, so it stays resident. See section 3 above for the narrower
+  property-level tweaks we did check for it.
 - **`memory::trim_freed_memory` / model unload defaults / idle threads**:
   already implemented on the Rust side (glibc-only malloc trim after each
   transcription, 5-minute default model unload timeout with a 10s-interval
