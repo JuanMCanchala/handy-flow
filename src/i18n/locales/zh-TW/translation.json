@@ -719,6 +719,32 @@
         "label": "顯示新功能",
         "description": "Handy 更新後顯示版本資訊"
       }
+    },
+    "cloudStt": {
+      "title": "雲端轉錄",
+      "enable": {
+        "label": "使用雲端轉錄",
+        "description": "將音訊傳送到雲端語音轉文字 API，而不是在此裝置上執行模型。啟用時不會載入本機模型，即時串流也會停用。"
+      },
+      "provider": {
+        "title": "提供者",
+        "description": "選擇雲端語音轉文字提供者，或選擇「自訂」以使用任何相容 OpenAI 的端點。"
+      },
+      "baseUrl": {
+        "title": "基礎 URL",
+        "description": "相容 OpenAI 的 API 基礎 URL，例如 https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "模型",
+        "description": "要向提供者請求的轉錄模型 ID。",
+        "placeholder": "例如 whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "API 金鑰",
+        "description": "此提供者的 API 金鑰。儲存在本機，僅傳送至該提供者的端點。",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {

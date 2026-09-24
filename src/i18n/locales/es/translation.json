@@ -182,6 +182,32 @@
         "tooltip": "Vuelve a escanear en busca de modelos añadidos a la carpeta de modelos o a la caché de Hugging Face fuera de Handy"
       }
     },
+    "cloudStt": {
+      "title": "Transcripción en la nube",
+      "enable": {
+        "label": "Usar transcripción en la nube",
+        "description": "Envía el audio a una API de voz a texto en la nube en lugar de ejecutar un modelo en este dispositivo. Mientras esté activado, no se carga ningún modelo local y la transcripción en vivo se desactiva."
+      },
+      "provider": {
+        "title": "Proveedor",
+        "description": "Elige un proveedor de voz a texto en la nube o Personalizado para cualquier endpoint compatible con OpenAI."
+      },
+      "baseUrl": {
+        "title": "URL base",
+        "description": "La URL base de la API compatible con OpenAI, p. ej. https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "Modelo",
+        "description": "El identificador del modelo de transcripción que se solicitará al proveedor.",
+        "placeholder": "p. ej. whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "Clave de API",
+        "description": "Tu clave de API para este proveedor. Se almacena localmente y nunca se envía a nadie salvo al endpoint del proveedor.",
+        "placeholder": "sk-..."
+      }
+    },
     "general": {
       "title": "General",
       "shortcut": {

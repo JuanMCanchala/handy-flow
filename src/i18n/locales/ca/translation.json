@@ -719,6 +719,32 @@
           "details": "La transcripció local de veu a text del Handy es basa en el transcribe.cpp i el ggml. Gràcies a la gran feina de Georgi Gerganov i dels col·laboradors."
         }
       }
+    },
+    "cloudStt": {
+      "title": "Cloud Transcription",
+      "enable": {
+        "label": "Use cloud transcription",
+        "description": "Send audio to a cloud speech-to-text API instead of running a model on this device. No local model is loaded while this is on, and live streaming is disabled."
+      },
+      "provider": {
+        "title": "Provider",
+        "description": "Choose a cloud speech-to-text provider or Custom for any OpenAI-compatible endpoint."
+      },
+      "baseUrl": {
+        "title": "Base URL",
+        "description": "The OpenAI-compatible API base URL, e.g. https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "Model",
+        "description": "The transcription model id to request from the provider.",
+        "placeholder": "e.g. whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "API Key",
+        "description": "Your API key for this provider. Stored locally and never sent anywhere except the provider's endpoint.",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {

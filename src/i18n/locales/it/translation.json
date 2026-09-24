@@ -719,6 +719,32 @@
         "label": "Mostra novità",
         "description": "Mostra le note di rilascio dopo gli aggiornamenti di Handy"
       }
+    },
+    "cloudStt": {
+      "title": "Trascrizione cloud",
+      "enable": {
+        "label": "Usa la trascrizione cloud",
+        "description": "Invia l'audio a un'API di riconoscimento vocale nel cloud invece di eseguire un modello su questo dispositivo. Mentre è attiva, nessun modello locale viene caricato e lo streaming in tempo reale è disattivato."
+      },
+      "provider": {
+        "title": "Provider",
+        "description": "Scegli un provider di trascrizione cloud o Personalizzato per qualsiasi endpoint compatibile con OpenAI."
+      },
+      "baseUrl": {
+        "title": "URL di base",
+        "description": "L'URL di base dell'API compatibile con OpenAI, es. https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "Modello",
+        "description": "L'ID del modello di trascrizione da richiedere al provider.",
+        "placeholder": "es. whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "Chiave API",
+        "description": "La tua chiave API per questo provider. Salvata localmente e inviata solo all'endpoint del provider.",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {

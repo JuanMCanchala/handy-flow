@@ -719,6 +719,32 @@
         "label": "Afficher les nouveautés",
         "description": "Afficher les notes de version après les mises à jour de Handy"
       }
+    },
+    "cloudStt": {
+      "title": "Transcription cloud",
+      "enable": {
+        "label": "Utiliser la transcription cloud",
+        "description": "Envoie l'audio à une API de synthèse vocale dans le cloud au lieu d'exécuter un modèle sur cet appareil. Tant que cette option est activée, aucun modèle local n'est chargé et la diffusion en direct est désactivée."
+      },
+      "provider": {
+        "title": "Fournisseur",
+        "description": "Choisissez un fournisseur de transcription vocale dans le cloud ou Personnalisé pour tout point de terminaison compatible OpenAI."
+      },
+      "baseUrl": {
+        "title": "URL de base",
+        "description": "L'URL de base de l'API compatible OpenAI, par ex. https://api.example.com/v1",
+        "placeholder": "https://api.example.com/v1"
+      },
+      "model": {
+        "title": "Modèle",
+        "description": "L'identifiant du modèle de transcription à demander au fournisseur.",
+        "placeholder": "ex. whisper-large-v3-turbo"
+      },
+      "apiKey": {
+        "title": "Clé API",
+        "description": "Votre clé API pour ce fournisseur. Stockée localement et envoyée uniquement au point de terminaison du fournisseur.",
+        "placeholder": "sk-..."
+      }
     }
   },
   "footer": {
