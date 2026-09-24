@@ -54,11 +54,11 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | 13 | SRT/VTT export with per-segment timestamps — **done** | M / S |
 | 14 | Streaming partial transcript in the overlay (final pass unchanged) — **covered upstream** (Live overlay with streaming models: Parakeet Unified, Nemotron) | H / M |
 | 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") — **done** (deterministic EN/ES pass) | H / S |
-| 16 | Self-learning dictionary from edits in history | M / M |
+| 16 | Self-learning dictionary from edits in history — **done** | M / M |
 | 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 — **done on Windows** | H / M |
 | 18 | Speaker diarization for long recordings | M / L |
-| 19 | Note templates + action items (Granola-style) over a session transcript | H / M |
-| 20 | Ask-your-history (local RAG over history) | M / M |
+| 19 | Note templates + action items (Granola-style) over a session transcript — **done** | H / M |
+| 20 | Ask-your-history (local RAG over history) — **done** (FTS5 + LLM) | M / M |
 
 ## RAM baseline (item 0, 2026-09-23, Windows 11, release build, main window open, no model loaded)
 
