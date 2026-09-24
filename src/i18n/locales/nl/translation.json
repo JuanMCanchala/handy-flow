@@ -16,6 +16,7 @@
     "advanced": "Geavanceerd",
     "snippets": "Snippets",
     "postProcessing": "Naverwerking",
+    "style": "Stijl",
     "history": "Geschiedenis",
     "scratchpad": "Kladblok",
     "debug": "Probleemoplossing",
@@ -492,6 +493,35 @@
         "totalWords": "Totaal woorden",
         "averageWpm": "Gemiddeld WPM",
         "dayStreak": "Dagenreeks"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Algemeen",
+        "categories": "Stijl per app"
+      },
+      "enabled": {
+        "label": "Toon aanpassen op basis van de actieve app",
+        "description": "Wanneer naverwerking wordt uitgevoerd, detecteert Handy de app waarin je dicteerde en voegt een toon-instructie toe voor die categorie."
+      },
+      "selectTone": "Selecteer een toon",
+      "categories": {
+        "personal": "Persoonlijke berichten",
+        "work": "Werkberichten",
+        "email": "E-mail",
+        "other": "Overig"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail en Gmail/Outlook in de browser",
+        "other": "Elke andere app"
+      },
+      "tones": {
+        "formal": "Formeel",
+        "casual": "Casual",
+        "very_casual": "Heel casual",
+        "excited": "Enthousiast"
       }
     },
     "history": {

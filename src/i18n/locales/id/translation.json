@@ -16,6 +16,7 @@
     "advanced": "Lanjutan",
     "snippets": "Snippet",
     "postProcessing": "Pascaproses",
+    "style": "Gaya",
     "history": "Riwayat",
     "scratchpad": "Scratchpad",
     "debug": "Debug",
@@ -492,6 +493,35 @@
         "totalWords": "Total Kata",
         "averageWpm": "Rata-rata KPM",
         "dayStreak": "Rangkaian Hari"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Umum",
+        "categories": "Gaya per Aplikasi"
+      },
+      "enabled": {
+        "label": "Sesuaikan nada berdasarkan aplikasi yang aktif",
+        "description": "Saat pascaproses berjalan, Handy mendeteksi aplikasi yang Anda gunakan untuk mendiktekan dan menambahkan instruksi nada untuk kategorinya."
+      },
+      "selectTone": "Pilih nada",
+      "categories": {
+        "personal": "Pesan Pribadi",
+        "work": "Pesan Kerja",
+        "email": "Email",
+        "other": "Lainnya"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail, dan Gmail/Outlook di browser",
+        "other": "Aplikasi lainnya"
+      },
+      "tones": {
+        "formal": "Formal",
+        "casual": "Santai",
+        "very_casual": "Sangat Santai",
+        "excited": "Antusias"
       }
     },
     "history": {

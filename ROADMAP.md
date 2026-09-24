@@ -7,8 +7,8 @@ Goal: a Wispr Flow–style dictation app (with voice commands) on top of Handy's
 | 0   | Build Handy as-is on Windows, measure RAM                                                              | done |
 | 1   | Command mode: dedicated hotkey + "Hey <agent>", LLM rewrites selected text in place                    | done        |
 | 2   | Cloud transcription provider (OpenAI-compatible: Fireworks, Groq, OpenAI)                              | todo        |
-| 3   | Style per app (cleanup tone based on the active app)                                                   | todo        |
-| 4   | Snippets (trigger phrase → expansion)                                                                  | todo        |
+| 3   | Style per app (cleanup tone based on the active app)                                                   | done        |
+| 4   | Snippets (trigger phrase → expansion)                                                                  | done        |
 | 5   | Transforms (saved prompts applied to the selection)                                                    | todo        |
 | 6   | Insights (total words, wpm, day streak from history)                                                   | done        |
 | 7   | Flow-style Home (history grouped by day, play / copy)                                                  | done        |

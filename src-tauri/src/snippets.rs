@@ -57,8 +57,8 @@ fn replace_trigger(text: &str, trigger: &str, expansion: &str) -> String {
                 .collect::<String>()
                 .to_lowercase();
 
-            let is_boundary_after = i + trigger_len == text_chars.len()
-                || !is_word_char(text_chars[i + trigger_len]);
+            let is_boundary_after =
+                i + trigger_len == text_chars.len() || !is_word_char(text_chars[i + trigger_len]);
 
             if is_boundary_after && candidate.chars().collect::<Vec<char>>() == trigger_lower {
                 result.push_str(expansion);
@@ -94,15 +94,15 @@ mod tests {
     #[test]
     fn single_snippet_is_expanded() {
         let snippets = vec![snippet("brb", "be right back")];
-        assert_eq!(apply_snippets("I will brb soon", &snippets), "I will be right back soon");
+        assert_eq!(
+            apply_snippets("I will brb soon", &snippets),
+            "I will be right back soon"
+        );
     }
 
     #[test]
     fn multiple_snippets_are_all_expanded() {
-        let snippets = vec![
-            snippet("brb", "be right back"),
-            snippet("omw", "on my way"),
-        ];
+        let snippets = vec![snippet("brb", "be right back"), snippet("omw", "on my way")];
         assert_eq!(
             apply_snippets("brb but also omw", &snippets),
             "be right back but also on my way"
@@ -132,7 +132,10 @@ mod tests {
 
     #[test]
     fn empty_trigger_is_skipped() {
-        let snippets = vec![snippet("", "should not appear"), snippet("brb", "be right back")];
+        let snippets = vec![
+            snippet("", "should not appear"),
+            snippet("brb", "be right back"),
+        ];
         assert_eq!(apply_snippets("brb", &snippets), "be right back");
     }
 }

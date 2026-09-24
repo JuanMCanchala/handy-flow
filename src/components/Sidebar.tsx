@@ -8,6 +8,7 @@ import {
   Home,
   Info,
   NotebookPen,
+  Palette,
   Sparkles,
   Type,
 } from "lucide-react";
@@ -24,6 +25,7 @@ import {
   PostProcessingSettings,
   ModelsSettings,
   SnippetsSettings,
+  StyleSettings,
 } from "./settings";
 import { ScratchpadSettings } from "./scratchpad";
 
@@ -92,6 +94,12 @@ export const SECTIONS_CONFIG = {
     icon: Sparkles,
     component: PostProcessingSettings,
     enabled: (settings) => settings?.post_process_enabled ?? false,
+  },
+  style: {
+    labelKey: "sidebar.style",
+    icon: Palette,
+    component: StyleSettings,
+    enabled: () => true,
   },
   debug: {
     labelKey: "sidebar.debug",

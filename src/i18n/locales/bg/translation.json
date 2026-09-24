@@ -16,6 +16,7 @@
     "advanced": "Разширени",
     "snippets": "Съкращения",
     "postProcessing": "Постобработка",
+    "style": "Стил",
     "history": "История",
     "scratchpad": "Бележник",
     "debug": "Отстраняване",
@@ -492,6 +493,35 @@
         "totalWords": "Общо думи",
         "averageWpm": "Средно ДВМ",
         "dayStreak": "Дни поред"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Общи",
+        "categories": "Стил по приложение"
+      },
+      "enabled": {
+        "label": "Настройка на тона според активното приложение",
+        "description": "Когато се изпълнява постобработка, Handy разпознава приложението, в което сте диктували, и добавя инструкция за тон за неговата категория."
+      },
+      "selectTone": "Изберете тон",
+      "categories": {
+        "personal": "Лични съобщения",
+        "work": "Работни съобщения",
+        "email": "Имейл",
+        "other": "Друго"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail и Gmail/Outlook в браузъра",
+        "other": "Всяко друго приложение"
+      },
+      "tones": {
+        "formal": "Официален",
+        "casual": "Неформален",
+        "very_casual": "Много неформален",
+        "excited": "Възбуден"
       }
     },
     "history": {

@@ -16,6 +16,7 @@
     "advanced": "ऐडवांस",
     "snippets": "स्निपेट",
     "postProcessing": "पोस्ट प्रोसेस",
+    "style": "स्टाइल",
     "history": "इतिहास",
     "scratchpad": "स्क्रैचपैड",
     "debug": "डिबग",
@@ -492,6 +493,35 @@
         "totalWords": "कुल शब्द",
         "averageWpm": "औसत WPM",
         "dayStreak": "दिन की लगातार गिनती"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "सामान्य",
+        "categories": "ऐप के अनुसार स्टाइल"
+      },
+      "enabled": {
+        "label": "सक्रिय ऐप के आधार पर टोन समायोजित करें",
+        "description": "जब पोस्ट-प्रोसेसिंग चलती है, तो Handy उस ऐप का पता लगाता है जिसमें आप बोल रहे थे और उसकी श्रेणी के लिए एक टोन निर्देश जोड़ता है।"
+      },
+      "selectTone": "एक टोन चुनें",
+      "categories": {
+        "personal": "व्यक्तिगत संदेश",
+        "work": "कार्य संदेश",
+        "email": "ईमेल",
+        "other": "अन्य"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail और ब्राउज़र में Gmail/Outlook",
+        "other": "कोई अन्य ऐप"
+      },
+      "tones": {
+        "formal": "औपचारिक",
+        "casual": "सहज",
+        "very_casual": "बहुत सहज",
+        "excited": "उत्साहित"
       }
     },
     "history": {

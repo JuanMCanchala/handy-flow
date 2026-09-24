@@ -16,6 +16,7 @@
     "advanced": "詳細設定",
     "snippets": "スニペット",
     "postProcessing": "後処理",
+    "style": "スタイル",
     "history": "履歴",
     "scratchpad": "メモ帳",
     "debug": "デバッグ",
@@ -492,6 +493,35 @@
         "totalWords": "合計単語数",
         "averageWpm": "平均WPM",
         "dayStreak": "連続日数"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "全般",
+        "categories": "アプリ別スタイル"
+      },
+      "enabled": {
+        "label": "フォアグラウンドのアプリに応じてトーンを調整する",
+        "description": "後処理が実行されると、Handyはディクテーション先のアプリを検出し、そのカテゴリに応じたトーンの指示を追加します。"
+      },
+      "selectTone": "トーンを選択",
+      "categories": {
+        "personal": "個人メッセージ",
+        "work": "仕事のメッセージ",
+        "email": "メール",
+        "other": "その他"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp、Telegram、Messenger、Signal、Discord",
+        "work": "Slack、Teams",
+        "email": "Outlook、Thunderbird、Mail、ブラウザ内のGmail/Outlook",
+        "other": "その他のアプリ"
+      },
+      "tones": {
+        "formal": "フォーマル",
+        "casual": "カジュアル",
+        "very_casual": "とてもカジュアル",
+        "excited": "テンション高め"
       }
     },
     "history": {

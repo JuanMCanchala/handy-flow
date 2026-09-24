@@ -16,6 +16,7 @@
     "advanced": "Avançat",
     "snippets": "Fragments",
     "postProcessing": "Postprocessament",
+    "style": "Estil",
     "history": "Historial",
     "scratchpad": "Bloc de notes",
     "debug": "Depuració",
@@ -492,6 +493,35 @@
         "totalWords": "Paraules totals",
         "averageWpm": "PPM mitjana",
         "dayStreak": "Ratxa de dies"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "General",
+        "categories": "Estil per aplicació"
+      },
+      "enabled": {
+        "label": "Ajustar el to segons l'aplicació activa",
+        "description": "Quan s'executa el postprocessament, Handy detecta l'aplicació on dictaves i afegeix una instrucció de to per a la seva categoria."
+      },
+      "selectTone": "Selecciona un to",
+      "categories": {
+        "personal": "Missatges personals",
+        "work": "Missatges de feina",
+        "email": "Correu electrònic",
+        "other": "Altres"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail i Gmail/Outlook al navegador",
+        "other": "Qualsevol altra aplicació"
+      },
+      "tones": {
+        "formal": "Formal",
+        "casual": "Informal",
+        "very_casual": "Molt informal",
+        "excited": "Entusiasta"
       }
     },
     "history": {

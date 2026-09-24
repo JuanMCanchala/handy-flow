@@ -16,6 +16,7 @@
     "advanced": "उन्नत",
     "snippets": "स्निपेटहरू",
     "postProcessing": "पोस्ट प्रोसेस",
+    "style": "स्टाइल",
     "history": "हिस्ट्री",
     "scratchpad": "स्क्र्याचप्याड",
     "debug": "डिबग",
@@ -492,6 +493,35 @@
         "totalWords": "कुल शब्दहरू",
         "averageWpm": "औसत WPM",
         "dayStreak": "दिनको स्ट्रिक"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "साधारण",
+        "categories": "एपको आधारमा स्टाइल"
+      },
+      "enabled": {
+        "label": "सक्रिय एपको आधारमा टोन समायोजन गर्नुहोस्",
+        "description": "पोस्ट-प्रोसेसिंग चलाउँदा, Handy ले तपाईंले बोलिरहनुभएको एप पत्ता लगाउँछ र त्यसको वर्गको लागि टोन निर्देशन थप्छ।"
+      },
+      "selectTone": "टोन चयन गर्नुहोस्",
+      "categories": {
+        "personal": "व्यक्तिगत सन्देशहरू",
+        "work": "कार्य सन्देशहरू",
+        "email": "इमेल",
+        "other": "अन्य"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail, र ब्राउजरमा Gmail/Outlook",
+        "other": "अन्य कुनै एप"
+      },
+      "tones": {
+        "formal": "औपचारिक",
+        "casual": "सहज",
+        "very_casual": "धेरै सहज",
+        "excited": "उत्साहित"
       }
     },
     "history": {

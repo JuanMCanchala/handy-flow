@@ -32,6 +32,7 @@ interface UseSettingsReturn {
 
   // Post-processing helpers
   setPostProcessProvider: (providerId: string) => Promise<void>;
+  setAppStyle: (category: string, tone: string) => Promise<void>;
   updatePostProcessBaseUrl: (
     providerId: string,
     baseUrl: string,
@@ -72,6 +73,7 @@ export const useSettings = (): UseSettingsReturn => {
     resetBinding: store.resetBinding,
     getSetting: store.getSetting,
     setPostProcessProvider: store.setPostProcessProvider,
+    setAppStyle: store.setAppStyle,
     updatePostProcessBaseUrl: store.updatePostProcessBaseUrl,
     updatePostProcessApiKey: store.updatePostProcessApiKey,
     updatePostProcessModel: store.updatePostProcessModel,

@@ -16,6 +16,7 @@
     "advanced": "Розширені",
     "snippets": "Сніпети",
     "postProcessing": "Постобробка",
+    "style": "Стиль",
     "history": "Історія",
     "scratchpad": "Блокнот",
     "debug": "Дебаг",
@@ -492,6 +493,35 @@
         "totalWords": "Всього слів",
         "averageWpm": "Середнє СЗХ",
         "dayStreak": "Днів поспіль"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Загальні",
+        "categories": "Стиль за додатком"
+      },
+      "enabled": {
+        "label": "Налаштувати тон залежно від активного застосунку",
+        "description": "Коли виконується постобробка, Handy визначає застосунок, у який ви диктували, і додає інструкцію тону для його категорії."
+      },
+      "selectTone": "Виберіть тон",
+      "categories": {
+        "personal": "Особисті повідомлення",
+        "work": "Робочі повідомлення",
+        "email": "Електронна пошта",
+        "other": "Інше"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail і Gmail/Outlook у браузері",
+        "other": "Будь-який інший застосунок"
+      },
+      "tones": {
+        "formal": "Офіційний",
+        "casual": "Неформальний",
+        "very_casual": "Дуже неформальний",
+        "excited": "Захоплений"
       }
     },
     "history": {

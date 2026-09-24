@@ -16,6 +16,7 @@
     "advanced": "Avancerat",
     "snippets": "Textmoduler",
     "postProcessing": "Efterbearbetning",
+    "style": "Stil",
     "history": "Historik",
     "scratchpad": "Anteckningsblock",
     "debug": "Felsökning",
@@ -492,6 +493,35 @@
         "totalWords": "Totalt antal ord",
         "averageWpm": "Genomsnittlig OPM",
         "dayStreak": "Dagsstreak"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Allmänt",
+        "categories": "Stil per app"
+      },
+      "enabled": {
+        "label": "Justera tonen baserat på den aktiva appen",
+        "description": "När efterbearbetning körs upptäcker Handy appen du dikterade i och lägger till en toninstruktion för dess kategori."
+      },
+      "selectTone": "Välj en ton",
+      "categories": {
+        "personal": "Personliga meddelanden",
+        "work": "Arbetsmeddelanden",
+        "email": "E-post",
+        "other": "Övrigt"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail och Gmail/Outlook i webbläsaren",
+        "other": "Vilken annan app som helst"
+      },
+      "tones": {
+        "formal": "Formell",
+        "casual": "Avslappnad",
+        "very_casual": "Mycket avslappnad",
+        "excited": "Entusiastisk"
       }
     },
     "history": {

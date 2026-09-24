@@ -16,6 +16,7 @@
     "advanced": "Gelişmiş",
     "snippets": "Snippet'ler",
     "postProcessing": "Son İşlem",
+    "style": "Stil",
     "history": "Geçmiş",
     "scratchpad": "Not Defteri",
     "debug": "Hata Ayıklama",
@@ -492,6 +493,35 @@
         "totalWords": "Toplam Kelime",
         "averageWpm": "Ortalama DKD",
         "dayStreak": "Gün Serisi"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Genel",
+        "categories": "Uygulamaya Göre Stil"
+      },
+      "enabled": {
+        "label": "Tonu etkin uygulamaya göre ayarla",
+        "description": "Son işlem çalıştığında Handy, konuştuğunuz uygulamayı algılar ve kategorisine uygun bir ton talimatı ekler."
+      },
+      "selectTone": "Bir ton seçin",
+      "categories": {
+        "personal": "Kişisel Mesajlar",
+        "work": "İş Mesajları",
+        "email": "E-posta",
+        "other": "Diğer"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail ve tarayıcıda Gmail/Outlook",
+        "other": "Diğer herhangi bir uygulama"
+      },
+      "tones": {
+        "formal": "Resmi",
+        "casual": "Gündelik",
+        "very_casual": "Çok Gündelik",
+        "excited": "Coşkulu"
       }
     },
     "history": {

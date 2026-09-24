@@ -16,6 +16,7 @@
     "advanced": "Avancé",
     "snippets": "Extraits",
     "postProcessing": "Post-traitement",
+    "style": "Style",
     "history": "Historique",
     "scratchpad": "Bloc-notes",
     "debug": "Débogage",
@@ -492,6 +493,35 @@
         "totalWords": "Mots totaux",
         "averageWpm": "MPM moyen",
         "dayStreak": "Série de jours"
+      }
+    },
+    "style": {
+      "groups": {
+        "general": "Général",
+        "categories": "Style par application"
+      },
+      "enabled": {
+        "label": "Adapter le ton selon l'application active",
+        "description": "Lorsque le post-traitement s'exécute, Handy détecte l'application dans laquelle vous dictiez et ajoute une instruction de ton pour sa catégorie."
+      },
+      "selectTone": "Choisir un ton",
+      "categories": {
+        "personal": "Messages personnels",
+        "work": "Messages professionnels",
+        "email": "E-mail",
+        "other": "Autre"
+      },
+      "categoryDescriptions": {
+        "personal": "WhatsApp, Telegram, Messenger, Signal, Discord",
+        "work": "Slack, Teams",
+        "email": "Outlook, Thunderbird, Mail et Gmail/Outlook dans le navigateur",
+        "other": "Toute autre application"
+      },
+      "tones": {
+        "formal": "Formel",
+        "casual": "Décontracté",
+        "very_casual": "Très décontracté",
+        "excited": "Enthousiaste"
       }
     },
     "history": {
