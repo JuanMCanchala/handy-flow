@@ -125,6 +125,39 @@ async changeOverlayStyleSetting(style: string) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async changeFlowBarVisibilitySetting(visibility: FlowBarVisibility) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_flow_bar_visibility_setting", { visibility }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async flowBarCycleLanguage() : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("flow_bar_cycle_language") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async flowBarToggleTranscribe() : Promise<void> {
+    await TAURI_INVOKE("flow_bar_toggle_transcribe");
+},
+async flowBarSetExpanded(expanded: boolean) : Promise<void> {
+    await TAURI_INVOKE("flow_bar_set_expanded", { expanded });
+},
+async flowBarOpenScratchpad() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("flow_bar_open_scratchpad") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async takePendingMainSection() : Promise<string | null> {
+    return await TAURI_INVOKE("take_pending_main_section");
+},
 async changeDebugModeSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_debug_mode_setting", { enabled }) };
@@ -1455,7 +1488,13 @@ vad_backend?: VadBackend;
  * not gated on this — that follows model capability. Migrated from the old
  * `overlay_position` (position `none` → style `None`).
  */
-overlay_style?: OverlayStyle; snippets?: Snippet[]; style_per_app_enabled?: boolean; 
+overlay_style?: OverlayStyle; 
+/**
+ * When to show the persistent idle Flow bar pill (the Wispr Flow-style
+ * bottom bar). `TextFields` only works on Windows (UI Automation focus
+ * tracking); other platforms behave like `Always`.
+ */
+flow_bar_visibility?: FlowBarVisibility; snippets?: Snippet[]; style_per_app_enabled?: boolean; 
 /**
  * Tone selected per style category. Keys are `StyleCategory::as_key()`
  * values ("personal", "work", "email", "other"); values are tone keys
@@ -1632,6 +1671,13 @@ export type OverlayPosition = "top" | "bottom"
  * streaming mode (that is driven purely by model capability).
  */
 export type OverlayStyle = "none" | "minimal" | "live"
+
+/**
+ * When to show the persistent idle Flow bar pill (the Wispr Flow-style
+ * bottom bar). `TextFields` only works on Windows (UI Automation focus
+ * tracking); other platforms behave like `Always`.
+ */
+export type FlowBarVisibility = "text_fields" | "always" | "never"
 export type PaginatedHistory = { entries: HistoryEntry[]; has_more: boolean }
 export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_shift_v" | "external_script"
 export type PermissionAccess = "allowed" | "denied" | "unknown"

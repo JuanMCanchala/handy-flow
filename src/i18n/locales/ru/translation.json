@@ -255,6 +255,15 @@
       "voiceEdits": {
         "label": "Голосовые команды редактирования",
         "description": "Во время диктовки произнесённые команды, такие как «scratch that», «новая строка» или «новый абзац», применяются вместо набора текста, на английском и испанском языках."
+      },
+      "flowBar": {
+        "title": "Flow Bar",
+        "description": "A small bar at the bottom of the screen with quick access to dictation, live subtitles and the scratchpad. On macOS and Linux \"On text fields\" behaves like \"Always\".",
+        "options": {
+          "textFields": "On text fields",
+          "always": "Always",
+          "never": "Never"
+        }
       }
     },
     "sound": {
@@ -997,7 +1006,13 @@
   },
   "overlay": {
     "transcribing": "Расшифровка...",
-    "processing": "Обработка..."
+    "processing": "Обработка...",
+    "flowBar": {
+      "language": "Language",
+      "mic": "Start or stop dictation",
+      "liveTranslate": "Live subtitles",
+      "scratchpad": "Open scratchpad"
+    }
   },
   "whatsNew": {
     "title": "Новое в Voxa v{{version}}"

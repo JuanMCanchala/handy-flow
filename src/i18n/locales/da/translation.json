@@ -235,6 +235,15 @@
       "voiceEdits": {
         "label": "Stemmestyrede redigeringskommandoer",
         "description": "Under diktering anvendes talte kommandoer som \"scratch that\", \"ny linje\" eller \"nyt afsnit\" i stedet for at blive skrevet, på engelsk og spansk."
+      },
+      "flowBar": {
+        "title": "Flow Bar",
+        "description": "A small bar at the bottom of the screen with quick access to dictation, live subtitles and the scratchpad. On macOS and Linux \"On text fields\" behaves like \"Always\".",
+        "options": {
+          "textFields": "On text fields",
+          "always": "Always",
+          "never": "Never"
+        }
       }
     },
     "models": {
@@ -1000,7 +1009,13 @@
   },
   "overlay": {
     "transcribing": "Transskriberer...",
-    "processing": "Behandler..."
+    "processing": "Behandler...",
+    "flowBar": {
+      "language": "Language",
+      "mic": "Start or stop dictation",
+      "liveTranslate": "Live subtitles",
+      "scratchpad": "Open scratchpad"
+    }
   },
   "secureInput": {
     "blockedWithCulprit_one": "{{name}} blokerer muligvis 1 genvej",

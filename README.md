@@ -122,6 +122,16 @@ handy --start-hidden --no-tray
 > /Applications/Handy.app/Contents/MacOS/Handy --toggle-transcription
 > ```
 
+### Flow Bar
+
+The Flow bar is a thin pill at the bottom center of the screen that expands on hover into a small toolbar (language chip, dictation, live subtitles, scratchpad). Configure it in **Settings > General > Flow Bar**:
+
+- **On text fields** (default): shown only while the keyboard focus is on an editable text control. This uses UI Automation focus events and therefore only works on Windows — on macOS and Linux it behaves like **Always**.
+- **Always**: shown whenever no recording is in progress.
+- **Never**: disabled.
+
+The bar hides while a fullscreen app is in front, and clicking it never takes focus away from the text field you are dictating into.
+
 ## Known Issues & Current Limitations
 
 This project is actively being developed and has some [known issues](https://github.com/cjpais/Handy/issues). We believe in transparency about the current state:

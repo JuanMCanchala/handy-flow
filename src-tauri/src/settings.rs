@@ -563,6 +563,11 @@ pub struct AppSettings {
     /// `overlay_position` (position `none` → style `None`).
     #[serde(default = "default_overlay_style")]
     pub overlay_style: OverlayStyle,
+    /// When to show the persistent idle Flow bar pill (the Wispr Flow-style
+    /// bottom bar). `TextFields` only works on Windows (UI Automation focus
+    /// tracking); other platforms behave like `Always`.
+    #[serde(default)]
+    pub flow_bar_visibility: crate::flow_bar::FlowBarVisibility,
     /// Adjust the post-processing cleanup tone based on the app in focus
     /// when recording stops (Personal / Work / Email / Other).
     #[serde(default)]
@@ -1276,6 +1281,7 @@ pub fn get_default_settings() -> AppSettings {
         vad_enabled: default_vad_enabled(),
         vad_backend: VadBackend::default(),
         overlay_style: default_overlay_style(),
+        flow_bar_visibility: crate::flow_bar::FlowBarVisibility::default(),
         style_per_app_enabled: false,
         app_styles: HashMap::new(),
         transforms: default_transforms(),
