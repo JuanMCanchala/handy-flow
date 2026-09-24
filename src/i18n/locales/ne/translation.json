@@ -542,6 +542,21 @@
         "progress": "खण्ड {{current}} / {{total}} ट्रान्सक्राइब गर्दै...",
         "cancel": "रद्द गर्नुहोस्",
         "error": "\"{{file}}\" आयात गर्न सकिएन। कृपया समर्थित अडियो वा भिडियो फाइल प्रयोग गर्नुहोस्।"
+      },
+      "ask": {
+        "placeholder": "Search or ask your history...",
+        "search": "Search",
+        "ask": "Ask",
+        "searchError": "Failed to search history. Please try again.",
+        "askError": "Failed to get an answer. Please try again.",
+        "noResults": "No matching history entries found.",
+        "sources": "Sources"
+      },
+      "learning": {
+        "suggestion": "Replace \"{{from}}\" with \"{{to}}\"?",
+        "addToDictionary": "Add to dictionary",
+        "dismiss": "Dismiss",
+        "addError": "Failed to add to dictionary. Please try again."
       }
     },
     "style": {
@@ -589,7 +604,11 @@
       "retranscribe": "फेरि ट्रान्सक्राइब गर्नुहोस्",
       "retranscribeError": "फेरि ट्रान्सक्राइब गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
       "transcribing": "ट्रान्सक्राइब गरिँदैछ...",
-      "transcriptionFailed": "ट्रान्सक्रिप्सन गर्न सकिएन। रिट्राई आइकन प्रयोग गरेर फेरि ट्रान्सक्राइब गर्न सक्नुहुन्छ।"
+      "transcriptionFailed": "ट्रान्सक्रिप्सन गर्न सकिएन। रिट्राई आइकन प्रयोग गरेर फेरि ट्रान्सक्राइब गर्न सक्नुहुन्छ।",
+      "edit": "Edit transcription",
+      "cancelEdit": "Cancel",
+      "saveEdit": "Save",
+      "editError": "Failed to save your edit. Please try again."
     },
     "scratchpad": {
       "title": "स्क्र्याचप्याड",

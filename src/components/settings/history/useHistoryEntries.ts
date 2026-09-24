@@ -150,6 +150,16 @@ export const useHistoryEntries = () => {
     }
   }, []);
 
+  const editEntryText = useCallback(async (id: number, text: string) => {
+    const result = await commands.editHistoryEntryText(id, text);
+    if (result.status !== "ok") {
+      throw new Error(String(result.error));
+    }
+    setEntries((prev) =>
+      prev.map((e) => (e.id === id ? result.data : e)),
+    );
+  }, []);
+
   return {
     entries,
     loading,
@@ -160,5 +170,6 @@ export const useHistoryEntries = () => {
     getAudioUrl,
     deleteAudioEntry,
     retryHistoryEntry,
+    editEntryText,
   };
 };

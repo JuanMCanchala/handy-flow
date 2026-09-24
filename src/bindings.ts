@@ -1139,6 +1139,54 @@ async exportTranscript(id: number, format: string, destPath: string) : Promise<R
     else return { status: "error", error: e  as any };
 }
 },
+async editHistoryEntryText(id: number, text: string) : Promise<Result<HistoryEntry, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("edit_history_entry_text", { id, text }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getLearningCandidates() : Promise<Result<LearningCandidate[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_learning_candidates") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async addLearningCandidateToDictionary(id: number, phraseTo: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("add_learning_candidate_to_dictionary", { id, phraseTo }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async dismissLearningCandidate(id: number) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("dismiss_learning_candidate", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async searchHistory(query: string) : Promise<Result<SearchResult[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("search_history", { query }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async askHistory(question: string) : Promise<Result<AskHistoryResponse, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("ask_history", { question }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Checks if the Mac is a laptop by detecting battery presence
  * 
@@ -1392,6 +1440,9 @@ export type GpuDeviceOption = { id: string; name: string; total_vram_mb: number 
 export type FileImportProgressEvent = { current_chunk: number; total_chunks: number }
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null; post_process_requested: boolean; duration_seconds: number | null; notes_markdown: string | null; notes_template_id: string | null }
 export type HistoryUpdatePayload = { action: "added"; entry: HistoryEntry } | { action: "updated"; entry: HistoryEntry } | { action: "deleted"; id: number } | { action: "toggled"; id: number }
+export type LearningCandidate = { id: number; phrase_from: string; phrase_to: string; hit_count: number }
+export type SearchResult = { id: number; title: string; snippet: string }
+export type AskHistoryResponse = { answer: string; matches: SearchResult[] }
 /**
  * Result of changing keyboard implementation
  */

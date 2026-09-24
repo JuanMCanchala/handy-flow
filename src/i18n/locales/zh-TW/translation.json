@@ -542,6 +542,21 @@
         "progress": "正在轉錄第 {{current}} / {{total}} 段...",
         "cancel": "取消",
         "error": "匯入「{{file}}」失敗。請嘗試支援的音訊或視訊檔案。"
+      },
+      "ask": {
+        "placeholder": "Search or ask your history...",
+        "search": "Search",
+        "ask": "Ask",
+        "searchError": "Failed to search history. Please try again.",
+        "askError": "Failed to get an answer. Please try again.",
+        "noResults": "No matching history entries found.",
+        "sources": "Sources"
+      },
+      "learning": {
+        "suggestion": "Replace \"{{from}}\" with \"{{to}}\"?",
+        "addToDictionary": "Add to dictionary",
+        "dismiss": "Dismiss",
+        "addError": "Failed to add to dictionary. Please try again."
       }
     },
     "style": {
@@ -589,7 +604,11 @@
       "retranscribe": "重新轉錄",
       "retranscribeError": "重新轉錄失敗，請重試。",
       "transcribing": "轉錄中...",
-      "transcriptionFailed": "轉錄失敗。您可以使用重試圖示重新轉錄。"
+      "transcriptionFailed": "轉錄失敗。您可以使用重試圖示重新轉錄。",
+      "edit": "Edit transcription",
+      "cancelEdit": "Cancel",
+      "saveEdit": "Save",
+      "editError": "Failed to save your edit. Please try again."
     },
     "scratchpad": {
       "title": "記事本",

@@ -542,6 +542,21 @@
         "progress": "Fragment {{current}} van {{total}} wordt getranscribeerd...",
         "cancel": "Annuleren",
         "error": "Importeren van \"{{file}}\" mislukt. Probeer een ondersteund audio- of videobestand."
+      },
+      "ask": {
+        "placeholder": "Search or ask your history...",
+        "search": "Search",
+        "ask": "Ask",
+        "searchError": "Failed to search history. Please try again.",
+        "askError": "Failed to get an answer. Please try again.",
+        "noResults": "No matching history entries found.",
+        "sources": "Sources"
+      },
+      "learning": {
+        "suggestion": "Replace \"{{from}}\" with \"{{to}}\"?",
+        "addToDictionary": "Add to dictionary",
+        "dismiss": "Dismiss",
+        "addError": "Failed to add to dictionary. Please try again."
       }
     },
     "style": {
@@ -589,7 +604,11 @@
       "retranscribe": "Opnieuw transcriberen",
       "retranscribeError": "Opnieuw transcriberen mislukt. Probeer het opnieuw.",
       "transcribing": "Transcriberen...",
-      "transcriptionFailed": "Transcriptie mislukt. Je kunt het opnieuw proberen via het herlaad-pictogram."
+      "transcriptionFailed": "Transcriptie mislukt. Je kunt het opnieuw proberen via het herlaad-pictogram.",
+      "edit": "Edit transcription",
+      "cancelEdit": "Cancel",
+      "saveEdit": "Save",
+      "editError": "Failed to save your edit. Please try again."
     },
     "scratchpad": {
       "title": "Kladblok",

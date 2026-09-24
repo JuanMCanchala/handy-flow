@@ -7,7 +7,9 @@ import { useHistoryEntries } from "../settings/history/useHistoryEntries";
 import { AudioPlayerGroup } from "../ui/AudioPlayer";
 import { PageHeader } from "../ui/PageHeader";
 import { StatCard } from "../ui/StatCard";
+import { AskHistoryBox } from "./AskHistoryBox";
 import { FileImportDropZone } from "./FileImportDropZone";
+import { LearningSuggestions } from "./LearningSuggestions";
 
 const StatsRow: React.FC = () => {
   const { t } = useTranslation();
@@ -97,6 +99,7 @@ export const HomeSettings: React.FC = () => {
     getAudioUrl,
     deleteAudioEntry,
     retryHistoryEntry,
+    editEntryText,
   } = useHistoryEntries();
   const dayGroupLabel = useDayGroupLabel();
 
@@ -107,6 +110,10 @@ export const HomeSettings: React.FC = () => {
       <PageHeader title={t("settings.home.welcome")} />
 
       <StatsRow />
+
+      <AskHistoryBox />
+
+      <LearningSuggestions />
 
       <FileImportDropZone />
 
@@ -138,6 +145,7 @@ export const HomeSettings: React.FC = () => {
                       getAudioUrl={getAudioUrl}
                       deleteAudio={deleteAudioEntry}
                       retryTranscription={retryHistoryEntry}
+                      onEditText={editEntryText}
                     />
                   ))}
                 </div>

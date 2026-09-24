@@ -542,6 +542,21 @@
         "progress": "Transcription du segment {{current}} sur {{total}}...",
         "cancel": "Annuler",
         "error": "Échec de l'importation de « {{file}} ». Essayez un fichier audio ou vidéo pris en charge."
+      },
+      "ask": {
+        "placeholder": "Search or ask your history...",
+        "search": "Search",
+        "ask": "Ask",
+        "searchError": "Failed to search history. Please try again.",
+        "askError": "Failed to get an answer. Please try again.",
+        "noResults": "No matching history entries found.",
+        "sources": "Sources"
+      },
+      "learning": {
+        "suggestion": "Replace \"{{from}}\" with \"{{to}}\"?",
+        "addToDictionary": "Add to dictionary",
+        "dismiss": "Dismiss",
+        "addError": "Failed to add to dictionary. Please try again."
       }
     },
     "style": {
@@ -589,7 +604,11 @@
       "retranscribe": "Re-transcrire",
       "retranscribeError": "Impossible de re-transcrire. Veuillez réessayer.",
       "transcribing": "Transcription en cours...",
-      "transcriptionFailed": "La transcription a échoué. Vous pouvez re-transcrire en utilisant l'icône de réessai."
+      "transcriptionFailed": "La transcription a échoué. Vous pouvez re-transcrire en utilisant l'icône de réessai.",
+      "edit": "Edit transcription",
+      "cancelEdit": "Cancel",
+      "saveEdit": "Save",
+      "editError": "Failed to save your edit. Please try again."
     },
     "scratchpad": {
       "title": "Bloc-notes",

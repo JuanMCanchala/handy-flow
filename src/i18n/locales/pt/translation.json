@@ -542,6 +542,21 @@
         "progress": "Transcrevendo trecho {{current}} de {{total}}...",
         "cancel": "Cancelar",
         "error": "Falha ao importar \"{{file}}\". Tente um arquivo de áudio ou vídeo compatível."
+      },
+      "ask": {
+        "placeholder": "Search or ask your history...",
+        "search": "Search",
+        "ask": "Ask",
+        "searchError": "Failed to search history. Please try again.",
+        "askError": "Failed to get an answer. Please try again.",
+        "noResults": "No matching history entries found.",
+        "sources": "Sources"
+      },
+      "learning": {
+        "suggestion": "Replace \"{{from}}\" with \"{{to}}\"?",
+        "addToDictionary": "Add to dictionary",
+        "dismiss": "Dismiss",
+        "addError": "Failed to add to dictionary. Please try again."
       }
     },
     "style": {
@@ -589,7 +604,11 @@
       "retranscribe": "Re-transcrever",
       "retranscribeError": "Falha ao re-transcrever. Por favor, tente novamente.",
       "transcribing": "Transcrevendo...",
-      "transcriptionFailed": "A transcrição falhou. Você pode re-transcrever usando o ícone de tentar novamente."
+      "transcriptionFailed": "A transcrição falhou. Você pode re-transcrever usando o ícone de tentar novamente.",
+      "edit": "Edit transcription",
+      "cancelEdit": "Cancel",
+      "saveEdit": "Save",
+      "editError": "Failed to save your edit. Please try again."
     },
     "scratchpad": {
       "title": "Bloco de notas",

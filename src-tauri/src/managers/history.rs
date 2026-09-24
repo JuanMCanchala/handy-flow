@@ -49,6 +49,41 @@ static MIGRATIONS: &[M] = &[
         "ALTER TABLE transcription_history ADD COLUMN notes_markdown TEXT;
         ALTER TABLE transcription_history ADD COLUMN notes_template_id TEXT;",
     ),
+    // Self-learning dictionary: candidate replacements harvested from
+    // diffing user edits of history entries (see `crate::learning`).
+    M::up(
+        "CREATE TABLE IF NOT EXISTS learning_candidates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            phrase_from TEXT NOT NULL,
+            phrase_to TEXT NOT NULL,
+            hit_count INTEGER NOT NULL DEFAULT 1,
+            dismissed BOOLEAN NOT NULL DEFAULT 0,
+            UNIQUE (phrase_from, phrase_to)
+        );",
+    ),
+    // "Ask your history": FTS5 full-text index over transcription text,
+    // kept in sync with transcription_history via triggers.
+    M::up(
+        "CREATE VIRTUAL TABLE IF NOT EXISTS transcription_history_fts USING fts5(
+            transcription_text,
+            content='transcription_history',
+            content_rowid='id'
+        );
+        INSERT INTO transcription_history_fts(rowid, transcription_text)
+            SELECT id, transcription_text FROM transcription_history;
+        CREATE TRIGGER IF NOT EXISTS transcription_history_ai AFTER INSERT ON transcription_history BEGIN
+            INSERT INTO transcription_history_fts(rowid, transcription_text) VALUES (new.id, new.transcription_text);
+        END;
+        CREATE TRIGGER IF NOT EXISTS transcription_history_ad AFTER DELETE ON transcription_history BEGIN
+            INSERT INTO transcription_history_fts(transcription_history_fts, rowid, transcription_text)
+                VALUES ('delete', old.id, old.transcription_text);
+        END;
+        CREATE TRIGGER IF NOT EXISTS transcription_history_au AFTER UPDATE ON transcription_history BEGIN
+            INSERT INTO transcription_history_fts(transcription_history_fts, rowid, transcription_text)
+                VALUES ('delete', old.id, old.transcription_text);
+            INSERT INTO transcription_history_fts(rowid, transcription_text) VALUES (new.id, new.transcription_text);
+        END;",
+    ),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -84,6 +119,14 @@ pub struct HistoryEntry {
     pub duration_seconds: Option<f64>,
     pub notes_markdown: Option<String>,
     pub notes_template_id: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
+pub struct LearningCandidate {
+    pub id: i64,
+    pub phrase_from: String,
+    pub phrase_to: String,
+    pub hit_count: i64,
 }
 
 pub struct HistoryManager {
@@ -397,6 +440,118 @@ impl HistoryManager {
         }
 
         Ok(entry)
+    }
+
+    /// Edit a history entry's transcription text (from the Home/History UI).
+    /// Diffs the original vs. edited text word-level (`crate::learning`) and
+    /// records/increments candidate replacements in `learning_candidates`.
+    pub async fn edit_entry_text(&self, id: i64, new_text: String) -> Result<HistoryEntry> {
+        let conn = self.get_connection()?;
+
+        let original_text: String = conn
+            .query_row(
+                "SELECT transcription_text FROM transcription_history WHERE id = ?1",
+                params![id],
+                |row| row.get(0),
+            )
+            .map_err(|_| anyhow!("History entry {} not found", id))?;
+
+        conn.execute(
+            "UPDATE transcription_history SET transcription_text = ?1 WHERE id = ?2",
+            params![new_text, id],
+        )?;
+
+        for candidate in crate::learning::extract_candidates(&original_text, &new_text) {
+            conn.execute(
+                "INSERT INTO learning_candidates (phrase_from, phrase_to, hit_count, dismissed)
+                 VALUES (?1, ?2, 1, 0)
+                 ON CONFLICT (phrase_from, phrase_to)
+                 DO UPDATE SET hit_count = hit_count + 1, dismissed = 0",
+                params![candidate.from, candidate.to],
+            )?;
+        }
+
+        let entry = conn.query_row(
+            "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt, post_process_requested, duration_seconds
+             FROM transcription_history WHERE id = ?1",
+            params![id],
+            Self::map_history_entry,
+        )?;
+
+        if let Err(e) = (HistoryUpdatePayload::Updated {
+            entry: entry.clone(),
+        })
+        .emit(&self.app_handle)
+        {
+            error!("Failed to emit history-updated event: {}", e);
+        }
+
+        Ok(entry)
+    }
+
+    /// List learning candidates with more than `min_hits` hits that haven't
+    /// been dismissed, most-hit first.
+    pub fn list_learning_candidates(&self, min_hits: i64) -> Result<Vec<LearningCandidate>> {
+        let conn = self.get_connection()?;
+        let mut stmt = conn.prepare(
+            "SELECT id, phrase_from, phrase_to, hit_count FROM learning_candidates
+             WHERE hit_count > ?1 AND dismissed = 0
+             ORDER BY hit_count DESC, id DESC",
+        )?;
+        let rows = stmt.query_map(params![min_hits], |row| {
+            Ok(LearningCandidate {
+                id: row.get("id")?,
+                phrase_from: row.get("phrase_from")?,
+                phrase_to: row.get("phrase_to")?,
+                hit_count: row.get("hit_count")?,
+            })
+        })?;
+        Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
+    }
+
+    /// Marks a learning candidate as dismissed so it stops being suggested.
+    pub fn dismiss_learning_candidate(&self, id: i64) -> Result<()> {
+        let conn = self.get_connection()?;
+        conn.execute(
+            "UPDATE learning_candidates SET dismissed = 1 WHERE id = ?1",
+            params![id],
+        )?;
+        Ok(())
+    }
+
+    /// Removes a learning candidate outright (used after it's been added to
+    /// the custom words dictionary, so it doesn't linger as "dismissed").
+    pub fn remove_learning_candidate(&self, id: i64) -> Result<()> {
+        let conn = self.get_connection()?;
+        conn.execute("DELETE FROM learning_candidates WHERE id = ?1", params![id])?;
+        Ok(())
+    }
+
+    /// Full-text search over transcription history via FTS5. `sanitized_query`
+    /// must already be a valid FTS5 MATCH expression (see
+    /// `crate::history_search::sanitize_fts_query`).
+    pub fn search_history_fts(
+        &self,
+        sanitized_query: &str,
+        limit: usize,
+    ) -> Result<Vec<crate::history_search::SearchResult>> {
+        let conn = self.get_connection()?;
+        let mut stmt = conn.prepare(
+            "SELECT h.id, h.title, snippet(transcription_history_fts, 0, '', '', '...', 16) AS snippet
+             FROM transcription_history_fts
+             JOIN transcription_history h ON h.id = transcription_history_fts.rowid
+             WHERE transcription_history_fts MATCH ?1
+             ORDER BY rank
+             LIMIT ?2",
+        )?;
+        let rows = stmt.query_map(params![sanitized_query, limit as i64], |row| {
+            Ok(crate::history_search::SearchResult {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                snippet: row.get(2)?,
+            })
+        })?;
+        Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
     }
 
     pub fn cleanup_old_entries(&self) -> Result<()> {

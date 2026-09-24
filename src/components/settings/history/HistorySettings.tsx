@@ -4,10 +4,12 @@ import {
   Copy,
   Download,
   FolderOpen,
+  Pencil,
   RotateCcw,
   Sparkles,
   Star,
   Trash2,
+  X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -19,6 +21,7 @@ import { Button } from "../../ui/Button";
 import { PageHeader } from "../../ui/PageHeader";
 import { GenerateNotesDialog } from "../../notes/GenerateNotesDialog";
 import { NotesView } from "../../notes/NotesView";
+import { Textarea } from "../../ui/Textarea";
 import { copyToClipboard } from "./clipboard";
 import { useHistoryEntries } from "./useHistoryEntries";
 
@@ -79,6 +82,7 @@ export const HistorySettings: React.FC = () => {
     getAudioUrl,
     deleteAudioEntry,
     retryHistoryEntry,
+    editEntryText,
   } = useHistoryEntries();
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -145,6 +149,7 @@ export const HistorySettings: React.FC = () => {
                 getAudioUrl={getAudioUrl}
                 deleteAudio={deleteAudioEntry}
                 retryTranscription={retryHistoryEntry}
+                onEditText={editEntryText}
               />
             ))}
           </div>
@@ -180,6 +185,7 @@ export interface HistoryEntryProps {
   getAudioUrl: (fileName: string) => Promise<string | null>;
   deleteAudio: (id: number) => Promise<void>;
   retryTranscription: (id: number) => Promise<void>;
+  onEditText: (id: number, text: string) => Promise<void>;
 }
 
 export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
@@ -189,6 +195,7 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   getAudioUrl,
   deleteAudio,
   retryTranscription,
+  onEditText,
 }) => {
   const { t, i18n } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
@@ -197,6 +204,9 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   const exportMenuRef = useRef<HTMLDivElement>(null);
   const [notesMarkdown, setNotesMarkdown] = useState(entry.notes_markdown);
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState(entry.transcription_text);
+  const [saving, setSaving] = useState(false);
 
   const hasTranscription = entry.transcription_text.trim().length > 0;
 
@@ -278,6 +288,33 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
     }
   };
 
+  const handleStartEdit = () => {
+    setEditedText(entry.transcription_text);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedText(entry.transcription_text);
+  };
+
+  const handleSaveEdit = async () => {
+    if (editedText === entry.transcription_text) {
+      setIsEditing(false);
+      return;
+    }
+    try {
+      setSaving(true);
+      await onEditText(entry.id, editedText);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to save edited transcription:", error);
+      toast.error(t("settings.history.editError"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const formattedDate = formatDateTime(String(entry.timestamp), i18n.language);
 
   return (
@@ -285,6 +322,15 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
       <div className="flex justify-between items-center">
         <p className="text-body font-medium tabular">{formattedDate}</p>
         <div className="flex items-center">
+          {!isEditing && (
+            <IconButton
+              onClick={handleStartEdit}
+              disabled={!hasTranscription || retrying}
+              title={t("settings.history.edit")}
+            >
+              <Pencil width={16} height={16} />
+            </IconButton>
+          )}
           <IconButton
             onClick={handleCopyText}
             disabled={!hasTranscription || retrying}
@@ -366,34 +412,62 @@ export const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
         </div>
       </div>
 
-      <p
-        className={`italic text-small pb-2 ${
-          retrying
-            ? ""
+      {isEditing ? (
+        <div className="flex flex-col gap-2">
+          <Textarea
+            variant="compact"
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+            disabled={saving}
+            autoFocus
+            className="w-full"
+          />
+          <div className="flex items-center gap-2 justify-end">
+            <Button
+              onClick={handleCancelEdit}
+              variant="secondary"
+              size="sm"
+              disabled={saving}
+            >
+              <X width={14} height={14} />
+              <span>{t("settings.history.cancelEdit")}</span>
+            </Button>
+            <Button onClick={handleSaveEdit} size="sm" disabled={saving}>
+              <Check width={14} height={14} />
+              <span>{t("settings.history.saveEdit")}</span>
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <p
+          className={`italic text-small pb-2 ${
+            retrying
+              ? ""
+              : hasTranscription
+                ? "text-text select-text cursor-text whitespace-pre-wrap break-words"
+                : "text-text-tertiary"
+          }`}
+          style={
+            retrying
+              ? { animation: "transcribe-pulse 3s ease-in-out infinite" }
+              : undefined
+          }
+        >
+          {retrying && (
+            <style>{`
+              @keyframes transcribe-pulse {
+                0%, 100% { color: color-mix(in srgb, var(--color-text) 40%, transparent); }
+                50% { color: color-mix(in srgb, var(--color-text) 90%, transparent); }
+              }
+            `}</style>
+          )}
+          {retrying
+            ? t("settings.history.transcribing")
             : hasTranscription
-              ? "text-text select-text cursor-text whitespace-pre-wrap break-words"
-              : "text-text-tertiary"
-        }`}
-        style={
-          retrying
-            ? { animation: "transcribe-pulse 3s ease-in-out infinite" }
-            : undefined
-        }
-      >
-        {retrying && (
-          <style>{`
-            @keyframes transcribe-pulse {
-              0%, 100% { color: color-mix(in srgb, var(--color-text) 40%, transparent); }
-              50% { color: color-mix(in srgb, var(--color-text) 90%, transparent); }
-            }
-          `}</style>
-        )}
-        {retrying
-          ? t("settings.history.transcribing")
-          : hasTranscription
-            ? entry.transcription_text
-            : t("settings.history.transcriptionFailed")}
-      </p>
+              ? entry.transcription_text
+              : t("settings.history.transcriptionFailed")}
+        </p>
+      )}
 
       <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
 
