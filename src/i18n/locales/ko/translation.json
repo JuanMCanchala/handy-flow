@@ -15,6 +15,7 @@
     "models": "모델",
     "advanced": "고급",
     "snippets": "스니펫",
+    "transforms": "Transforms",
     "postProcessing": "후처리",
     "style": "스타일",
     "history": "히스토리",
@@ -424,6 +425,22 @@
         "remove": "{{trigger}} 삭제"
       }
     },
+    "transforms": {
+      "title": "Transforms",
+      "add": {
+        "title": "Add Transform",
+        "description": "Create a named prompt you can invoke by speaking its name in command mode (e.g. \"apply bullet list\").",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "단축키"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "에이전트 이름",
           "description": "받아쓰기를 \"Hey <이름>\"으로 시작하면 명령으로 실행됩니다."
+        }
+      },
+      "translate": {
+        "title": "Translate",
+        "target": {
+          "title": "Target Language",
+          "description": "Language the translate hotkey translates to. Auto translates Spanish to English and anything else to Spanish.",
+          "auto": "Auto (Spanish ↔ English)",
+          "en": "English",
+          "es": "Spanish"
         }
       }
     },

@@ -15,6 +15,7 @@
     "models": "Modele",
     "advanced": "Zaawansowane",
     "snippets": "Fragmenty",
+    "transforms": "Transformacje",
     "postProcessing": "Postproces",
     "style": "Styl",
     "history": "Historia",
@@ -424,6 +425,22 @@
         "remove": "Usuń {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transformacje",
+      "add": {
+        "title": "Dodaj transformację",
+        "description": "Utwórz nazwany prompt, który możesz wywołać, wypowiadając jego nazwę w trybie komend (np. \"zastosuj listę punktowaną\").",
+        "namePlaceholder": "Nazwa",
+        "promptPlaceholder": "Prompt",
+        "add": "Dodaj"
+      },
+      "list": {
+        "edit": "Edytuj {{name}}",
+        "save": "Zapisz",
+        "cancel": "Anuluj",
+        "remove": "Usuń {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Skrót klawiszowy"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "Nazwa agenta",
           "description": "Zacznij dyktowanie od „Hey <nazwa>”, aby wykonać je jako polecenie."
+        }
+      },
+      "translate": {
+        "title": "Tłumacz",
+        "target": {
+          "title": "Język docelowy",
+          "description": "Język, na który tłumaczy skrót tłumaczenia. Auto tłumaczy hiszpański na angielski, a wszystko inne na hiszpański.",
+          "auto": "Auto (hiszpański ↔ angielski)",
+          "en": "Angielski",
+          "es": "Hiszpański"
         }
       }
     },

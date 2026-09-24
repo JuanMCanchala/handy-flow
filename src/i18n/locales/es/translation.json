@@ -15,6 +15,7 @@
     "models": "Modelos",
     "advanced": "Avanzado",
     "snippets": "Fragmentos",
+    "transforms": "Transformaciones",
     "postProcessing": "Post proceso",
     "style": "Estilo",
     "history": "Historial",
@@ -450,6 +451,22 @@
         "remove": "Eliminar {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transformaciones",
+      "add": {
+        "title": "Añadir transformación",
+        "description": "Crea un prompt con nombre que puedas invocar diciendo su nombre en modo comando (p. ej. \"aplica lista de viñetas\").",
+        "namePlaceholder": "Nombre",
+        "promptPlaceholder": "Prompt",
+        "add": "Añadir"
+      },
+      "list": {
+        "edit": "Editar {{name}}",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "remove": "Eliminar {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Tecla de acceso rápido"
@@ -508,6 +525,16 @@
         "agentName": {
           "title": "Nombre del agente",
           "description": "Empieza un dictado con \"Oye <nombre>\" para ejecutarlo como comando."
+        }
+      },
+      "translate": {
+        "title": "Traducir",
+        "target": {
+          "title": "Idioma de destino",
+          "description": "Idioma al que traduce el atajo de traducción. Auto traduce del español al inglés y cualquier otro idioma al español.",
+          "auto": "Auto (Español ↔ Inglés)",
+          "en": "Inglés",
+          "es": "Español"
         }
       }
     },

@@ -15,6 +15,7 @@
     "models": "Modelos",
     "advanced": "Avançado",
     "snippets": "Trechos",
+    "transforms": "Transformações",
     "postProcessing": "Pós-Processamento",
     "style": "Estilo",
     "history": "Histórico",
@@ -424,6 +425,22 @@
         "remove": "Remover {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transformações",
+      "add": {
+        "title": "Adicionar transformação",
+        "description": "Crie um prompt nomeado que você pode invocar dizendo o nome no modo de comando (ex.: \"aplicar lista com marcadores\").",
+        "namePlaceholder": "Nome",
+        "promptPlaceholder": "Prompt",
+        "add": "Adicionar"
+      },
+      "list": {
+        "edit": "Editar {{name}}",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "remove": "Remover {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Tecla de atalho"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "Nome do agente",
           "description": "Comece um ditado com \"Ei <nome>\" para executá-lo como comando."
+        }
+      },
+      "translate": {
+        "title": "Traduzir",
+        "target": {
+          "title": "Idioma de destino",
+          "description": "Idioma para o qual o atalho de tradução traduz. Auto traduz do espanhol para o inglês e qualquer outro idioma para o espanhol.",
+          "auto": "Auto (Espanhol ↔ Inglês)",
+          "en": "Inglês",
+          "es": "Espanhol"
         }
       }
     },

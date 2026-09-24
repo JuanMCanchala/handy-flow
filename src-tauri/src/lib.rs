@@ -26,6 +26,8 @@ mod signal_handle;
 mod snippets;
 mod style;
 mod transcription_coordinator;
+mod transforms;
+mod translate;
 mod tray;
 mod tray_i18n;
 mod utils;
@@ -780,6 +782,10 @@ pub fn run(cli_args: CliArgs) {
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
             commands::insights::get_insights,
+            commands::transforms::add_transform,
+            commands::transforms::update_transform,
+            commands::transforms::delete_transform,
+            commands::transforms::change_translation_target_setting,
             helpers::clamshell::is_laptop,
         ])
         .events(collect_events![

@@ -15,6 +15,7 @@
     "models": "Modelle",
     "advanced": "Erweitert",
     "snippets": "Textbausteine",
+    "transforms": "Transformationen",
     "postProcessing": "Nachbearbeitung",
     "style": "Stil",
     "history": "Verlauf",
@@ -424,6 +425,22 @@
         "remove": "{{trigger}} entfernen"
       }
     },
+    "transforms": {
+      "title": "Transformationen",
+      "add": {
+        "title": "Transformation hinzufügen",
+        "description": "Erstelle einen benannten Prompt, den du im Befehlsmodus per Namen aufrufen kannst (z. B. „Aufzählungsliste anwenden“).",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Hinzufügen"
+      },
+      "list": {
+        "edit": "{{name}} bearbeiten",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "remove": "{{name}} entfernen"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Tastenkürzel"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "Name des Agenten",
           "description": "Beginne ein Diktat mit „Hey <Name>“, um es als Befehl auszuführen."
+        }
+      },
+      "translate": {
+        "title": "Übersetzen",
+        "target": {
+          "title": "Zielsprache",
+          "description": "Sprache, in die der Übersetzungs-Hotkey übersetzt. Auto übersetzt Spanisch ins Englische und alles andere ins Spanische.",
+          "auto": "Auto (Spanisch ↔ Englisch)",
+          "en": "Englisch",
+          "es": "Spanisch"
         }
       }
     },

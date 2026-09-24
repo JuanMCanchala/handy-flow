@@ -15,6 +15,7 @@
     "models": "Modelli",
     "advanced": "Avanzate",
     "snippets": "Snippet",
+    "transforms": "Trasformazioni",
     "postProcessing": "Post-Elaborazione",
     "style": "Stile",
     "history": "Cronologia",
@@ -424,6 +425,22 @@
         "remove": "Rimuovi {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Trasformazioni",
+      "add": {
+        "title": "Aggiungi trasformazione",
+        "description": "Crea un prompt con nome che puoi richiamare pronunciandolo in modalità comando (es. \"applica elenco puntato\").",
+        "namePlaceholder": "Nome",
+        "promptPlaceholder": "Prompt",
+        "add": "Aggiungi"
+      },
+      "list": {
+        "edit": "Modifica {{name}}",
+        "save": "Salva",
+        "cancel": "Annulla",
+        "remove": "Rimuovi {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Tasto di scelta rapida"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "Nome dell'agente",
           "description": "Inizia una dettatura con \"Hey <nome>\" per eseguirla come comando."
+        }
+      },
+      "translate": {
+        "title": "Traduci",
+        "target": {
+          "title": "Lingua di destinazione",
+          "description": "Lingua verso cui traduce la scorciatoia di traduzione. Auto traduce lo spagnolo in inglese e tutto il resto in spagnolo.",
+          "auto": "Auto (Spagnolo ↔ Inglese)",
+          "en": "Inglese",
+          "es": "Spagnolo"
         }
       }
     },

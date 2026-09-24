@@ -8,6 +8,7 @@ export { AboutSettings } from "./about/AboutSettings";
 export { PostProcessingSettings } from "./post-processing/PostProcessingSettings";
 export { ModelsSettings } from "./models/ModelsSettings";
 export { SnippetsSettings } from "./snippets/SnippetsSettings";
+export { TransformsSettings } from "./transforms/TransformsSettings";
 export { StyleSettings } from "./StyleSettings";
 
 // Individual setting components
@@ -36,3 +37,4 @@ export { RecordingRetentionPeriodSelector } from "./RecordingRetentionPeriod";
 export { AutostartToggle } from "./AutostartToggle";
 export { UpdateChecksToggle } from "./UpdateChecksToggle";
 export { ShowWhatsNewOnUpdate } from "./ShowWhatsNewOnUpdate";
+export { TranslationTargetSelector } from "./TranslationTargetSelector";

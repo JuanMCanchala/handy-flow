@@ -15,6 +15,7 @@
     "models": "מודלים",
     "advanced": "מתקדם",
     "snippets": "קטעי טקסט",
+    "transforms": "Transforms",
     "postProcessing": "עיבוד משלים",
     "style": "סטייל",
     "history": "היסטוריה",
@@ -424,6 +425,22 @@
         "remove": "הסר {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transforms",
+      "add": {
+        "title": "Add Transform",
+        "description": "Create a named prompt you can invoke by speaking its name in command mode (e.g. \"apply bullet list\").",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "קיצור מקשים"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "שם הסוכן",
           "description": "התחילו הכתבה ב-\"Hey <שם>\" כדי להריץ אותה כפקודה."
+        }
+      },
+      "translate": {
+        "title": "Translate",
+        "target": {
+          "title": "Target Language",
+          "description": "Language the translate hotkey translates to. Auto translates Spanish to English and anything else to Spanish.",
+          "auto": "Auto (Spanish ↔ English)",
+          "en": "English",
+          "es": "Spanish"
         }
       }
     },

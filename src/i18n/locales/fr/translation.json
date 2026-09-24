@@ -15,6 +15,7 @@
     "models": "Modèles",
     "advanced": "Avancé",
     "snippets": "Extraits",
+    "transforms": "Transformations",
     "postProcessing": "Post-traitement",
     "style": "Style",
     "history": "Historique",
@@ -424,6 +425,22 @@
         "remove": "Supprimer {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transformations",
+      "add": {
+        "title": "Ajouter une transformation",
+        "description": "Créez un prompt nommé que vous pouvez invoquer en mode commande (par ex. \"applique liste à puces\").",
+        "namePlaceholder": "Nom",
+        "promptPlaceholder": "Prompt",
+        "add": "Ajouter"
+      },
+      "list": {
+        "edit": "Modifier {{name}}",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "remove": "Supprimer {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Raccourci clavier"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "Nom de l'agent",
           "description": "Commencez une dictée par « Hey <nom> » pour l'exécuter comme commande."
+        }
+      },
+      "translate": {
+        "title": "Traduire",
+        "target": {
+          "title": "Langue cible",
+          "description": "Langue vers laquelle le raccourci de traduction traduit. Auto traduit l'espagnol vers l'anglais et le reste vers l'espagnol.",
+          "auto": "Auto (Espagnol ↔ Anglais)",
+          "en": "Anglais",
+          "es": "Espagnol"
         }
       }
     },

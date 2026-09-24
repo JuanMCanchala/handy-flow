@@ -15,6 +15,7 @@
     "models": "Models",
     "advanced": "Avançat",
     "snippets": "Fragments",
+    "transforms": "Transforms",
     "postProcessing": "Postprocessament",
     "style": "Estil",
     "history": "Historial",
@@ -424,6 +425,22 @@
         "remove": "Elimina {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transforms",
+      "add": {
+        "title": "Add Transform",
+        "description": "Create a named prompt you can invoke by speaking its name in command mode (e.g. \"apply bullet list\").",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Drecera de teclat"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "Nom de l'agent",
           "description": "Comença un dictat amb \"Ei <nom>\" per executar-lo com a ordre."
+        }
+      },
+      "translate": {
+        "title": "Translate",
+        "target": {
+          "title": "Target Language",
+          "description": "Language the translate hotkey translates to. Auto translates Spanish to English and anything else to Spanish.",
+          "auto": "Auto (Spanish ↔ English)",
+          "en": "English",
+          "es": "Spanish"
         }
       }
     },

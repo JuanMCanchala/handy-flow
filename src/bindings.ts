@@ -376,6 +376,38 @@ async deleteSnippet(id: string) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async addTransform(name: string, prompt: string) : Promise<Result<Transform, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("add_transform", { name, prompt }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async updateTransform(id: string, name: string, prompt: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_transform", { id, name, prompt }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async deleteTransform(id: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("delete_transform", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeTranslationTargetSetting(target: TranslationTarget) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_translation_target_setting", { target }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Temporarily unregister all bindings while the user is recording a
  * shortcut in the UI. This avoids firing actions while keys are recorded.
@@ -1112,7 +1144,17 @@ overlay_style?: OverlayStyle; snippets?: Snippet[]; style_per_app_enabled?: bool
  * ("formal", "casual", "very_casual", "excited"). Missing entries mean
  * no extra tone instruction is appended for that category.
  */
-app_styles?: Partial<{ [key in string]: string }> }
+app_styles?: Partial<{ [key in string]: string }>; 
+/**
+ * User-saved named prompts invocable by name in command mode
+ * ("apply bullet list"). Seeded with a few defaults on fresh installs.
+ */
+transforms?: Transform[]; 
+/**
+ * Target language for the `translate` binding. `Auto` translates
+ * Spanish to English and anything else to Spanish.
+ */
+translation_target?: TranslationTarget }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1284,6 +1326,16 @@ export type StreamWorkKind = "transcribing" | "polishing"
  */
 export type Theme = "system" | "light" | "dark"
 export type TranscribeAcceleratorSetting = "auto" | "cpu" | "gpu"
+/**
+ * Target language for the `translate` binding. `Auto` translates
+ * Spanish to English and anything else to Spanish.
+ */
+export type TranslationTarget = "auto" | "en" | "es"
+/**
+ * User-saved named prompts invocable by name in command mode
+ * ("apply bullet list"). Seeded with a few defaults on fresh installs.
+ */
+export type Transform = { id: string; name: string; prompt: string }
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 export type VadBackend = "silero" | "earshot"
 export type WindowsMicrophonePermissionStatus = { supported: boolean; overall_access: PermissionAccess; device_access: PermissionAccess; app_access: PermissionAccess; desktop_app_access: PermissionAccess }

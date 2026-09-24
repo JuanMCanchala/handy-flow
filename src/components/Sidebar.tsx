@@ -11,6 +11,7 @@ import {
   Palette,
   Sparkles,
   Type,
+  Wand2,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
@@ -25,6 +26,7 @@ import {
   PostProcessingSettings,
   ModelsSettings,
   SnippetsSettings,
+  TransformsSettings,
   StyleSettings,
 } from "./settings";
 import { ScratchpadSettings } from "./scratchpad";
@@ -87,6 +89,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.snippets",
     icon: Type,
     component: SnippetsSettings,
+    enabled: () => true,
+  },
+  transforms: {
+    labelKey: "sidebar.transforms",
+    icon: Wand2,
+    component: TransformsSettings,
     enabled: () => true,
   },
   postprocessing: {

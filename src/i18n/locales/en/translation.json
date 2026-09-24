@@ -15,6 +15,7 @@
     "models": "Models",
     "advanced": "Advanced",
     "snippets": "Snippets",
+    "transforms": "Transforms",
     "postProcessing": "Post Process",
     "style": "Style",
     "history": "History",
@@ -450,6 +451,22 @@
         "remove": "Remove {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transforms",
+      "add": {
+        "title": "Add Transform",
+        "description": "Create a named prompt you can invoke by speaking its name in command mode (e.g. \"apply bullet list\").",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "Hotkey"
@@ -508,6 +525,16 @@
         "agentName": {
           "title": "Agent name",
           "description": "Start a dictation with \"Hey <name>\" to run it as a command."
+        }
+      },
+      "translate": {
+        "title": "Translate",
+        "target": {
+          "title": "Target Language",
+          "description": "Language the translate hotkey translates to. Auto translates Spanish to English and anything else to Spanish.",
+          "auto": "Auto (Spanish \u2194 English)",
+          "en": "English",
+          "es": "Spanish"
         }
       }
     },

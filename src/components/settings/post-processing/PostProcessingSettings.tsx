@@ -21,6 +21,7 @@ import { ModelSelect } from "../PostProcessingSettingsApi/ModelSelect";
 import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePostProcessProviderState";
 import { ShortcutInput } from "../ShortcutInput";
 import { AgentName } from "../AgentName";
+import { TranslationTargetSelector } from "../TranslationTargetSelector";
 import { useSettings } from "../../../hooks/useSettings";
 
 const PostProcessingSettingsApiComponent: React.FC = () => {
@@ -445,6 +446,15 @@ export const PostProcessingSettings: React.FC = () => {
           grouped={true}
         />
         <AgentName descriptionMode="tooltip" grouped={true} />
+      </SettingsGroup>
+
+      <SettingsGroup title={t("settings.postProcessing.translate.title")}>
+        <ShortcutInput
+          shortcutId="translate"
+          descriptionMode="tooltip"
+          grouped={true}
+        />
+        <TranslationTargetSelector descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.postProcessing.api.title")}>

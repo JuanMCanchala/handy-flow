@@ -1,3 +1,5 @@
+use crate::transforms::Transform;
+use crate::translate::TranslationTarget;
 use crate::utils;
 use log::{debug, warn};
 use serde::de::{self, Visitor};
@@ -560,6 +562,14 @@ pub struct AppSettings {
     /// no extra tone instruction is appended for that category.
     #[serde(default)]
     pub app_styles: HashMap<String, String>,
+    /// User-saved named prompts invocable by name in command mode
+    /// ("apply bullet list"). Seeded with a few defaults on fresh installs.
+    #[serde(default = "default_transforms")]
+    pub transforms: Vec<Transform>,
+    /// Target language for the `translate` binding. `Auto` translates
+    /// Spanish to English and anything else to Spanish.
+    #[serde(default)]
+    pub translation_target: TranslationTarget,
 }
 
 fn default_model() -> String {
@@ -872,6 +882,26 @@ fn default_post_process_prompts() -> Vec<LLMPrompt> {
     }]
 }
 
+fn default_transforms() -> Vec<Transform> {
+    vec![
+        Transform {
+            id: "default_bullet_list".to_string(),
+            name: "Bullet list".to_string(),
+            prompt: "Rewrite the text as a concise bullet list.".to_string(),
+        },
+        Transform {
+            id: "default_make_formal".to_string(),
+            name: "Make it formal".to_string(),
+            prompt: "Rewrite the text in a more formal tone.".to_string(),
+        },
+        Transform {
+            id: "default_summarize".to_string(),
+            name: "Summarize".to_string(),
+            prompt: "Summarize the text concisely, preserving the key points.".to_string(),
+        },
+    ]
+}
+
 fn default_transcribe_gpu_device() -> Option<String> {
     None // automatic device selection
 }
@@ -1022,6 +1052,22 @@ pub fn get_default_settings() -> AppSettings {
             current_binding: "escape".to_string(),
         },
     );
+    #[cfg(target_os = "macos")]
+    let default_translate_shortcut = "control+option+t";
+    #[cfg(not(target_os = "macos"))]
+    let default_translate_shortcut = "ctrl+alt+t";
+
+    bindings.insert(
+        "translate".to_string(),
+        ShortcutBinding {
+            id: "translate".to_string(),
+            name: "Translate".to_string(),
+            description: "Speaks are translated and pasted instead of transcribed as-is."
+                .to_string(),
+            default_binding: default_translate_shortcut.to_string(),
+            current_binding: default_translate_shortcut.to_string(),
+        },
+    );
 
     AppSettings {
         settings_schema_version: default_settings_schema_version(),
@@ -1095,6 +1141,8 @@ pub fn get_default_settings() -> AppSettings {
         overlay_style: default_overlay_style(),
         style_per_app_enabled: false,
         app_styles: HashMap::new(),
+        transforms: default_transforms(),
+        translation_target: TranslationTarget::default(),
     }
 }
 

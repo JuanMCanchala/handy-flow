@@ -59,6 +59,8 @@ struct TranscribeAction {
     post_process: bool,
     /// Treat the whole utterance as an instruction for the selected text.
     command: bool,
+    /// Paste a translation of the transcript instead of the transcript itself.
+    translate: bool,
 }
 
 /// Field name for structured output JSON schema
@@ -497,6 +499,42 @@ pub(crate) async fn process_transcription_output(
     }
 }
 
+/// Runs the translate hotkey: translates the transcript itself (never a
+/// captured selection) via command mode's LLM call and pastes the result.
+async fn process_translation(
+    app: &AppHandle,
+    transcription: &str,
+) -> ProcessedTranscription {
+    if is_blank_transcription(transcription) {
+        return ProcessedTranscription {
+            final_text: String::new(),
+            post_processed_text: None,
+            post_process_prompt: None,
+        };
+    }
+
+    let settings = get_settings(app);
+    let instruction =
+        crate::translate::build_translate_instruction(transcription, settings.translation_target);
+
+    match crate::command_mode::run_command(&settings, Some(transcription), &instruction).await {
+        Ok(result) => ProcessedTranscription {
+            final_text: result.clone(),
+            post_processed_text: Some(result),
+            post_process_prompt: Some(format!("translate: {}", instruction)),
+        },
+        Err(err) => {
+            error!("Translate mode failed: {}", err);
+            let _ = app.emit("transcription-error", err);
+            ProcessedTranscription {
+                final_text: String::new(),
+                post_processed_text: None,
+                post_process_prompt: None,
+            }
+        }
+    }
+}
+
 /// Runs command mode when the utterance is an instruction, otherwise the
 /// normal dictation output pipeline. A failed command surfaces an error and
 /// pastes nothing, so the user's selection is never overwritten by accident.
@@ -520,11 +558,16 @@ async fn process_output_or_command(
     .unwrap_or(None);
 
     let settings = get_settings(app);
-    match crate::command_mode::run_command(&settings, selection.as_deref(), &instruction).await {
+    let resolved_instruction = crate::transforms::match_transform(&instruction, &settings.transforms)
+        .map(str::to_string)
+        .unwrap_or(instruction);
+    match crate::command_mode::run_command(&settings, selection.as_deref(), &resolved_instruction)
+        .await
+    {
         Ok(result) => ProcessedTranscription {
             final_text: result.clone(),
             post_processed_text: Some(result),
-            post_process_prompt: Some(format!("command: {}", instruction)),
+            post_process_prompt: Some(format!("command: {}", resolved_instruction)),
         },
         Err(err) => {
             error!("Command mode failed: {}", err);
@@ -750,6 +793,7 @@ impl ShortcutAction for TranscribeAction {
         let binding_id = binding_id.to_string(); // Clone binding_id for the async task
         let post_process = self.post_process;
         let command = self.command;
+        let translate = self.translate;
         let cancel_generation = rm.cancel_generation();
 
         tauri::async_runtime::spawn(async move {
@@ -848,7 +892,9 @@ impl ShortcutAction for TranscribeAction {
                                 utils::redact_text(&transcription)
                             );
 
-                            let command_instruction = if command {
+                            let command_instruction = if translate {
+                                None
+                            } else if command {
                                 Some(transcription.trim().to_string()).filter(|t| !t.is_empty())
                             } else {
                                 crate::command_mode::strip_agent_address(
@@ -856,7 +902,7 @@ impl ShortcutAction for TranscribeAction {
                                     &get_settings(&ah).agent_name,
                                 )
                             };
-                            if post_process || command_instruction.is_some() {
+                            if post_process || command_instruction.is_some() || translate {
                                 if use_streaming_overlay {
                                     tm.emit_stream_working(StreamWorkKind::Polishing);
                                 } else {
@@ -864,13 +910,20 @@ impl ShortcutAction for TranscribeAction {
                                 }
                             }
                             let Some(processed) = complete_unless_cancelled(
-                                process_output_or_command(
-                                    &ah,
-                                    &transcription,
-                                    post_process,
-                                    style_category,
-                                    command_instruction,
-                                ),
+                                async {
+                                    if translate {
+                                        process_translation(&ah, &transcription).await
+                                    } else {
+                                        process_output_or_command(
+                                            &ah,
+                                            &transcription,
+                                            post_process,
+                                            style_category,
+                                            command_instruction,
+                                        )
+                                        .await
+                                    }
+                                },
                                 || rm.was_cancelled_since(cancel_generation),
                             )
                             .await
@@ -1040,6 +1093,7 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
         Arc::new(TranscribeAction {
             post_process: false,
             command: false,
+            translate: false,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
@@ -1047,6 +1101,7 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
         Arc::new(TranscribeAction {
             post_process: true,
             command: false,
+            translate: false,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
@@ -1054,6 +1109,15 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
         Arc::new(TranscribeAction {
             post_process: false,
             command: true,
+            translate: false,
+        }) as Arc<dyn ShortcutAction>,
+    );
+    map.insert(
+        "translate".to_string(),
+        Arc::new(TranscribeAction {
+            post_process: false,
+            command: false,
+            translate: true,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(

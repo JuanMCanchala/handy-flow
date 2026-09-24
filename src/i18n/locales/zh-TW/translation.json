@@ -15,6 +15,7 @@
     "models": "模型",
     "advanced": "進階",
     "snippets": "片段",
+    "transforms": "Transforms",
     "postProcessing": "後處理",
     "style": "風格",
     "history": "歷史紀錄",
@@ -424,6 +425,22 @@
         "remove": "移除 {{trigger}}"
       }
     },
+    "transforms": {
+      "title": "Transforms",
+      "add": {
+        "title": "Add Transform",
+        "description": "Create a named prompt you can invoke by speaking its name in command mode (e.g. \"apply bullet list\").",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}"
+      }
+    },
     "postProcessing": {
       "hotkey": {
         "title": "快捷鍵"
@@ -482,6 +499,16 @@
         "agentName": {
           "title": "助理名稱",
           "description": "以「Hey <名稱>」開頭的聽寫將作為命令執行。"
+        }
+      },
+      "translate": {
+        "title": "Translate",
+        "target": {
+          "title": "Target Language",
+          "description": "Language the translate hotkey translates to. Auto translates Spanish to English and anything else to Spanish.",
+          "auto": "Auto (Spanish ↔ English)",
+          "en": "English",
+          "es": "Spanish"
         }
       }
     },
