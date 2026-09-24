@@ -29,11 +29,15 @@ pub enum FlowBarVisibility {
 /// separate from any `windows` crate types so it can be unit tested without
 /// a live UIA connection.
 #[derive(Debug, Clone, Copy, Default)]
+#[allow(dead_code)] // document/text-pattern are recorded for diagnostics and tests
 pub struct FocusedElementInfo {
     pub is_edit_control: bool,
     pub is_document_control: bool,
-    /// Element supports ValuePattern or TextPattern and is not read-only.
-    pub has_editable_value_or_text_pattern: bool,
+    /// Element supports ValuePattern and it is not read-only.
+    pub has_editable_value: bool,
+    /// Element supports TextPattern (read-only documents such as web pages
+    /// do too, so this alone is not enough).
+    pub has_text_pattern: bool,
 }
 
 /// Decides whether a focused UI Automation element should count as a text
@@ -42,7 +46,10 @@ pub struct FocusedElementInfo {
 /// or TextPattern, which covers rich text editors that don't report as
 /// Edit/Document (e.g. many Electron/web based editors).
 pub fn is_text_field(info: FocusedElementInfo) -> bool {
-    info.is_edit_control || info.is_document_control || info.has_editable_value_or_text_pattern
+    // Edit controls cover native inputs, browser <input>/<textarea> and
+    // contenteditable textboxes. A Document (e.g. a whole web page) or any
+    // other control only counts when its value is actually editable.
+    info.is_edit_control || info.has_editable_value
 }
 
 /// Cycles `selected_language` between `es -> en -> auto -> es`, matching the
@@ -135,21 +142,29 @@ mod tests {
     }
 
     #[test]
-    fn document_control_is_a_text_field() {
+    fn read_only_document_is_not_a_text_field() {
+        // A web page in the browser: Document + TextPattern, not editable.
         let info = FocusedElementInfo {
             is_document_control: true,
+            has_text_pattern: true,
             ..Default::default()
         };
-        assert!(is_text_field(info));
+        assert!(!is_text_field(info));
     }
 
     #[test]
-    fn editable_value_or_text_pattern_is_a_text_field() {
+    fn editable_document_or_value_is_a_text_field() {
         let info = FocusedElementInfo {
-            has_editable_value_or_text_pattern: true,
+            is_document_control: true,
+            has_editable_value: true,
             ..Default::default()
         };
         assert!(is_text_field(info));
+        let combo_edit = FocusedElementInfo {
+            has_editable_value: true,
+            ..Default::default()
+        };
+        assert!(is_text_field(combo_edit));
     }
 
     #[test]
