@@ -3,6 +3,13 @@
 //! one fixed-size window docked at the bottom of the monitor under the
 //! cursor, with no state machine — content is pushed via the
 //! `live-subtitle-line` event emitted from `live_translate::pipeline`.
+//!
+//! Unlike the recording overlay, this window has no instant-show latency
+//! requirement (a live-subtitles/copilot session going through the whole
+//! capture/VAD/transcription/LLM pipeline before anything reaches the
+//! overlay dwarfs a WebView2 window creation), so it is created when a
+//! session starts and destroyed when it stops instead of staying resident
+//! for the lifetime of the app.
 
 use tauri::{AppHandle, Emitter, Manager, WebviewWindowBuilder};
 
@@ -23,9 +30,20 @@ fn calculate_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
     Some((x, y))
 }
 
-/// Creates the live subtitles window, hidden by default. Safe to call once at
-/// startup, mirroring `utils::create_recording_overlay`.
+/// Creates the live subtitles window and shows it. Called when a live
+/// subtitles/copilot session starts (`LiveTranslateManager::start_with_mode`);
+/// paired with `destroy_live_subtitles_window` on session stop. Safe to call
+/// when the window already exists (e.g. a stop/start race) — it is
+/// repositioned and shown rather than duplicated.
 pub fn create_live_subtitles_window(app_handle: &AppHandle) {
+    if let Some(window) = app_handle.get_webview_window("live_subtitles") {
+        if let Some((x, y)) = calculate_position(app_handle) {
+            let _ = window.set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
+        }
+        let _ = window.show();
+        return;
+    }
+
     let (x, y) = match calculate_position(app_handle) {
         Some(pos) => pos,
         None => (100.0, 100.0),
@@ -62,7 +80,8 @@ pub fn create_live_subtitles_window(app_handle: &AppHandle) {
             // Best-effort: hides the overlay from screen capture/share where
             // the OS supports it (Windows 10 2004+, macOS). No-op elsewhere.
             let _ = window.set_content_protected(true);
-            log::debug!("Live subtitles window created successfully (hidden)");
+            let _ = window.show();
+            log::debug!("Live subtitles window created and shown");
         }
         Err(e) => {
             log::debug!("Failed to create live subtitles window: {}", e);
@@ -70,18 +89,15 @@ pub fn create_live_subtitles_window(app_handle: &AppHandle) {
     }
 }
 
-pub fn show(app_handle: &AppHandle) {
-    if let Some(window) = app_handle.get_webview_window("live_subtitles") {
-        if let Some((x, y)) = calculate_position(app_handle) {
-            let _ = window.set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
-        }
-        let _ = window.show();
-    }
-}
-
-pub fn hide(app_handle: &AppHandle) {
+/// Destroys the live subtitles window, releasing its WebView2/WebKit
+/// renderer. Called when a live subtitles/copilot session stops
+/// (`LiveTranslateManager::stop`). The window is recreated from scratch by
+/// `create_live_subtitles_window` the next time a session starts.
+pub fn destroy_live_subtitles_window(app_handle: &AppHandle) {
     if let Some(window) = app_handle.get_webview_window("live_subtitles") {
         let _ = window.emit("live-subtitles-hide", ());
-        let _ = window.hide();
+        if let Err(e) = window.destroy() {
+            log::error!("Failed to destroy live subtitles window: {}", e);
+        }
     }
 }

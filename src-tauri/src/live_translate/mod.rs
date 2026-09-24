@@ -14,5 +14,4 @@ mod pipeline;
 mod prompt;
 mod segmenter;
 
-pub use overlay::create_live_subtitles_window;
 pub use pipeline::{CopilotAnswerLine, LiveSubtitleLine, LiveTranslateManager};
