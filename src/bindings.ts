@@ -1568,7 +1568,7 @@ hotkey: string | null }
  * `style.rs` appends its tone fragment.
  */
 export type ModeOutputFormat = "plain" | "bullet_list" | "email" | "markdown"
-export type LiveSubtitleLine = { original: string; translation: string }
+export type LiveSubtitleLine = { id: number; original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
 
 export type DiarizationModelKind = "Segmentation" | "Embedding"

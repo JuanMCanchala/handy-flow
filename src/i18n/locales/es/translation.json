@@ -862,6 +862,11 @@
           "microphone": "Micrófono",
           "systemAudio": "Audio del sistema"
         }
+      },
+      "listening": "Escuchando… EN ⇄ ES",
+      "feed": {
+        "title": "Transcripción en vivo",
+        "empty": "Inicia los subtítulos en vivo y habla o reproduce audio: las frases aparecen aquí al transcribirse."
       }
     },
     "copilot": {

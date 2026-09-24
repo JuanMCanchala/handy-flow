@@ -828,6 +828,11 @@
           "microphone": "Microfono",
           "systemAudio": "Audio di sistema"
         }
+      },
+      "listening": "Listening… EN ⇄ ES",
+      "feed": {
+        "title": "Live transcript",
+        "empty": "Start live subtitles and speak or play audio — lines appear here as they're transcribed."
       }
     },
     "copilot": {

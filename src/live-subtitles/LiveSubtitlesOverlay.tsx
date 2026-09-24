@@ -1,8 +1,10 @@
 import { listen } from "@tauri-apps/api/event";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./LiveSubtitlesOverlay.css";
 
 interface LiveSubtitleLine {
+  id: number;
   original: string;
   translation: string;
 }
@@ -18,17 +20,33 @@ interface CopilotAnswerLine {
 // click-through, and excluded from screen capture where the platform
 // supports it (see live_translate/overlay.rs). It never steals focus.
 const LiveSubtitlesOverlay: React.FC = () => {
+  const { t } = useTranslation();
   const [lines, setLines] = useState<LiveSubtitleLine[]>([]);
   const [answers, setAnswers] = useState<CopilotAnswerLine[]>([]);
 
   useEffect(() => {
-    const unlistenLine = listen<LiveSubtitleLine>("live-subtitle-line", (event) => {
-      setLines((prev) => [...prev, event.payload].slice(-2));
-    });
-    const unlistenAnswer = listen<CopilotAnswerLine>("copilot-answer-line", (event) => {
-      // Newest first: prepend, then keep only the two most recent.
-      setAnswers((prev) => [event.payload, ...prev].slice(0, 2));
-    });
+    const unlistenLine = listen<LiveSubtitleLine>(
+      "live-subtitle-line",
+      (event) => {
+        // Same id = the translation for a line already shown: update in place.
+        setLines((prev) => {
+          const index = prev.findIndex((line) => line.id === event.payload.id);
+          if (index >= 0) {
+            const next = [...prev];
+            next[index] = event.payload;
+            return next;
+          }
+          return [...prev, event.payload].slice(-2);
+        });
+      },
+    );
+    const unlistenAnswer = listen<CopilotAnswerLine>(
+      "copilot-answer-line",
+      (event) => {
+        // Newest first: prepend, then keep only the two most recent.
+        setAnswers((prev) => [event.payload, ...prev].slice(0, 2));
+      },
+    );
     const unlistenHide = listen("live-subtitles-hide", () => {
       setLines([]);
       setAnswers([]);
@@ -42,7 +60,15 @@ const LiveSubtitlesOverlay: React.FC = () => {
   }, []);
 
   if (lines.length === 0 && answers.length === 0) {
-    return null;
+    return (
+      <div className="live-subtitles-container">
+        <div className="live-subtitles-line">
+          <div className="live-subtitles-original">
+            {t("settings.liveTranslate.listening")}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -54,9 +80,11 @@ const LiveSubtitlesOverlay: React.FC = () => {
         </div>
       ))}
       {lines.map((line, index) => (
-        <div className="live-subtitles-line" key={index}>
+        <div className="live-subtitles-line" key={line.id ?? index}>
           <div className="live-subtitles-original">{line.original}</div>
-          <div className="live-subtitles-translation">{line.translation}</div>
+          <div className="live-subtitles-translation">
+            {line.translation || "…"}
+          </div>
         </div>
       ))}
     </div>

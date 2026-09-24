@@ -33,9 +33,15 @@ const MAX_CONTEXT_HISTORY: usize = 3;
 /// One rendered subtitle line, emitted to the overlay window.
 #[derive(Debug, Clone, Serialize, Type, tauri_specta::Event)]
 pub struct LiveSubtitleLine {
+    /// Stable per line: the original is emitted as soon as it is transcribed
+    /// (with an empty translation) and re-emitted with the same id once the
+    /// translation arrives, so the overlay updates the line in place.
+    pub id: u32,
     pub original: String,
     pub translation: String,
 }
+
+static NEXT_LINE_ID: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(1);
 
 /// One answer suggestion, emitted to the overlay window and appended to the
 /// Copilot history.
@@ -120,11 +126,19 @@ impl LiveTranslateManager {
             return Ok(());
         }
 
+        log::info!("Live session starting: mode={:?} source={:?}", mode, source);
         *self.mode.lock().unwrap() = mode;
         self.context.lock().unwrap().clear();
         self.transcript_history.lock().unwrap().clear();
 
-        let detector = build_vad(&self.app_handle)?;
+        let detector = match build_vad(&self.app_handle) {
+            Ok(detector) => detector,
+            Err(e) => {
+                log::error!("Live session: VAD init failed: {e}");
+                self.active.store(false, Ordering::SeqCst);
+                return Err(e);
+            }
+        };
         let segmenter_config = SegmenterConfig::default();
         *self.segmenter.lock().unwrap() = Some(SpeechSegmenter::new(segmenter_config));
         let segmenter = Arc::clone(&self.segmenter);
@@ -165,11 +179,13 @@ impl LiveTranslateManager {
         let stream = match capture_result {
             Ok(stream) => stream,
             Err(e) => {
+                log::error!("Live session: audio capture failed: {e}");
                 self.active.store(false, Ordering::SeqCst);
                 return Err(e);
             }
         };
 
+        log::info!("Live session capturing audio");
         *self.capture.lock().unwrap() = Some(stream);
         super::overlay::create_live_subtitles_window(&self.app_handle);
         Ok(())
@@ -210,10 +226,18 @@ impl LiveTranslateManager {
             return;
         }
 
+        log::debug!(
+            "Live session: segment closed ({:.1}s), transcribing",
+            segment.len() as f32 / crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as f32
+        );
         let manager = self.clone();
         tauri::async_runtime::spawn(async move {
+            let started = std::time::Instant::now();
             let transcript = match manager.transcription_manager.transcribe(segment) {
-                Ok(text) => text.trim().to_string(),
+                Ok(text) => {
+                    log::debug!("Live session: transcribed in {:?}", started.elapsed());
+                    text.trim().to_string()
+                }
                 Err(e) => {
                     log::error!("Live subtitles transcription failed: {e}");
                     return;
@@ -233,9 +257,21 @@ impl LiveTranslateManager {
     }
 
     async fn handle_subtitle_segment(&self, transcript: String) {
-        let settings = get_settings(&self.app_handle);
-        let source_lang = SubtitleLanguage::from_code(&settings.selected_language);
+        // Detect per segment so a bilingual conversation flips direction
+        // automatically (EN speaker -> ES subtitles, ES speaker -> EN).
+        let source_lang = super::prompt::detect_language(&transcript);
         let target_lang = source_lang.other();
+
+        // Show what was said immediately; the translation fills in the same
+        // line a moment later.
+        let id = NEXT_LINE_ID.fetch_add(1, Ordering::Relaxed);
+        let _ = LiveSubtitleLine {
+            id,
+            original: transcript.clone(),
+            translation: String::new(),
+        }
+        .emit(&self.app_handle);
+        let started = std::time::Instant::now();
 
         let translation = match self.translate(&transcript, target_lang).await {
             Ok(text) => text,
@@ -258,7 +294,9 @@ impl LiveTranslateManager {
             }
         }
 
+        log::debug!("Live subtitles: translated in {:?}", started.elapsed());
         let line = LiveSubtitleLine {
+            id,
             original: transcript,
             translation,
         };

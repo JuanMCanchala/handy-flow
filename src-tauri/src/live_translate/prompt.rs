@@ -46,6 +46,39 @@ impl SubtitleLanguage {
     }
 }
 
+const SPANISH_WORDS: &[&str] = &[
+    "el", "la", "los", "las", "de", "que", "y", "en", "un", "una", "es", "por", "con", "para",
+    "no", "se", "lo", "como", "pero", "más", "mas", "muy", "está", "esta", "estoy", "yo", "tú",
+    "usted", "nosotros", "hola", "gracias", "qué", "cómo", "porque", "también", "sí",
+];
+const ENGLISH_WORDS: &[&str] = &[
+    "the", "and", "of", "to", "is", "in", "that", "it", "you", "for", "on", "with", "are", "this",
+    "was", "have", "be", "what", "how", "why", "i", "we", "they", "hello", "thanks", "not", "but",
+    "so", "do", "can", "will",
+];
+
+/// Guesses whether a transcript is Spanish or English: accents/ñ/¿¡ are a
+/// strong Spanish signal, otherwise the more frequent stop-word set wins
+/// (ties go to English).
+pub fn detect_language(text: &str) -> SubtitleLanguage {
+    let lower = text.to_lowercase();
+    let accent_hits = lower
+        .chars()
+        .filter(|c| matches!(c, 'ñ' | 'á' | 'é' | 'í' | 'ó' | 'ú' | '¿' | '¡'))
+        .count();
+    let words: Vec<&str> = lower
+        .split(|c: char| !c.is_alphanumeric() && !"ñáéíóúü".contains(c))
+        .filter(|w| !w.is_empty())
+        .collect();
+    let es = words.iter().filter(|w| SPANISH_WORDS.contains(w)).count() + accent_hits * 2;
+    let en = words.iter().filter(|w| ENGLISH_WORDS.contains(w)).count();
+    if es > en {
+        SubtitleLanguage::Es
+    } else {
+        SubtitleLanguage::En
+    }
+}
+
 /// One previously-translated segment, kept for context in later prompts.
 #[derive(Debug, Clone)]
 pub struct ContextSegment {
@@ -92,6 +125,27 @@ Reply with only the translation, no explanations or quotes.\n",
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn detects_spanish_and_english_segments() {
+        assert_eq!(
+            detect_language("Hola, ¿cómo estás? Esto es una prueba"),
+            SubtitleLanguage::Es
+        );
+        assert_eq!(
+            detect_language("pero no se lo que quiere decir"),
+            SubtitleLanguage::Es
+        );
+        assert_eq!(
+            detect_language("Hello, how are you? This is a test"),
+            SubtitleLanguage::En
+        );
+        assert_eq!(
+            detect_language("we can do it with the team"),
+            SubtitleLanguage::En
+        );
+        assert_eq!(detect_language(""), SubtitleLanguage::En);
+    }
 
     #[test]
     fn other_language_is_the_opposite_of_the_pair() {

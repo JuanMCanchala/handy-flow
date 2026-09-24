@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { commands } from "@/bindings";
+import { listen } from "@tauri-apps/api/event";
+import { commands, type LiveSubtitleLine } from "@/bindings";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { PageHeader } from "../../ui/PageHeader";
 import { Button } from "../../ui/Button";
@@ -12,6 +13,26 @@ export const LiveTranslateSettings: React.FC = () => {
   const { t } = useTranslation();
   const [isActive, setIsActive] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
+  const [feed, setFeed] = useState<LiveSubtitleLine[]>([]);
+
+  // Mirror of the overlay inside the app: every line as it is transcribed,
+  // then updated in place when its translation arrives.
+  useEffect(() => {
+    const unlisten = listen<LiveSubtitleLine>("live-subtitle-line", (event) => {
+      setFeed((prev) => {
+        const index = prev.findIndex((line) => line.id === event.payload.id);
+        if (index >= 0) {
+          const next = [...prev];
+          next[index] = event.payload;
+          return next;
+        }
+        return [event.payload, ...prev].slice(0, 30);
+      });
+    });
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -57,6 +78,28 @@ export const LiveTranslateSettings: React.FC = () => {
             : t("settings.liveTranslate.startButton")}
         </Button>
       </div>
+      <SettingsGroup title={t("settings.liveTranslate.feed.title")}>
+        <div className="flex flex-col gap-3 p-4 max-h-96 overflow-y-auto">
+          {feed.length === 0 ? (
+            <p className="text-small text-text-secondary">
+              {isActive
+                ? t("settings.liveTranslate.listening")
+                : t("settings.liveTranslate.feed.empty")}
+            </p>
+          ) : (
+            feed.map((line) => (
+              <div key={line.id} className="flex flex-col gap-0.5">
+                <span className="text-small text-text-secondary">
+                  {line.original}
+                </span>
+                <span className="text-text font-medium">
+                  {line.translation || "…"}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      </SettingsGroup>
     </div>
   );
 };
