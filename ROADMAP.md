@@ -76,7 +76,5 @@ After all features (2026-09-24, Voxa release build, onboarding window open, no m
 Only `en` and `es` are maintained; `python scripts/fill-locales.py` copies English into the other locales.
 
 ## Pending polish
-- App/installer icons still upstream Handy (need a source SVG → `bun tauri icon`).
-- Legacy classes left in PostProcessingSettings, AboutSettings, AppDataDirectory, LogDirectory.
 - Style detection by window title not available on macOS; system audio capture Windows-only.
-- File import: no webm/mkv.
+- File import: webm/mkv supported (vorbis); opus-in-webm depends on symphonia support.
