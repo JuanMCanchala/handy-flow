@@ -67,8 +67,11 @@ sentences) that a non-native speaker can read aloud fluently.\n",
         }
         CopilotAnswerLanguage::Both => {
             system.push_str(
-                "Answer in both English and Spanish. Reply with exactly two labeled \
-paragraphs, in this format:\nEN: <simple, clear english answer>\nES: <spanish answer>\n",
+                "Answer in simple, clear English (B1-B2 level, common words, short \
+sentences) that a non-native speaker can read aloud fluently, then give its Spanish \
+translation so the user knows exactly what they are saying. Reply with exactly two labeled \
+paragraphs, English first, in this format:\nEN: <english answer>\nES: <spanish translation \
+of that answer>\n",
             );
         }
     }

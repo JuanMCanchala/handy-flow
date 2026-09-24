@@ -2,10 +2,34 @@ import { listen } from "@tauri-apps/api/event";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { CopilotAnswerLine } from "@/bindings";
+import { splitBilingualAnswer } from "@/lib/utils/bilingualAnswer";
 import { useMoveMode } from "./useMoveMode";
 import "./AnswersOverlay.css";
 
 const MAX_VISIBLE = 2;
+
+/** English to read aloud, with its Spanish translation underneath. */
+const BilingualText: React.FC<{ answer: string; streaming: boolean }> = ({
+  answer,
+  streaming,
+}) => {
+  const { en, es } = splitBilingualAnswer(answer);
+  const caret = streaming && <span className="ans-caret" aria-hidden />;
+  return (
+    <>
+      <p className="ans-text" lang="en">
+        {en}
+        {!es && caret}
+      </p>
+      {es && (
+        <p className="ans-translation" lang="es">
+          {es}
+          {caret}
+        </p>
+      )}
+    </>
+  );
+};
 
 // Suggested answers, docked top-right. The newest answer streams in word by
 // word at reading size; the previous one stays underneath, quieter, in case
@@ -63,10 +87,7 @@ const AnswersOverlay: React.FC = () => {
         >
           <p className="ans-question">{answer.question}</p>
           {answer.answer ? (
-            <p className="ans-text">
-              {answer.answer}
-              {!answer.done && <span className="ans-caret" aria-hidden />}
-            </p>
+            <BilingualText answer={answer.answer} streaming={!answer.done} />
           ) : (
             <p className="ans-thinking">
               <span />

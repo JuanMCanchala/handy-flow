@@ -80,6 +80,21 @@ body,
   text-wrap: pretty;
 }
 
+.ans-translation {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 0.5px solid var(--ans-border);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ans-muted);
+  white-space: pre-wrap;
+  text-wrap: pretty;
+}
+
+.is-previous .ans-translation {
+  display: none;
+}
+
 .is-previous .ans-text {
   font-size: 14.5px;
   font-weight: 400;

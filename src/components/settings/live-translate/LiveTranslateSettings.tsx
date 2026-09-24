@@ -15,6 +15,7 @@ import {
   type SuggestedAnswer,
 } from "../../../stores/liveTranslateStore";
 import { LiveModelSettings, LiveOverlayPlacement } from "./LiveOverlaySettings";
+import { splitBilingualAnswer } from "@/lib/utils/bilingualAnswer";
 import "./LiveTranslate.css";
 
 type View = "conversation" | "answers";
@@ -105,9 +106,10 @@ const TranslationColumn: React.FC<ColumnProps> = ({
 
 const AnswerCard: React.FC<{ answer: SuggestedAnswer }> = ({ answer }) => {
   const { t } = useTranslation();
+  const bilingual = splitBilingualAnswer(answer.answer);
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(answer.answer);
+      await navigator.clipboard.writeText(bilingual.en || answer.answer);
       toast.success(t("settings.liveTranslate.view.copied"));
     } catch {
       toast.error(t("settings.liveTranslate.view.copyFailed"));
@@ -117,8 +119,9 @@ const AnswerCard: React.FC<{ answer: SuggestedAnswer }> = ({ answer }) => {
     <article className="lt-answer">
       <p className="lt-answer-question">{answer.question}</p>
       <p className={`lt-answer-text ${answer.answer ? "" : "lt-pending"}`}>
-        {answer.answer || t("liveOverlays.thinking")}
+        {bilingual.en || t("liveOverlays.thinking")}
       </p>
+      {bilingual.es && <p className="lt-answer-es">{bilingual.es}</p>}
       <div className="lt-answer-foot">
         <time className="lt-answer-time">
           {new Date(answer.at).toLocaleTimeString([], {

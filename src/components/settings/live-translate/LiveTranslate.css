@@ -228,6 +228,14 @@
   text-wrap: pretty;
 }
 
+.lt-answer-es {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+
 .lt-answer:not(:first-child) .lt-answer-text {
   font-size: 18px;
 }
