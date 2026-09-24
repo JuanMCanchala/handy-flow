@@ -56,7 +56,7 @@ Load my profile (CV, LinkedIn text, notes), listen to the call, detect questions
 | 15 | Inline voice edits ("scratch that", "new paragraph", "make that a list") — **done** (deterministic EN/ES pass) | H / S |
 | 16 | Self-learning dictionary from edits in history — **done** | M / M |
 | 17 | System-audio capture (WASAPI loopback) — shared with items 9 and 10 — **done on Windows** | H / M |
-| 18 | Speaker diarization for long recordings | M / L |
+| 18 | Speaker diarization for long recordings — **done** (pyannote + speaker embeddings, renameable) | M / L |
 | 19 | Note templates + action items (Granola-style) over a session transcript — **done** | H / M |
 | 20 | Ask-your-history (local RAG over history) — **done** (FTS5 + LLM) | M / M |
 
