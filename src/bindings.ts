@@ -1242,6 +1242,46 @@ async isLaptop() : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async changeLiveSubtitlesPositionSetting(position: SubtitlesPosition) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_live_subtitles_position_setting", { position }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async resetCopilotAnswersPosition() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("reset_copilot_answers_position") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async setLiveOverlaysMoveMode(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("set_live_overlays_move_mode", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getLiveOverlaysMoveMode() : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_live_overlays_move_mode") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeLiveLlmSetting(providerId: string, model: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_live_llm_setting", { providerId, model }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeHideFromScreenShareSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_hide_from_screen_share_setting", { enabled }) };
@@ -1531,7 +1571,7 @@ translation_target?: TranslationTarget;
  * only implemented on Windows; other platforms report an error when
  * selected (see `live_translate::capture`).
  */
-live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; hide_from_screen_share?: boolean; 
+live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; hide_from_screen_share?: boolean; live_subtitles_position?: SubtitlesPosition; live_subtitles_custom_position?: WindowPoint | null; copilot_answers_custom_position?: WindowPoint | null; live_llm_provider_id?: string; live_llm_model?: string; 
 /**
  * User-defined named modes/presets (Superwhisper-style). Seeded with
  * Default/Email/Notes on fresh installs. See `modes.rs`.
@@ -1625,13 +1665,15 @@ hotkey: string | null }
 export type ModeOutputFormat = "plain" | "bullet_list" | "email" | "markdown"
 export type LiveSubtitleLine = { id: number; source_lang: string; original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
+export type SubtitlesPosition = "bottom" | "top" | "custom"
+export type WindowPoint = { x: number; y: number }
 
 export type DiarizationModelKind = "Segmentation" | "Embedding"
 
 export type DiarizationModelInfo = { kind: DiarizationModelKind; filename: string; size_bytes: number; is_downloaded: boolean }
 
 export type TranscriptSegmentView = { start_ms: number; end_ms: number; text: string; speaker: string | null }
-export type CopilotAnswerLine = { question: string; answer: string }
+export type CopilotAnswerLine = { id: number; question: string; answer: string; done: boolean }
 export type CopilotAnswerEntry = { id: string; question: string; answer: string; 
 /**
  * Milliseconds since epoch.

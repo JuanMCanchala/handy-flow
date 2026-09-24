@@ -1063,5 +1063,34 @@
       "cancel": "Cancel",
       "noTemplates": "No templates yet. Add one in the Templates section."
     }
+  },
+  "liveOverlays": {
+    "title": "On screen",
+    "answersPanel": "Suggested answers",
+    "dragHint": "Drag to place it, then press Done in Voxa",
+    "subtitlesSample": "Subtitles will appear here",
+    "thinking": "Writing an answer…",
+    "saved": "Positions saved",
+    "position": {
+      "title": "Subtitles position",
+      "description": "Where the translated subtitles appear, on the screen you are using. Use Move to place them anywhere, including another monitor.",
+      "bottom": "Bottom of the screen",
+      "top": "Top of the screen",
+      "custom": "Where I placed them"
+    },
+    "move": {
+      "title": "Place subtitles and answers",
+      "description": "Shows both overlays so you can drag them. Answers are docked in the top-right corner unless you move them.",
+      "start": "Move",
+      "done": "Done",
+      "resetAnswers": "Answers to top-right"
+    },
+    "model": {
+      "provider": "Live AI provider",
+      "providerDescription": "Used for live translation and suggested answers. A fast provider like Groq or Cerebras lowers the delay without changing dictation cleanup.",
+      "sameAsCleanup": "Same as cleanup",
+      "model": "Live AI model",
+      "modelDescription": "Leave empty to use the provider's cleanup model. Pick a fast, non-reasoning model."
+    }
   }
 }

@@ -1,0 +1,190 @@
+@import "../styles/theme.css";
+
+/*
+ * Suggested-answers panel. It floats over whatever the user is looking at
+ * (a video call), so it keeps the overlay "ink" surface of the subtitles and
+ * the recording pill: dark glass, white type. The answer itself is the only
+ * large thing; everything else recedes.
+ */
+:root {
+  --ans-surface: rgb(28 27 23 / 0.9);
+  --ans-surface-quiet: rgb(28 27 23 / 0.72);
+  --ans-border: rgb(255 255 255 / 0.12);
+  --ans-muted: rgb(255 255 255 / 0.58);
+  --ans-ink: #ffffff;
+  --ans-accent: #8fb8ff;
+}
+
+html,
+body,
+#root {
+  background: transparent;
+}
+
+.ans-root {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  pointer-events: none;
+  font-family:
+    "Inter Variable",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+.ans-card {
+  padding: 14px 18px 16px;
+  border-radius: 14px;
+  background: var(--ans-surface);
+  border: 0.5px solid var(--ans-border);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+  color: var(--ans-ink);
+  animation: ans-in 180ms var(--ease-out, ease-out);
+}
+
+.ans-card.is-current {
+  border-inline-start: 3px solid var(--ans-accent);
+}
+
+.ans-card.is-previous {
+  background: var(--ans-surface-quiet);
+}
+
+.ans-question {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ans-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ans-text {
+  margin: 6px 0 0;
+  font-size: 19px;
+  line-height: 1.42;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  white-space: pre-wrap;
+  text-wrap: pretty;
+}
+
+.is-previous .ans-text {
+  font-size: 14.5px;
+  font-weight: 400;
+  color: rgb(255 255 255 / 0.82);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ans-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-inline-start: 3px;
+  vertical-align: -0.12em;
+  background: var(--ans-accent);
+  animation: ans-blink 900ms steps(2, start) infinite;
+}
+
+.ans-thinking {
+  display: flex;
+  gap: 5px;
+  margin: 12px 0 2px;
+}
+
+.ans-thinking > span:not(.sr-only) {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ans-muted);
+  animation: ans-dot 1s ease-in-out infinite;
+}
+
+.ans-thinking > span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ans-thinking > span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Move mode: the whole panel is the drag handle. */
+.ans-move {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 14px;
+  border: 1.5px dashed rgb(255 255 255 / 0.6);
+  background: rgb(28 27 23 / 0.55);
+  color: var(--ans-ink);
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.ans-move > * {
+  pointer-events: none;
+  margin: 0;
+}
+
+.ans-move-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ans-move-hint {
+  font-size: 13px;
+  color: var(--ans-muted);
+}
+
+@keyframes ans-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes ans-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes ans-dot {
+  50% {
+    opacity: 0.3;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ans-card,
+  .ans-caret,
+  .ans-thinking > span {
+    animation: none;
+  }
+}

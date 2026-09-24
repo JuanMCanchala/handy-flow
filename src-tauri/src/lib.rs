@@ -993,6 +993,11 @@ pub fn run(cli_args: CliArgs) {
             commands::live_translate::change_hide_from_screen_share_setting,
             commands::live_translate::is_live_translate_active,
             commands::live_translate::toggle_live_translate,
+            commands::live_translate::change_live_subtitles_position_setting,
+            commands::live_translate::reset_copilot_answers_position,
+            commands::live_translate::set_live_overlays_move_mode,
+            commands::live_translate::get_live_overlays_move_mode,
+            commands::live_translate::change_live_llm_setting,
             commands::copilot::get_copilot_profile,
             commands::copilot::set_copilot_profile_text,
             commands::copilot::set_copilot_answer_language,
@@ -1102,6 +1107,10 @@ pub fn run(cli_args: CliArgs) {
                 signal_handle::send_transcription_input(app, "transcribe_with_post_process", "CLI");
             } else if args.iter().any(|a| a == "--cancel") {
                 crate::utils::cancel_current_operation(app);
+            } else if args.iter().any(|a| a == "--toggle-live-translate") {
+                if let Err(e) = commands::live_translate::toggle_live_translate(app.clone()) {
+                    log::error!("CLI live translate toggle failed: {e}");
+                }
             } else {
                 // A second process was launched without remote-control flags
                 // (e.g. the binary run from a shell). On macOS, relaunching the

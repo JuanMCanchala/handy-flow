@@ -9,7 +9,7 @@
 //! lock at the same time.
 
 mod capture;
-mod overlay;
+pub mod overlay;
 mod pipeline;
 mod prompt;
 mod segmenter;

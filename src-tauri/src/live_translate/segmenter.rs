@@ -38,6 +38,7 @@ pub struct SpeechSegmenter {
     buffer: Vec<f32>,
     trailing_silence_samples: u64,
     in_speech: bool,
+    last_closed_by_cap: bool,
 }
 
 impl SpeechSegmenter {
@@ -47,6 +48,7 @@ impl SpeechSegmenter {
             buffer: Vec::new(),
             trailing_silence_samples: 0,
             in_speech: false,
+            last_closed_by_cap: false,
         }
     }
 
@@ -68,7 +70,7 @@ impl SpeechSegmenter {
             self.buffer.extend_from_slice(frame);
 
             if self.buffer.len() as u64 >= self.max_segment_samples() {
-                return Some(self.take_segment());
+                return Some(self.take_segment_by(true));
             }
             None
         } else {
@@ -81,11 +83,11 @@ impl SpeechSegmenter {
             self.buffer.extend_from_slice(frame);
 
             if self.trailing_silence_samples >= self.silence_close_samples() {
-                return Some(self.take_segment());
+                return Some(self.take_segment_by(false));
             }
 
             if self.buffer.len() as u64 >= self.max_segment_samples() {
-                return Some(self.take_segment());
+                return Some(self.take_segment_by(true));
             }
 
             None
@@ -98,8 +100,20 @@ impl SpeechSegmenter {
         if self.buffer.is_empty() {
             None
         } else {
-            Some(self.take_segment())
+            Some(self.take_segment_by(false))
         }
+    }
+
+    /// Whether the last closed segment was cut by the length cap while the
+    /// speaker was still talking (true) rather than by a pause (false). A
+    /// capped segment is a fragment of a longer utterance.
+    pub fn last_closed_by_cap(&self) -> bool {
+        self.last_closed_by_cap
+    }
+
+    fn take_segment_by(&mut self, cap: bool) -> Vec<f32> {
+        self.last_closed_by_cap = cap;
+        self.take_segment()
     }
 
     fn take_segment(&mut self) -> Vec<f32> {

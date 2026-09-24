@@ -1,28 +1,20 @@
 import { listen } from "@tauri-apps/api/event";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { LiveSubtitleLine } from "@/bindings";
+import { useMoveMode } from "./useMoveMode";
 import "./LiveSubtitlesOverlay.css";
 
-interface LiveSubtitleLine {
-  id: number;
-  original: string;
-  translation: string;
-}
-
-interface CopilotAnswerLine {
-  question: string;
-  answer: string;
-}
-
-// Shows the last two translated subtitle lines, and/or (when the copilot is
-// running instead) the last two answer suggestions, newest first. Purely a
-// passive display: the window itself is transparent, always-on-top,
-// click-through, and excluded from screen capture where the platform
-// supports it (see live_translate/overlay.rs). It never steals focus.
+// Shows the last two subtitle lines, newest at the bottom; each translation
+// streams into its line as it is generated. Purely a passive display: the
+// window is transparent, always-on-top, click-through, and excluded from
+// screen capture where the platform supports it (see
+// live_translate/overlay.rs). Suggested answers live in their own panel
+// (AnswersOverlay). In move mode the window becomes a drag handle.
 const LiveSubtitlesOverlay: React.FC = () => {
   const { t } = useTranslation();
+  const moving = useMoveMode();
   const [lines, setLines] = useState<LiveSubtitleLine[]>([]);
-  const [answers, setAnswers] = useState<CopilotAnswerLine[]>([]);
 
   useEffect(() => {
     const unlistenLine = listen<LiveSubtitleLine>(
@@ -40,26 +32,30 @@ const LiveSubtitlesOverlay: React.FC = () => {
         });
       },
     );
-    const unlistenAnswer = listen<CopilotAnswerLine>(
-      "copilot-answer-line",
-      (event) => {
-        // Newest first: prepend, then keep only the two most recent.
-        setAnswers((prev) => [event.payload, ...prev].slice(0, 2));
-      },
-    );
-    const unlistenHide = listen("live-subtitles-hide", () => {
-      setLines([]);
-      setAnswers([]);
-    });
+    const unlistenHide = listen("live-subtitles-hide", () => setLines([]));
 
     return () => {
       unlistenLine.then((f) => f());
-      unlistenAnswer.then((f) => f());
       unlistenHide.then((f) => f());
     };
   }, []);
 
-  if (lines.length === 0 && answers.length === 0) {
+  if (moving) {
+    return (
+      <div className="live-subtitles-container">
+        <div className="live-subtitles-move" data-tauri-drag-region>
+          <div className="live-subtitles-original">
+            {t("liveOverlays.dragHint")}
+          </div>
+          <div className="live-subtitles-translation">
+            {t("liveOverlays.subtitlesSample")}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (lines.length === 0) {
     return (
       <div className="live-subtitles-container">
         <div className="live-subtitles-line">
@@ -73,14 +69,8 @@ const LiveSubtitlesOverlay: React.FC = () => {
 
   return (
     <div className="live-subtitles-container">
-      {answers.map((answer, index) => (
-        <div className="copilot-answer-card" key={index}>
-          <div className="copilot-answer-question">{answer.question}</div>
-          <div className="copilot-answer-text">{answer.answer}</div>
-        </div>
-      ))}
-      {lines.map((line, index) => (
-        <div className="live-subtitles-line" key={line.id ?? index}>
+      {lines.map((line) => (
+        <div className="live-subtitles-line" key={line.id}>
           <div className="live-subtitles-original">{line.original}</div>
           <div className="live-subtitles-translation">
             {line.translation || "…"}

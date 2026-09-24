@@ -11,73 +11,92 @@ use super::profile::CopilotAnswerLanguage;
 /// Max number of recent transcript segments included as conversation context.
 pub const MAX_TRANSCRIPT_CONTEXT: usize = 6;
 
-/// Builds the user prompt for one answer suggestion.
+/// System + user messages for one answer suggestion.
+pub struct AnswerPrompt {
+    /// Instructions and the profile. Identical for every question in a
+    /// session, so providers with prefix caching (Fireworks, Groq, OpenAI)
+    /// skip re-reading the CV and the first word arrives sooner.
+    pub system: String,
+    /// Recent conversation plus the question just asked.
+    pub user: String,
+}
+
+/// Builds the prompt for one answer suggestion.
 ///
 /// `profile` is the user's raw CV/notes text, `recent_transcript` is the last
 /// `MAX_TRANSCRIPT_CONTEXT` (or fewer) transcript segments in speaking order,
-/// and `question` is the just-closed segment that triggered detection.
+/// and `question` is the just-closed utterance that triggered detection.
 pub fn build_answer_prompt(
     profile: &str,
     recent_transcript: &[String],
     question: &str,
     language: CopilotAnswerLanguage,
-) -> String {
-    let mut prompt = String::new();
+) -> AnswerPrompt {
+    let mut system = String::new();
 
-    prompt.push_str(
+    system.push_str(
         "You are silently listening to a call/interview on behalf of the user and \
-must suggest how THEY should answer a question just asked to them.\n\n",
+must suggest how THEY should answer the question just asked to them.\n\n",
     );
 
-    prompt.push_str("User profile (CV / notes, ground truth about the user):\n");
-    if profile.trim().is_empty() {
-        prompt.push_str("(no profile provided)\n");
-    } else {
-        prompt.push_str(profile.trim());
-        prompt.push('\n');
-    }
-
-    if !recent_transcript.is_empty() {
-        prompt.push_str("\nRecent conversation (oldest first, for context only):\n");
-        for line in recent_transcript.iter().take(MAX_TRANSCRIPT_CONTEXT) {
-            prompt.push_str("- \"");
-            prompt.push_str(line);
-            prompt.push_str("\"\n");
-        }
-    }
-
-    prompt.push_str("\nQuestion just asked to the user:\n\"");
-    prompt.push_str(question.trim());
-    prompt.push_str("\"\n\n");
-
-    prompt.push_str(
+    system.push_str(
         "Write the answer the user should say out loud, in first person (\"I\", \"my\"), \
-2 to 4 sentences, natural and speakable — not a bullet list. \
-Only use facts present in the profile or conversation above. \
-If the profile does not contain what is needed to answer, say so plainly \
-(e.g. mention that detail isn't in the profile) instead of inventing facts.\n",
+2 to 4 short sentences, natural and speakable — not a bullet list. Lead with the direct \
+answer in the first sentence, then one concrete detail (project, tool, number) from the \
+profile. Only use facts present in the profile or conversation. If the profile does not \
+contain what is needed, give an honest, general answer the user can adapt and never invent \
+employers, dates or numbers.\n",
     );
 
     match language {
         CopilotAnswerLanguage::Auto => {
-            prompt.push_str("Answer in the same language as the question above.\n");
+            system.push_str(
+                "Answer in the same language as the question. When answering in English, \
+use simple, clear English (B1-B2 level, common words, short sentences) that a non-native \
+speaker can read aloud fluently.\n",
+            );
         }
         CopilotAnswerLanguage::En => {
-            prompt.push_str("Answer in English.\n");
+            system.push_str(
+                "Answer in simple, clear English (B1-B2 level, common words, short \
+sentences) that a non-native speaker can read aloud fluently.\n",
+            );
         }
         CopilotAnswerLanguage::Es => {
-            prompt.push_str("Answer in Spanish.\n");
+            system.push_str("Answer in Spanish.\n");
         }
         CopilotAnswerLanguage::Both => {
-            prompt.push_str(
+            system.push_str(
                 "Answer in both English and Spanish. Reply with exactly two labeled \
-paragraphs, in this format:\nEN: <english answer>\nES: <spanish answer>\n",
+paragraphs, in this format:\nEN: <simple, clear english answer>\nES: <spanish answer>\n",
             );
         }
     }
+    system.push_str("Reply with only the answer (or the EN/ES pair above), no preamble.\n\n");
 
-    prompt.push_str("\nReply with only the answer (or the EN/ES pair above), no preamble.");
-    prompt
+    system.push_str("User profile (CV / notes, ground truth about the user):\n");
+    if profile.trim().is_empty() {
+        system.push_str("(no profile provided)\n");
+    } else {
+        system.push_str(profile.trim());
+        system.push('\n');
+    }
+
+    let mut user = String::new();
+    if !recent_transcript.is_empty() {
+        user.push_str("Recent conversation (oldest first, for context only):\n");
+        for line in recent_transcript.iter().take(MAX_TRANSCRIPT_CONTEXT) {
+            user.push_str("- \"");
+            user.push_str(line);
+            user.push_str("\"\n");
+        }
+        user.push('\n');
+    }
+    user.push_str("Question just asked to the user:\n\"");
+    user.push_str(question.trim());
+    user.push('"');
+
+    AnswerPrompt { system, user }
 }
 
 #[cfg(test)]
@@ -92,23 +111,23 @@ mod tests {
             "Why do you want this job?",
             CopilotAnswerLanguage::Auto,
         );
-        assert!(prompt.contains("5 years of Rust experience."));
-        assert!(prompt.contains("Why do you want this job?"));
-        assert!(prompt.contains("same language as the question"));
+        assert!(prompt.system.contains("5 years of Rust experience."));
+        assert!(prompt.user.contains("Why do you want this job?"));
+        assert!(prompt.system.contains("same language as the question"));
     }
 
     #[test]
     fn empty_profile_tells_the_model_nothing_was_provided() {
         let prompt = build_answer_prompt("", &[], "What is your name?", CopilotAnswerLanguage::En);
-        assert!(prompt.contains("(no profile provided)"));
-        assert!(prompt.contains("Answer in English."));
+        assert!(prompt.system.contains("(no profile provided)"));
+        assert!(prompt.system.contains("simple, clear English"));
     }
 
     #[test]
     fn both_language_asks_for_labeled_en_es_pair() {
         let prompt = build_answer_prompt("Profile", &[], "Question?", CopilotAnswerLanguage::Both);
-        assert!(prompt.contains("EN:"));
-        assert!(prompt.contains("ES:"));
+        assert!(prompt.system.contains("EN:"));
+        assert!(prompt.system.contains("ES:"));
     }
 
     #[test]
@@ -120,9 +139,9 @@ mod tests {
             "How are you?",
             CopilotAnswerLanguage::Auto,
         );
-        let idx_first = prompt.find("Hi there.").unwrap();
-        let idx_second = prompt.find("Thanks for joining.").unwrap();
-        let idx_question = prompt.find("Question just asked").unwrap();
+        let idx_first = prompt.user.find("Hi there.").unwrap();
+        let idx_second = prompt.user.find("Thanks for joining.").unwrap();
+        let idx_question = prompt.user.find("Question just asked").unwrap();
         assert!(idx_first < idx_second);
         assert!(idx_second < idx_question);
     }
@@ -131,7 +150,7 @@ mod tests {
     fn only_up_to_max_context_segments_are_included() {
         let context: Vec<String> = (0..10).map(|i| format!("segment {i}")).collect();
         let prompt = build_answer_prompt("Profile", &context, "Q?", CopilotAnswerLanguage::Auto);
-        assert!(!prompt.contains("segment 6"));
-        assert!(prompt.contains("segment 5"));
+        assert!(!prompt.user.contains("segment 6"));
+        assert!(prompt.user.contains("segment 5"));
     }
 }

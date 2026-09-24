@@ -526,6 +526,129 @@ pub async fn send_chat_completion_with_schema(
         .and_then(|choice| choice.message.content.clone()))
 }
 
+#[derive(Debug, Serialize)]
+struct StreamingChatRequest<'a> {
+    model: &'a str,
+    messages: &'a [ChatMessage],
+    stream: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    max_tokens: Option<u32>,
+    temperature: f32,
+    #[serde(flatten)]
+    reasoning: ReasoningParams,
+}
+
+/// Extracts the content delta from one SSE `data:` payload of an
+/// OpenAI-compatible streaming chat completion. `None` for keep-alives,
+/// role-only chunks and `[DONE]`.
+fn parse_stream_delta(payload: &str) -> Option<String> {
+    let payload = payload.trim();
+    if payload.is_empty() || payload == "[DONE]" {
+        return None;
+    }
+    let value: Value = serde_json::from_str(payload).ok()?;
+    let content = value
+        .get("choices")?
+        .get(0)?
+        .get("delta")?
+        .get("content")?
+        .as_str()?;
+    (!content.is_empty()).then(|| content.to_string())
+}
+
+/// Streams a chat completion, calling `on_delta` with the text accumulated so
+/// far every time new content arrives, and returns the full text. Used by the
+/// live features (subtitles, answer suggestions) where time to first word is
+/// what the user feels. Reasoning-disable fields get the same one-shot 400/422
+/// fallback as `send_chat_completion_with_schema`.
+pub async fn stream_chat_completion<F>(
+    provider: &PostProcessProvider,
+    api_key: &str,
+    model: &str,
+    system_prompt: Option<String>,
+    user_content: String,
+    max_tokens: Option<u32>,
+    mut on_delta: F,
+) -> Result<String, String>
+where
+    F: FnMut(&str) + Send,
+{
+    use futures_util::StreamExt;
+
+    let base_url = provider.base_url.trim_end_matches('/');
+    let url = format!("{}/chat/completions", base_url);
+    let client = create_client(provider, api_key)?;
+
+    let mut messages = Vec::with_capacity(2);
+    if let Some(system) = system_prompt {
+        messages.push(ChatMessage {
+            role: "system".to_string(),
+            content: system,
+        });
+    }
+    messages.push(ChatMessage {
+        role: "user".to_string(),
+        content: user_content,
+    });
+
+    let key = endpoint_key(provider, model);
+    let mut body = StreamingChatRequest {
+        model,
+        messages: &messages,
+        stream: true,
+        max_tokens,
+        temperature: 0.3,
+        reasoning: if should_disable_reasoning(provider) && !is_known_rejected(&key) {
+            reasoning_disable_params(provider)
+        } else {
+            ReasoningParams::default()
+        },
+    };
+
+    let mut response = send_with_connect_retry(|| Ok(client.post(&url).json(&body)))
+        .await
+        .map_err(|e| report_reqwest_error("HTTP request failed", &e))?;
+    if matches!(response.status().as_u16(), 400 | 422) && !body.reasoning.is_empty() {
+        body.reasoning = ReasoningParams::default();
+        response = send_with_connect_retry(|| Ok(client.post(&url).json(&body)))
+            .await
+            .map_err(|e| report_reqwest_error("HTTP retry failed", &e))?;
+        if response.status().is_success() {
+            remember_rejection(key);
+        }
+    }
+    let status = response.status();
+    if !status.is_success() {
+        let error_text = response.text().await.unwrap_or_default();
+        return Err(format!(
+            "API request failed with status {}: {}",
+            status, error_text
+        ));
+    }
+
+    let mut text = String::new();
+    let mut pending = String::new();
+    let mut stream = response.bytes_stream();
+    while let Some(chunk) = stream.next().await {
+        let chunk = chunk.map_err(|e| report_reqwest_error("Stream read failed", &e))?;
+        pending.push_str(&String::from_utf8_lossy(&chunk));
+        while let Some(newline) = pending.find('\n') {
+            let line: String = pending.drain(..=newline).collect();
+            let Some(payload) = line.trim().strip_prefix("data:") else {
+                continue;
+            };
+            if payload.trim() == "[DONE]" {
+                return Ok(text);
+            }
+            if let Some(delta) = parse_stream_delta(payload) {
+                text.push_str(&delta);
+                on_delta(&text);
+            }
+        }
+    }
+    Ok(text)
+}
+
 /// Fetch available models from an OpenAI-compatible API
 /// Returns a list of model IDs
 pub async fn fetch_models(
@@ -723,6 +846,17 @@ mod tests {
         assert!(details.contains(&format!("url: {base_url}/private")));
         assert!(!details.contains("SECRET_QUERY_TOKEN"));
         assert!(!details.contains("#private"));
+    }
+
+    #[test]
+    fn stream_delta_parsing() {
+        assert_eq!(
+            parse_stream_delta(r#"{"choices":[{"delta":{"content":"Hola"}}]}"#).as_deref(),
+            Some("Hola")
+        );
+        assert_eq!(parse_stream_delta(r#"{"choices":[{"delta":{"role":"assistant"}}]}"#), None);
+        assert_eq!(parse_stream_delta(" [DONE]"), None);
+        assert_eq!(parse_stream_delta(r#"{"choices":[]}"#), None);
     }
 
     #[test]

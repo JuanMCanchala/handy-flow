@@ -11,6 +11,7 @@ import type {
   VadBackend,
   TranslationTarget,
   LiveTranslateSource,
+  SubtitlesPosition,
 } from "@/bindings";
 import { commands } from "@/bindings";
 import { toast } from "sonner";
@@ -213,6 +214,8 @@ const settingUpdaters: {
     commands.changeHideFromScreenShareSetting(value as boolean),
   live_translate_suggest_answers: (value) =>
     commands.changeLiveTranslateSuggestAnswersSetting(value as boolean),
+  live_subtitles_position: (value) =>
+    commands.changeLiveSubtitlesPositionSetting(value as SubtitlesPosition),
   live_translate_source: (value) =>
     commands.changeLiveTranslateSourceSetting(value as LiveTranslateSource),
   diarization_enabled: (value) =>

@@ -24,6 +24,10 @@ pub struct CliArgs {
     #[arg(long)]
     pub cancel: bool,
 
+    /// Start/stop live translation in the running instance.
+    #[arg(long)]
+    pub toggle_live_translate: bool,
+
     /// Enable debug mode with verbose logging
     #[arg(long)]
     pub debug: bool,

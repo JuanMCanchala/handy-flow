@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "live-overlays",
+  "description": "Live subtitles and suggested-answers overlays: listen to events and drag the window in move mode",
+  "windows": ["live_subtitles", "copilot_answers"],
+  "permissions": ["core:default", "core:window:allow-start-dragging"]
+}

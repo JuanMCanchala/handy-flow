@@ -136,6 +136,25 @@ pub enum LiveTranslateSource {
     SystemAudio,
 }
 
+/// Where the live subtitles overlay sits on screen.
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum SubtitlesPosition {
+    #[default]
+    Bottom,
+    Top,
+    /// Wherever the user dragged it (`live_subtitles_custom_position`).
+    Custom,
+}
+
+/// A saved window position, in logical pixels (virtual-desktop coordinates,
+/// so it may point at any monitor).
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Type)]
+pub struct WindowPoint {
+    pub x: f64,
+    pub y: f64,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum OverlayPosition {
@@ -603,6 +622,24 @@ pub struct AppSettings {
     /// Exclude every Voxa window from screen sharing / recording.
     #[serde(default = "default_true")]
     pub hide_from_screen_share: bool,
+    /// Placement of the live subtitles overlay.
+    #[serde(default)]
+    pub live_subtitles_position: SubtitlesPosition,
+    #[serde(default)]
+    pub live_subtitles_custom_position: Option<WindowPoint>,
+    /// Top-left of the answer suggestions panel when the user moved it;
+    /// `None` docks it in the top-right corner.
+    #[serde(default)]
+    pub copilot_answers_custom_position: Option<WindowPoint>,
+    /// Provider used by live translation and answer suggestions. Empty = the
+    /// post-processing provider, so a faster endpoint (Groq, Cerebras) can be
+    /// used live without changing dictation cleanup.
+    #[serde(default)]
+    pub live_llm_provider_id: String,
+    /// Model for the live provider. Empty = that provider's post-processing
+    /// model.
+    #[serde(default)]
+    pub live_llm_model: String,
     /// User-defined named modes/presets (Superwhisper-style). Seeded with
     /// Default/Email/Notes on fresh installs. See `modes.rs`.
     #[serde(default = "default_modes")]
@@ -1297,6 +1334,11 @@ pub fn get_default_settings() -> AppSettings {
         live_translate_source: LiveTranslateSource::default(),
         live_translate_suggest_answers: false,
         hide_from_screen_share: true,
+        live_subtitles_position: SubtitlesPosition::default(),
+        live_subtitles_custom_position: None,
+        copilot_answers_custom_position: None,
+        live_llm_provider_id: String::new(),
+        live_llm_model: String::new(),
         modes: default_modes(),
         active_mode_id: None,
         diarization_enabled: false,
@@ -1321,6 +1363,38 @@ impl AppSettings {
             .unwrap_or_default();
         if model.trim().is_empty() {
             return None;
+        }
+        let api_key = self
+            .post_process_api_keys
+            .get(&provider.id)
+            .cloned()
+            .unwrap_or_default();
+        Some((provider, model, api_key))
+    }
+
+    /// LLM target for live translation / answer suggestions: the live
+    /// override when set, otherwise the post-processing target.
+    pub fn resolve_live_llm_target(&self) -> Option<(PostProcessProvider, String, String)> {
+        let provider_id = self.live_llm_provider_id.trim();
+        if provider_id.is_empty() {
+            let (provider, model, key) = self.resolve_llm_target()?;
+            let model = match self.live_llm_model.trim() {
+                "" => model,
+                live => live.to_string(),
+            };
+            return Some((provider, model, key));
+        }
+        let provider = self.post_process_provider(provider_id)?.clone();
+        let model = match self.live_llm_model.trim() {
+            "" => self
+                .post_process_models
+                .get(&provider.id)
+                .cloned()
+                .unwrap_or_default(),
+            live => live.to_string(),
+        };
+        if model.trim().is_empty() {
+            return self.resolve_llm_target();
         }
         let api_key = self
             .post_process_api_keys

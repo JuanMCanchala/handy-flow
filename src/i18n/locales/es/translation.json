@@ -1063,5 +1063,34 @@
       "cancel": "Cancelar",
       "noTemplates": "Todavía no hay plantillas. Añade una en la sección Plantillas."
     }
+  },
+  "liveOverlays": {
+    "title": "En pantalla",
+    "answersPanel": "Respuestas sugeridas",
+    "dragHint": "Arrástralo a donde quieras y pulsa Listo en Voxa",
+    "subtitlesSample": "Aquí aparecerán los subtítulos",
+    "thinking": "Escribiendo una respuesta…",
+    "saved": "Posiciones guardadas",
+    "position": {
+      "title": "Posición de los subtítulos",
+      "description": "Dónde aparecen los subtítulos traducidos, en la pantalla que estés usando. Usa Mover para ponerlos en cualquier sitio, incluso en otro monitor.",
+      "bottom": "Abajo de la pantalla",
+      "top": "Arriba de la pantalla",
+      "custom": "Donde los coloqué"
+    },
+    "move": {
+      "title": "Colocar subtítulos y respuestas",
+      "description": "Muestra ambos paneles para que los arrastres. Las respuestas van en la esquina superior derecha salvo que las muevas.",
+      "start": "Mover",
+      "done": "Listo",
+      "resetAnswers": "Respuestas arriba a la derecha"
+    },
+    "model": {
+      "provider": "Proveedor de IA en vivo",
+      "providerDescription": "Se usa para la traducción en vivo y las respuestas sugeridas. Un proveedor rápido como Groq o Cerebras baja la demora sin cambiar la limpieza del dictado.",
+      "sameAsCleanup": "El mismo de la limpieza",
+      "model": "Modelo de IA en vivo",
+      "modelDescription": "Déjalo vacío para usar el modelo de limpieza del proveedor. Elige un modelo rápido y sin razonamiento."
+    }
   }
 }

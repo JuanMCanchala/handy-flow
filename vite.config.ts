@@ -24,6 +24,7 @@ export default defineConfig(async () => ({
         main: resolve(__dirname, "index.html"),
         overlay: resolve(__dirname, "src/overlay/index.html"),
         liveSubtitles: resolve(__dirname, "src/live-subtitles/index.html"),
+        copilotAnswers: resolve(__dirname, "src/live-subtitles/answers.html"),
       },
     },
   },

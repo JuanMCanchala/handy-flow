@@ -14,6 +14,7 @@ import {
   useLiveTranslateStore,
   type SuggestedAnswer,
 } from "../../../stores/liveTranslateStore";
+import { LiveModelSettings, LiveOverlayPlacement } from "./LiveOverlaySettings";
 import "./LiveTranslate.css";
 
 type View = "conversation" | "answers";
@@ -115,7 +116,9 @@ const AnswerCard: React.FC<{ answer: SuggestedAnswer }> = ({ answer }) => {
   return (
     <article className="lt-answer">
       <p className="lt-answer-question">{answer.question}</p>
-      <p className="lt-answer-text">{answer.answer}</p>
+      <p className={`lt-answer-text ${answer.answer ? "" : "lt-pending"}`}>
+        {answer.answer || t("liveOverlays.thinking")}
+      </p>
       <div className="lt-answer-foot">
         <time className="lt-answer-time">
           {new Date(answer.at).toLocaleTimeString([], {
@@ -281,7 +284,10 @@ export const LiveTranslateSettings: React.FC = () => {
           descriptionMode="tooltip"
           grouped={true}
         />
+        <LiveModelSettings />
       </SettingsGroup>
+
+      <LiveOverlayPlacement />
     </div>
   );
 };

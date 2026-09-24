@@ -21,7 +21,7 @@ use crate::managers::transcription::TranscriptionManager;
 use crate::settings::{get_settings, LiveTranslateSource, VadBackend};
 use serde::Serialize;
 use specta::Type;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter};
 use tauri_specta::Event;
@@ -29,6 +29,39 @@ use tauri_specta::Event;
 const SILERO_VAD_THRESHOLD: f32 = 0.3;
 const EARSHOT_VAD_THRESHOLD: f32 = 0.5;
 const MAX_CONTEXT_HISTORY: usize = 3;
+/// After a pause closes an utterance, how long (from the segment close) the
+/// speaker must stay quiet before the utterance is treated as a finished
+/// turn and answered. Transcription usually takes longer than this, so the
+/// wait is typically zero; it only avoids answering half a question when the
+/// interviewer pauses mid-sentence.
+const TURN_GRACE_MS: u64 = 550;
+/// Cap on the fragments merged into one utterance (monologues).
+const MAX_UTTERANCE_FRAGMENTS: usize = 10;
+/// Minimum spacing between streamed answer/translation updates.
+const STREAM_EMIT_INTERVAL: std::time::Duration = std::time::Duration::from_millis(40);
+
+static EPOCH: std::sync::LazyLock<std::time::Instant> =
+    std::sync::LazyLock::new(std::time::Instant::now);
+
+fn now_ms() -> u64 {
+    EPOCH.elapsed().as_millis() as u64
+}
+
+/// A closed segment whose transcription is in flight. Queued in capture
+/// order so lines and utterances stay ordered even though transcriptions run
+/// concurrently.
+struct PendingSegment {
+    transcript: tauri::async_runtime::JoinHandle<Option<String>>,
+    closed_by_cap: bool,
+    closed_at_ms: u64,
+}
+
+/// A transcribed segment handed to the answer-suggestion stage.
+struct UtteranceFragment {
+    text: String,
+    closed_by_cap: bool,
+    closed_at_ms: u64,
+}
 
 /// One rendered subtitle line, emitted to the overlay window.
 #[derive(Debug, Clone, Serialize, Type, tauri_specta::Event)]
@@ -48,10 +81,17 @@ static NEXT_LINE_ID: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32
 
 /// One answer suggestion, emitted to the overlay window and appended to the
 /// Copilot history.
+///
+/// Streamed: emitted with an empty `answer` as soon as a question is
+/// detected, then re-emitted with the same `id` as the answer grows, and a
+/// last time with `done` set. A `done` line with an empty answer means the
+/// suggestion failed and should be dropped.
 #[derive(Debug, Clone, Serialize, Type, tauri_specta::Event)]
 pub struct CopilotAnswerLine {
+    pub id: u32,
     pub question: String,
     pub answer: String,
+    pub done: bool,
 }
 
 /// Which behavior a capture session runs: translated subtitles, or the
@@ -79,6 +119,12 @@ pub struct LiveTranslateManager {
     /// Live during a capture session so `stop()` can flush the in-progress
     /// segment instead of discarding it.
     segmenter: Arc<Mutex<Option<SpeechSegmenter>>>,
+    /// Ordered queue of closed segments for the session (see
+    /// `run_segment_consumer`); dropped on stop so the consumer drains and
+    /// exits.
+    segments_tx: Arc<Mutex<Option<tokio::sync::mpsc::UnboundedSender<PendingSegment>>>>,
+    /// `now_ms()` of the last frame the VAD classified as speech.
+    last_speech_ms: Arc<AtomicU64>,
 }
 
 impl LiveTranslateManager {
@@ -92,6 +138,8 @@ impl LiveTranslateManager {
             context: Arc::new(Mutex::new(Vec::new())),
             transcript_history: Arc::new(Mutex::new(Vec::new())),
             segmenter: Arc::new(Mutex::new(None)),
+            segments_tx: Arc::new(Mutex::new(None)),
+            last_speech_ms: Arc::new(AtomicU64::new(0)),
         }
     }
 
@@ -147,6 +195,14 @@ impl LiveTranslateManager {
         let segmenter = Arc::clone(&self.segmenter);
         let vad = Arc::new(Mutex::new(detector));
 
+        let (segments_tx, segments_rx) = tokio::sync::mpsc::unbounded_channel();
+        *self.segments_tx.lock().unwrap() = Some(segments_tx);
+        let consumer = self.clone();
+        tauri::async_runtime::spawn(async move {
+            consumer.run_segment_consumer(segments_rx).await;
+        });
+        let last_speech_ms = Arc::clone(&self.last_speech_ms);
+
         let manager = self.clone();
         let frame_samples = vad.lock().unwrap().frame_samples();
         let mut pending: Vec<f32> = Vec::with_capacity(frame_samples * 2);
@@ -167,6 +223,9 @@ impl LiveTranslateManager {
                         false
                     }
                 };
+                if is_speech {
+                    last_speech_ms.store(now_ms(), Ordering::Relaxed);
+                }
                 diag_frames += 1;
                 diag_speech += u32::from(is_speech);
                 diag_peak = chunk.iter().fold(diag_peak, |m, v| m.max(v.abs()));
@@ -182,13 +241,12 @@ impl LiveTranslateManager {
                     diag_peak = 0.0;
                 }
 
-                let closed_segment = segmenter
-                    .lock()
-                    .unwrap()
-                    .as_mut()
-                    .and_then(|s| s.push(&chunk, is_speech));
-                if let Some(segment) = closed_segment {
-                    manager.process_segment(segment);
+                let closed_segment = segmenter.lock().unwrap().as_mut().and_then(|s| {
+                    s.push(&chunk, is_speech)
+                        .map(|segment| (segment, s.last_closed_by_cap()))
+                });
+                if let Some((segment, closed_by_cap)) = closed_segment {
+                    manager.process_segment(segment, closed_by_cap);
                 }
             }
         };
@@ -221,13 +279,20 @@ impl LiveTranslateManager {
                 if settings.cloud_stt_enabled {
                     crate::cloud_stt::prewarm(&settings);
                 }
-                if let Some((provider, _model, api_key)) = settings.resolve_llm_target() {
+                if let Some((provider, _model, api_key)) = settings.resolve_live_llm_target() {
                     crate::llm_client::prewarm(&provider, &api_key);
                 }
                 tokio::time::sleep(std::time::Duration::from_secs(45)).await;
             }
         });
-        super::overlay::create_live_subtitles_window(&self.app_handle);
+        if mode == LiveTranslateMode::Subtitles {
+            super::overlay::create_live_subtitles_window(&self.app_handle);
+        }
+        if mode == LiveTranslateMode::Copilot
+            || get_settings(&self.app_handle).live_translate_suggest_answers
+        {
+            super::overlay::create_answers_window(&self.app_handle);
+        }
         Ok(())
     }
 
@@ -250,51 +315,141 @@ impl LiveTranslateManager {
         *self.capture.lock().unwrap() = None;
         *self.segmenter.lock().unwrap() = None;
         if let Some(segment) = flushed {
-            self.process_segment(segment);
+            self.process_segment(segment, false);
         }
+        // Dropping the sender lets the consumer drain what is queued and exit.
+        *self.segments_tx.lock().unwrap() = None;
         super::overlay::destroy_live_subtitles_window(&self.app_handle);
+        super::overlay::destroy_answers_window(&self.app_handle);
         let _ = self.app_handle.emit("live-translate-state", false);
     }
 
-    /// Transcribes one closed speech segment, then dispatches it to the
-    /// translation (subtitles) or question-answering (copilot) path
-    /// depending on the active mode. Runs on the capture thread's callback
-    /// stack via a spawned blocking task so audio capture is never blocked on
-    /// network I/O.
-    fn process_segment(&self, segment: Vec<f32>) {
-        // Ignore segments too short to be meaningful speech (VAD noise).
-        if segment.len() < crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as usize / 5 {
-            return;
+    /// Starts transcribing one closed speech segment right away (so
+    /// transcriptions overlap) and queues it, in capture order, for
+    /// `run_segment_consumer`. Never blocks the capture callback.
+    fn process_segment(&self, segment: Vec<f32>, closed_by_cap: bool) {
+        let closed_at_ms = now_ms();
+        let sample_rate = crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as usize;
+        // Segments too short to be meaningful speech (VAD noise) are not
+        // transcribed, but still queued: a pause that ends a turn must reach
+        // the answer stage.
+        let transcript = if segment.len() < sample_rate / 5 {
+            tauri::async_runtime::spawn(async { None })
+        } else {
+            log::debug!(
+                "Live session: segment closed ({:.1}s, cap={}), transcribing",
+                segment.len() as f32 / sample_rate as f32,
+                closed_by_cap
+            );
+            let manager = self.clone();
+            tauri::async_runtime::spawn_blocking(move || {
+                let started = std::time::Instant::now();
+                match manager.transcription_manager.transcribe(segment) {
+                    Ok(text) => {
+                        log::debug!("Live session: transcribed in {:?}", started.elapsed());
+                        Some(text.trim().to_string()).filter(|t| !t.is_empty())
+                    }
+                    Err(e) => {
+                        log::error!("Live subtitles transcription failed: {e}");
+                        None
+                    }
+                }
+            })
+        };
+
+        if let Some(tx) = self.segments_tx.lock().unwrap().as_ref() {
+            let _ = tx.send(PendingSegment {
+                transcript,
+                closed_by_cap,
+                closed_at_ms,
+            });
         }
+    }
 
-        log::debug!(
-            "Live session: segment closed ({:.1}s), transcribing",
-            segment.len() as f32 / crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as f32
-        );
-        let manager = self.clone();
+    /// Consumes the session's segments in capture order: each transcript is
+    /// subtitled immediately (translation runs concurrently), and forwarded
+    /// to the answer stage.
+    async fn run_segment_consumer(
+        self,
+        mut rx: tokio::sync::mpsc::UnboundedReceiver<PendingSegment>,
+    ) {
+        let (answers_tx, answers_rx) = tokio::sync::mpsc::unbounded_channel();
+        let answerer = self.clone();
         tauri::async_runtime::spawn(async move {
-            let started = std::time::Instant::now();
-            let transcript = match manager.transcription_manager.transcribe(segment) {
-                Ok(text) => {
-                    log::debug!("Live session: transcribed in {:?}", started.elapsed());
-                    text.trim().to_string()
-                }
-                Err(e) => {
-                    log::error!("Live subtitles transcription failed: {e}");
-                    return;
-                }
-            };
-
-            if transcript.is_empty() {
-                return;
-            }
-
-            let mode = *manager.mode.lock().unwrap();
-            match mode {
-                LiveTranslateMode::Subtitles => manager.handle_subtitle_segment(transcript).await,
-                LiveTranslateMode::Copilot => manager.handle_copilot_segment(transcript).await,
-            }
+            answerer.run_answer_stage(answers_rx).await;
         });
+
+        while let Some(segment) = rx.recv().await {
+            let text = segment.transcript.await.ok().flatten().unwrap_or_default();
+            let mode = *self.mode.lock().unwrap();
+
+            if mode == LiveTranslateMode::Subtitles && !text.is_empty() {
+                let manager = self.clone();
+                let text = text.clone();
+                tauri::async_runtime::spawn(async move {
+                    manager.handle_subtitle_segment(text).await;
+                });
+            }
+
+            let _ = answers_tx.send(UtteranceFragment {
+                text,
+                closed_by_cap: segment.closed_by_cap,
+                closed_at_ms: segment.closed_at_ms,
+            });
+        }
+    }
+
+    /// Joins fragments into utterances (a segment cut by the length cap is
+    /// half a sentence) and, once the speaker has paused, hands the utterance
+    /// to the question detector / answer generator.
+    async fn run_answer_stage(
+        self,
+        mut rx: tokio::sync::mpsc::UnboundedReceiver<UtteranceFragment>,
+    ) {
+        let mut utterance: Vec<String> = Vec::new();
+        while let Some(fragment) = rx.recv().await {
+            let answering = *self.mode.lock().unwrap() == LiveTranslateMode::Copilot
+                || get_settings(&self.app_handle).live_translate_suggest_answers;
+            if !answering {
+                utterance.clear();
+                continue;
+            }
+            // A fragment the transcriber punctuated as a question ends the
+            // turn right away, even if the speaker keeps talking or there is
+            // background audio that never lets a pause close the segment.
+            let asks = fragment.text.trim_end().ends_with('?');
+            if !fragment.text.is_empty() {
+                utterance.push(fragment.text);
+                if utterance.len() > MAX_UTTERANCE_FRAGMENTS {
+                    utterance.remove(0);
+                }
+            }
+            if utterance.is_empty() || (fragment.closed_by_cap && !asks) {
+                continue;
+            }
+
+            if !asks {
+                let waited = now_ms().saturating_sub(fragment.closed_at_ms);
+                if waited < TURN_GRACE_MS {
+                    tokio::time::sleep(std::time::Duration::from_millis(TURN_GRACE_MS - waited))
+                        .await;
+                }
+                // Still talking: keep the fragments and merge them with what
+                // follows instead of answering half a question.
+                if self.is_active()
+                    && self.last_speech_ms.load(Ordering::Relaxed) > fragment.closed_at_ms
+                {
+                    continue;
+                }
+            }
+
+            let text = utterance.join(" ");
+            utterance.clear();
+            let manager = self.clone();
+            tauri::async_runtime::spawn(async move {
+                manager.handle_copilot_utterance(text).await;
+            });
+        }
     }
 
     async fn handle_subtitle_segment(&self, transcript: String) {
@@ -303,30 +458,29 @@ impl LiveTranslateManager {
         let source_lang = super::prompt::detect_language(&transcript);
         let target_lang = source_lang.other();
 
-        // Show what was said immediately; the translation fills in the same
-        // line a moment later.
+        // Show what was said immediately; the translation streams into the
+        // same line right after.
         let id = NEXT_LINE_ID.fetch_add(1, Ordering::Relaxed);
-        let _ = LiveSubtitleLine {
+        let line = |translation: String| LiveSubtitleLine {
             id,
             source_lang: source_lang.code().to_string(),
             original: transcript.clone(),
-            translation: String::new(),
-        }
-        .emit(&self.app_handle);
+            translation,
+        };
+        let _ = line(String::new()).emit(&self.app_handle);
         let started = std::time::Instant::now();
 
-        // Optional answer suggestions alongside the subtitles: same question
-        // detector + profile-grounded answer as the Copilot mode.
-        if get_settings(&self.app_handle).live_translate_suggest_answers {
-            let manager = self.clone();
-            let question = transcript.clone();
-            tauri::async_runtime::spawn(async move {
-                manager.handle_copilot_segment(question).await;
-            });
-        }
+        let app = self.app_handle.clone();
+        let mut last_emit = std::time::Instant::now();
+        let on_partial = |partial: &str| {
+            if last_emit.elapsed() >= STREAM_EMIT_INTERVAL {
+                last_emit = std::time::Instant::now();
+                let _ = line(clean_model_text(partial)).emit(&app);
+            }
+        };
 
-        let translation = match self.translate(&transcript, target_lang).await {
-            Ok(text) => text,
+        let translation = match self.translate(&transcript, target_lang, on_partial).await {
+            Ok(text) => clean_model_text(&text),
             Err(e) => {
                 log::error!("Live subtitles translation failed: {e}");
                 // Still show the original so the user gets something.
@@ -347,19 +501,13 @@ impl LiveTranslateManager {
         }
 
         log::debug!("Live subtitles: translated in {:?}", started.elapsed());
-        let line = LiveSubtitleLine {
-            id,
-            source_lang: source_lang.code().to_string(),
-            original: transcript,
-            translation,
-        };
-        let _ = line.emit(&self.app_handle);
+        let _ = line(translation).emit(&self.app_handle);
     }
 
-    /// Runs the copilot's question detector on a closed segment; on a match,
-    /// requests an answer suggestion from the configured LLM (grounded in the
-    /// user's profile) and emits it to the overlay + history.
-    async fn handle_copilot_segment(&self, transcript: String) {
+    /// Runs the copilot's question detector on a finished utterance; on a
+    /// match, streams an answer suggestion from the live LLM (grounded in
+    /// the user's profile) to the answers panel, the live view and history.
+    async fn handle_copilot_utterance(&self, transcript: String) {
         self.transcript_history
             .lock()
             .unwrap()
@@ -369,6 +517,17 @@ impl LiveTranslateManager {
         if !crate::copilot::is_question(&transcript) {
             return;
         }
+        let started = std::time::Instant::now();
+
+        let settings = get_settings(&self.app_handle);
+        let Some((provider, model, api_key)) = settings.resolve_live_llm_target() else {
+            log::error!("Copilot: no LLM configured for answer generation");
+            return;
+        };
+
+        if self.is_active() {
+            super::overlay::create_answers_window(&self.app_handle);
+        }
 
         let profile = crate::copilot::get_profile(&self.app_handle);
         let recent_transcript = {
@@ -376,63 +535,82 @@ impl LiveTranslateManager {
             // Exclude the question itself; the prompt passes it separately.
             history[..history.len().saturating_sub(1)].to_vec()
         };
-
-        let settings = get_settings(&self.app_handle);
-        let (provider, model, api_key) = match settings.resolve_llm_target() {
-            Some(target) => target,
-            None => {
-                log::error!("Copilot: no LLM configured for answer generation");
-                return;
-            }
-        };
-
         let prompt = crate::copilot::build_answer_prompt(
             &profile.text,
             &recent_transcript,
             &transcript,
             profile.answer_language,
         );
+        let max_tokens = match profile.answer_language {
+            crate::copilot::CopilotAnswerLanguage::Both => 420,
+            _ => 220,
+        };
 
-        let answer =
-            match crate::llm_client::send_chat_completion(&provider, api_key, &model, prompt, true)
-                .await
-            {
-                Ok(Some(text)) => text.trim().to_string(),
-                Ok(None) => {
-                    log::error!("Copilot: empty answer response");
-                    return;
-                }
-                Err(e) => {
-                    log::error!("Copilot: answer generation failed: {e}");
-                    return;
-                }
-            };
+        let id = NEXT_LINE_ID.fetch_add(1, Ordering::Relaxed);
+        let line = |answer: String, done: bool| CopilotAnswerLine {
+            id,
+            question: transcript.clone(),
+            answer,
+            done,
+        };
+        let _ = line(String::new(), false).emit(&self.app_handle);
 
+        let app = self.app_handle.clone();
+        let mut first_word: Option<std::time::Duration> = None;
+        let mut last_emit = std::time::Instant::now();
+        let on_partial = |partial: &str| {
+            first_word.get_or_insert_with(|| started.elapsed());
+            if last_emit.elapsed() >= STREAM_EMIT_INTERVAL {
+                last_emit = std::time::Instant::now();
+                let _ = line(clean_model_text(partial), false).emit(&app);
+            }
+        };
+
+        let result = crate::llm_client::stream_chat_completion(
+            &provider,
+            &api_key,
+            &model,
+            Some(prompt.system),
+            prompt.user,
+            Some(max_tokens),
+            on_partial,
+        )
+        .await;
+
+        let answer = match result {
+            Ok(text) => clean_model_text(&text),
+            Err(e) => {
+                log::error!("Copilot: answer generation failed: {e}");
+                String::new()
+            }
+        };
+        log::debug!(
+            "Copilot: answer first word {:?}, done in {:?}",
+            first_word,
+            started.elapsed()
+        );
+        let _ = line(answer.clone(), true).emit(&self.app_handle);
         if answer.is_empty() {
             return;
         }
 
         let timestamp = chrono::Utc::now().timestamp_millis();
-        let entry = crate::copilot::CopilotAnswerEntry {
-            id: timestamp.to_string(),
-            question: transcript.clone(),
-            answer: answer.clone(),
-            timestamp,
-        };
-        crate::copilot::append_entry(&self.app_handle, entry);
-
-        let line = CopilotAnswerLine {
-            question: transcript,
-            answer,
-        };
-        let _ = line.emit(&self.app_handle);
+        crate::copilot::append_entry(
+            &self.app_handle,
+            crate::copilot::CopilotAnswerEntry {
+                id: timestamp.to_string(),
+                question: transcript,
+                answer,
+                timestamp,
+            },
+        );
     }
 
     fn trim_transcript_history(&self) {
         let mut history = self.transcript_history.lock().unwrap();
         // Keep one extra slot beyond the context window: the newest entry is
-        // the just-closed segment itself (excluded from context by the
-        // caller), so MAX_CONTEXT_SEGMENTS prior segments need to survive
+        // the just-finished utterance itself (excluded from context by the
+        // caller), so MAX_CONTEXT_SEGMENTS prior utterances need to survive
         // alongside it.
         let cap = super::prompt::MAX_CONTEXT_SEGMENTS + 1;
         if history.len() > cap {
@@ -441,21 +619,53 @@ impl LiveTranslateManager {
         }
     }
 
-    async fn translate(&self, text: &str, target: SubtitleLanguage) -> Result<String, String> {
+    async fn translate<F>(
+        &self,
+        text: &str,
+        target: SubtitleLanguage,
+        on_partial: F,
+    ) -> Result<String, String>
+    where
+        F: FnMut(&str) + Send,
+    {
         let settings = get_settings(&self.app_handle);
         let (provider, model, api_key) = settings
-            .resolve_llm_target()
+            .resolve_live_llm_target()
             .ok_or_else(|| "No LLM configured for translation".to_string())?;
 
         let context_snapshot = self.context.lock().unwrap().clone();
         let prompt = build_translation_prompt(text, target, &context_snapshot);
+        // Translations run about as long as the source; the cap only stops a
+        // runaway reply.
+        let max_tokens = (text.len() as u32 / 2).max(48) + 48;
 
-        let result =
-            crate::llm_client::send_chat_completion(&provider, api_key, &model, prompt, true)
-                .await?;
-
-        result.ok_or_else(|| "Empty translation response".to_string())
+        let translation = crate::llm_client::stream_chat_completion(
+            &provider,
+            &api_key,
+            &model,
+            None,
+            prompt,
+            Some(max_tokens),
+            on_partial,
+        )
+        .await?;
+        if translation.trim().is_empty() {
+            return Err("Empty translation response".to_string());
+        }
+        Ok(translation)
     }
+}
+
+/// Strips a reasoning block and wrapping quotes some models add despite the
+/// prompt, so partial and final text render cleanly.
+fn clean_model_text(text: &str) -> String {
+    let text = crate::actions::strip_invisible_chars(crate::actions::strip_think_block(text));
+    let text = text.trim();
+    let text = text
+        .strip_prefix('"')
+        .map(|t| t.strip_suffix('"').unwrap_or(t))
+        .unwrap_or(text);
+    text.trim().to_string()
 }
 
 fn build_vad(app_handle: &AppHandle) -> Result<Box<dyn VoiceActivityDetector>, String> {
