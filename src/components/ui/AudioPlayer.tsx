@@ -283,18 +283,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       <button
         onClick={togglePlay}
         disabled={isLoading}
-        className="transition-colors cursor-pointer text-text hover:text-logo-primary disabled:opacity-50"
+        className="flex items-center justify-center size-6 rounded-full bg-fill-active transition-colors cursor-default text-text hover:bg-fill-selected disabled:opacity-50"
         aria-label={isPlaying ? "Pause" : "Play"}
       >
         {isPlaying ? (
-          <Pause width={20} height={20} fill="currentColor" />
+          <Pause width={14} height={14} fill="currentColor" />
         ) : (
-          <Play width={20} height={20} fill="currentColor" />
+          <Play width={14} height={14} fill="currentColor" />
         )}
       </button>
 
       <div className="flex-1 flex items-center gap-2">
-        <span className="text-xs text-text/60 min-w-[30px] tabular-nums">
+        <span className="text-caption text-text-tertiary min-w-[30px] tabular">
           {formatTime(currentTime)}
         </span>
 
@@ -307,13 +307,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           onChange={handleSeek}
           onMouseDown={handleSliderMouseDown}
           onTouchStart={handleSliderTouchStart}
-          className={`flex-1 h-1 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-logo-primary ${progressPercent >= 99.5 ? "[&::-webkit-slider-thumb]:translate-x-0.5 [&::-moz-range-thumb]:translate-x-0.5" : ""}`}
+          className={`flex-1 h-1 rounded-full appearance-none cursor-pointer focus:outline-none focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 ${progressPercent >= 99.5 ? "[&::-webkit-slider-thumb]:translate-x-0.5 [&::-moz-range-thumb]:translate-x-0.5" : ""}`}
           style={{
-            background: `linear-gradient(to right, #FAA2CA 0%, #FAA2CA ${progressPercent}%, rgba(128, 128, 128, 0.2) ${progressPercent}%, rgba(128, 128, 128, 0.2) 100%)`,
+            background: `linear-gradient(to right, var(--color-text) 0%, var(--color-text) ${progressPercent}%, var(--color-border-strong) ${progressPercent}%, var(--color-border-strong) 100%)`,
           }}
         />
 
-        <span className="text-xs text-text/60 min-w-[30px] tabular-nums">
+        <span className="text-caption text-text-tertiary min-w-[30px] tabular">
           {formatTime(duration)}
         </span>
       </div>

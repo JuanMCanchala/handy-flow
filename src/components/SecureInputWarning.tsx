@@ -108,7 +108,7 @@ const SecureInputWarning: React.FC = () => {
           <button
             onClick={() => setDismissed(true)}
             aria-label={t("secureInput.dismiss")}
-            className="cursor-pointer rounded p-1.5 text-mid-gray hover:bg-warning/15 hover:text-warning focus:outline-none focus:ring-1 focus:ring-warning"
+            className="cursor-default rounded p-1.5 text-text-tertiary hover:bg-warning/15 hover:text-warning focus:outline-none focus:ring-1 focus:ring-warning"
           >
             <X className="h-4 w-4" />
           </button>

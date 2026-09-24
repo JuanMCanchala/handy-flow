@@ -968,11 +968,42 @@ pub fn run(cli_args: CliArgs) {
             let mut win_builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
                     .title("Handy")
-                    .inner_size(680.0, 570.0)
-                    .min_inner_size(680.0, 570.0)
+                    .inner_size(880.0, 620.0)
+                    .min_inner_size(720.0, 540.0)
                     .resizable(true)
                     .maximizable(true)
                     .visible(false);
+
+            // macOS: content sits under the titlebar (hidden title, traffic
+            // lights kept and repositioned) with a native sidebar vibrancy
+            // effect that follows the window's active/theme state. See
+            // docs/design/macos-style.md section 4.
+            #[cfg(target_os = "macos")]
+            {
+                win_builder = win_builder
+                    .title_bar_style(tauri::TitleBarStyle::Overlay)
+                    .hidden_title(true)
+                    .traffic_light_position(tauri::LogicalPosition::new(18.0, 22.0))
+                    .transparent(true)
+                    .effects(tauri::utils::config::WindowEffectsConfig {
+                        effects: vec![tauri::window::Effect::Sidebar],
+                        state: Some(tauri::window::EffectState::FollowsWindowActiveState),
+                        radius: None,
+                        color: None,
+                    });
+            }
+
+            // Windows 11 22H2+: Mica behind the window. Older Windows ignores
+            // the effect and the CSS canvas background stays opaque.
+            #[cfg(target_os = "windows")]
+            {
+                win_builder = win_builder.effects(tauri::utils::config::WindowEffectsConfig {
+                    effects: vec![tauri::window::Effect::Mica],
+                    state: None,
+                    radius: None,
+                    color: None,
+                });
+            }
 
             if let Some(data_dir) = portable::data_dir() {
                 win_builder = win_builder.data_directory(data_dir.join("webview"));

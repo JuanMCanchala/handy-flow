@@ -1,50 +1,148 @@
 /* Handy Colors */
 
 :root {
-  /* Palette source of truth. Each themed color is defined once as a
-     light/dark pair; the active tokens below and the `data-theme` overrides
-     in App.css reference these, so a hex value lives in exactly one place. */
-  --light-color-text: #0f0f0f;
-  --light-color-background: #fbfbfb;
-  --light-color-logo-primary: #faa2ca;
-  --light-color-logo-stroke: #382731;
+  /* ---------- Light ---------- */
+  --light-canvas: #f7f6f3;
+  --light-canvas-vibrant: rgb(247 246 243 / 0.72);
+  --light-surface: #ffffff;
+  --light-surface-raised: #ffffff;
+  --light-surface-sunken: #f2f1ed;
+  --light-fill-hover: rgb(28 27 23 / 0.045);
+  --light-fill-active: rgb(28 27 23 / 0.075);
+  --light-fill-selected: rgb(28 27 23 / 0.06);
+  --light-text: #1c1b17;
+  --light-text-secondary: #6b6962;
+  --light-text-tertiary: #9c9a93;
+  --light-text-on-accent: #ffffff;
+  --light-border: rgb(28 27 23 / 0.08);
+  --light-border-strong: rgb(28 27 23 / 0.14);
+  --light-accent: #1c1b17;
+  --light-accent-hover: #34332e;
+  --light-focus: rgb(28 27 23 / 0.28);
+  --light-brand: #e2669d;
+  --light-success: #2f7d4f;
+  --light-warning: #b4690e;
+  --light-error: #c93a2f;
+  --light-shadow-panel:
+    0 0 0 1px rgb(28 27 23 / 0.06), 0 1px 2px rgb(28 27 23 / 0.04),
+    0 8px 24px -8px rgb(28 27 23 / 0.08);
+  --light-shadow-pop:
+    0 0 0 1px rgb(28 27 23 / 0.08), 0 4px 12px rgb(28 27 23 / 0.08),
+    0 16px 40px -12px rgb(28 27 23 / 0.18);
 
-  --dark-color-text: #fbfbfb;
-  --dark-color-background: #2c2b29;
-  --dark-color-logo-primary: #f28cbb;
-  --dark-color-logo-stroke: #fad1ed;
+  /* ---------- Dark ---------- */
+  --dark-canvas: #1b1a18;
+  --dark-canvas-vibrant: rgb(27 26 24 / 0.6);
+  --dark-surface: #242321;
+  --dark-surface-raised: #2c2b28;
+  --dark-surface-sunken: #1f1e1c;
+  --dark-fill-hover: rgb(255 253 245 / 0.05);
+  --dark-fill-active: rgb(255 253 245 / 0.09);
+  --dark-fill-selected: rgb(255 253 245 / 0.07);
+  --dark-text: #ecebe6;
+  --dark-text-secondary: #a09e97;
+  --dark-text-tertiary: #6f6d67;
+  --dark-text-on-accent: #1b1a18;
+  --dark-border: rgb(255 253 245 / 0.08);
+  --dark-border-strong: rgb(255 253 245 / 0.14);
+  --dark-accent: #ecebe6;
+  --dark-accent-hover: #ffffff;
+  --dark-focus: rgb(236 235 230 / 0.35);
+  --dark-brand: #f28cbb;
+  --dark-success: #5fbf85;
+  --dark-warning: #e6a84a;
+  --dark-error: #f07f74;
+  --dark-shadow-panel:
+    0 0 0 1px rgb(255 253 245 / 0.06), 0 1px 2px rgb(0 0 0 / 0.3),
+    0 12px 32px -12px rgb(0 0 0 / 0.5);
+  --dark-shadow-pop:
+    0 0 0 1px rgb(255 253 245 / 0.08), 0 8px 24px rgb(0 0 0 / 0.35),
+    0 24px 48px -16px rgb(0 0 0 / 0.55);
 
-  /* Semantic status colors. First used by SecureInputWarning; intended to
-     replace the ad-hoc yellow-500/red-500 usages (e.g. ui/Alert.tsx) over
-     time so status styling is themeable from one place. */
-  --light-color-warning: #d97706;
-  --light-color-error: #dc2626;
-  --dark-color-warning: #fbbf24;
-  --dark-color-error: #f87171;
+  /* ---------- Theme-independent ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
 
-  /* Tokens that do not change between light and dark */
-  --color-background-ui: #da5893;
-  --color-text-stroke: #f6f6f6;
-  --color-mid-gray: #808080;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 260ms;
 
-  /* Active palette — defaults to light, follows the OS via the media query
-     below, or is forced by `data-theme` (see the overrides below). */
-  --color-text: var(--light-color-text);
-  --color-background: var(--light-color-background);
-  --color-logo-primary: var(--light-color-logo-primary);
-  --color-logo-stroke: var(--light-color-logo-stroke);
-  --color-warning: var(--light-color-warning);
-  --color-error: var(--light-color-error);
+  --sidebar-w: 216px;
+  --titlebar-h: 44px;
+  --traffic-light-inset: 76px;
+
+  /* ---------- Active palette (default light) ---------- */
+  --color-canvas: var(--light-canvas);
+  --color-canvas-vibrant: var(--light-canvas-vibrant);
+  --color-surface: var(--light-surface);
+  --color-surface-raised: var(--light-surface-raised);
+  --color-surface-sunken: var(--light-surface-sunken);
+  --color-fill-hover: var(--light-fill-hover);
+  --color-fill-active: var(--light-fill-active);
+  --color-fill-selected: var(--light-fill-selected);
+  --color-text: var(--light-text);
+  --color-text-secondary: var(--light-text-secondary);
+  --color-text-tertiary: var(--light-text-tertiary);
+  --color-text-on-accent: var(--light-text-on-accent);
+  --color-border: var(--light-border);
+  --color-border-strong: var(--light-border-strong);
+  --color-accent: var(--light-accent);
+  --color-accent-hover: var(--light-accent-hover);
+  --color-focus: var(--light-focus);
+  --color-brand: var(--light-brand);
+  --color-success: var(--light-success);
+  --color-warning: var(--light-warning);
+  --color-error: var(--light-error);
+  --shadow-panel: var(--light-shadow-panel);
+  --shadow-pop: var(--light-shadow-pop);
+
+  /* ---------- Legacy aliases (kept so existing call sites keep compiling) ---------- */
+  --color-background: var(--color-surface);
+  --color-background-ui: var(--color-accent);
+  --color-logo-primary: var(--color-brand);
+  --color-logo-stroke: var(--color-text);
+  --color-text-stroke: var(--color-surface);
+  --color-mid-gray: #8c8a83;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-text: var(--dark-color-text);
-    --color-background: var(--dark-color-background);
-    --color-logo-primary: var(--dark-color-logo-primary);
-    --color-logo-stroke: var(--dark-color-logo-stroke);
-    --color-warning: var(--dark-color-warning);
-    --color-error: var(--dark-color-error);
+  :root:not([data-theme="light"]) {
+    --color-canvas: var(--dark-canvas);
+    --color-canvas-vibrant: var(--dark-canvas-vibrant);
+    --color-surface: var(--dark-surface);
+    --color-surface-raised: var(--dark-surface-raised);
+    --color-surface-sunken: var(--dark-surface-sunken);
+    --color-fill-hover: var(--dark-fill-hover);
+    --color-fill-active: var(--dark-fill-active);
+    --color-fill-selected: var(--dark-fill-selected);
+    --color-text: var(--dark-text);
+    --color-text-secondary: var(--dark-text-secondary);
+    --color-text-tertiary: var(--dark-text-tertiary);
+    --color-text-on-accent: var(--dark-text-on-accent);
+    --color-border: var(--dark-border);
+    --color-border-strong: var(--dark-border-strong);
+    --color-accent: var(--dark-accent);
+    --color-accent-hover: var(--dark-accent-hover);
+    --color-focus: var(--dark-focus);
+    --color-brand: var(--dark-brand);
+    --color-success: var(--dark-success);
+    --color-warning: var(--dark-warning);
+    --color-error: var(--dark-error);
+    --shadow-panel: var(--dark-shadow-panel);
+    --shadow-pop: var(--dark-shadow-pop);
+
+    --color-background: var(--color-surface);
+    --color-background-ui: var(--color-accent);
+    --color-logo-primary: var(--color-brand);
+    --color-logo-stroke: var(--color-text);
+    --color-text-stroke: var(--color-surface);
   }
 }
 
@@ -58,20 +156,66 @@
  * Lives here (not in App.css) so every window that imports the shared palette —
  * the settings window and the recording overlay alike — honours the override.
  */
-:root[data-theme="light"] {
-  --color-text: var(--light-color-text);
-  --color-background: var(--light-color-background);
-  --color-logo-primary: var(--light-color-logo-primary);
-  --color-logo-stroke: var(--light-color-logo-stroke);
-  --color-warning: var(--light-color-warning);
-  --color-error: var(--light-color-error);
+:root[data-theme="dark"] {
+  --color-canvas: var(--dark-canvas);
+  --color-canvas-vibrant: var(--dark-canvas-vibrant);
+  --color-surface: var(--dark-surface);
+  --color-surface-raised: var(--dark-surface-raised);
+  --color-surface-sunken: var(--dark-surface-sunken);
+  --color-fill-hover: var(--dark-fill-hover);
+  --color-fill-active: var(--dark-fill-active);
+  --color-fill-selected: var(--dark-fill-selected);
+  --color-text: var(--dark-text);
+  --color-text-secondary: var(--dark-text-secondary);
+  --color-text-tertiary: var(--dark-text-tertiary);
+  --color-text-on-accent: var(--dark-text-on-accent);
+  --color-border: var(--dark-border);
+  --color-border-strong: var(--dark-border-strong);
+  --color-accent: var(--dark-accent);
+  --color-accent-hover: var(--dark-accent-hover);
+  --color-focus: var(--dark-focus);
+  --color-brand: var(--dark-brand);
+  --color-success: var(--dark-success);
+  --color-warning: var(--dark-warning);
+  --color-error: var(--dark-error);
+  --shadow-panel: var(--dark-shadow-panel);
+  --shadow-pop: var(--dark-shadow-pop);
+
+  --color-background: var(--color-surface);
+  --color-background-ui: var(--color-accent);
+  --color-logo-primary: var(--color-brand);
+  --color-logo-stroke: var(--color-text);
+  --color-text-stroke: var(--color-surface);
 }
 
-:root[data-theme="dark"] {
-  --color-text: var(--dark-color-text);
-  --color-background: var(--dark-color-background);
-  --color-logo-primary: var(--dark-color-logo-primary);
-  --color-logo-stroke: var(--dark-color-logo-stroke);
-  --color-warning: var(--dark-color-warning);
-  --color-error: var(--dark-color-error);
+:root[data-theme="light"] {
+  --color-canvas: var(--light-canvas);
+  --color-canvas-vibrant: var(--light-canvas-vibrant);
+  --color-surface: var(--light-surface);
+  --color-surface-raised: var(--light-surface-raised);
+  --color-surface-sunken: var(--light-surface-sunken);
+  --color-fill-hover: var(--light-fill-hover);
+  --color-fill-active: var(--light-fill-active);
+  --color-fill-selected: var(--light-fill-selected);
+  --color-text: var(--light-text);
+  --color-text-secondary: var(--light-text-secondary);
+  --color-text-tertiary: var(--light-text-tertiary);
+  --color-text-on-accent: var(--light-text-on-accent);
+  --color-border: var(--light-border);
+  --color-border-strong: var(--light-border-strong);
+  --color-accent: var(--light-accent);
+  --color-accent-hover: var(--light-accent-hover);
+  --color-focus: var(--light-focus);
+  --color-brand: var(--light-brand);
+  --color-success: var(--light-success);
+  --color-warning: var(--light-warning);
+  --color-error: var(--light-error);
+  --shadow-panel: var(--light-shadow-panel);
+  --shadow-pop: var(--light-shadow-pop);
+
+  --color-background: var(--color-surface);
+  --color-background-ui: var(--color-accent);
+  --color-logo-primary: var(--color-brand);
+  --color-logo-stroke: var(--color-text);
+  --color-text-stroke: var(--color-surface);
 }

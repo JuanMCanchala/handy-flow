@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Info } from "lucide-react";
 import { Tooltip } from "./Tooltip";
 
 interface SettingContainerProps {
@@ -48,8 +49,8 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   };
 
   const containerClasses = grouped
-    ? "px-4 p-2"
-    : "px-4 p-2 rounded-lg border border-mid-gray/20";
+    ? "px-4 py-3"
+    : "px-4 py-3 rounded-lg border border-border";
 
   if (layout === "stacked") {
     if (descriptionMode === "tooltip") {
@@ -57,7 +58,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
         <div className={containerClasses}>
           <div className="flex items-center gap-2 mb-2">
             <h3
-              className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}
+              className={`text-body font-medium ${disabled ? "opacity-50" : ""}`}
             >
               {title}
             </h3>
@@ -68,11 +69,8 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
               onMouseLeave={() => setShowTooltip(false)}
               onClick={toggleTooltip}
             >
-              <svg
-                className="w-4 h-4 text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <Info
+                className="w-3.5 h-3.5 text-text-tertiary cursor-help hover:text-text transition-colors duration-[var(--dur-fast)] select-none"
                 aria-label="More information"
                 role="button"
                 tabIndex={0}
@@ -82,17 +80,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
                     toggleTooltip();
                   }
                 }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              />
               {showTooltip && (
                 <Tooltip targetRef={tooltipRef} position="top">
-                  <p className="text-sm text-center leading-relaxed">
+                  <p className="text-small text-center leading-relaxed">
                     {description}
                   </p>
                 </Tooltip>
@@ -107,10 +98,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
     return (
       <div className={containerClasses}>
         <div className="mb-2">
-          <h3 className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}>
+          <h3 className={`text-body font-medium ${disabled ? "opacity-50" : ""}`}>
             {title}
           </h3>
-          <p className={`text-sm ${disabled ? "opacity-50" : ""}`}>
+          <p className={`text-small text-text-secondary mt-0.5 ${disabled ? "opacity-50" : ""}`}>
             {description}
           </p>
         </div>
@@ -121,8 +112,8 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
 
   // Horizontal layout (default)
   const horizontalContainerClasses = grouped
-    ? "flex items-center justify-between min-h-12 px-4 p-2"
-    : "flex items-center justify-between min-h-12 px-4 p-2 rounded-lg border border-mid-gray/20";
+    ? "flex items-center justify-between min-h-[52px] px-4 py-3 gap-6"
+    : "flex items-center justify-between min-h-[52px] px-4 py-3 gap-6 rounded-lg border border-border";
 
   if (descriptionMode === "tooltip") {
     return (
@@ -130,7 +121,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
         <div className="max-w-2/3">
           <div className="flex items-center gap-2">
             <h3
-              className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}
+              className={`text-body font-medium ${disabled ? "opacity-50" : ""}`}
             >
               {title}
             </h3>
@@ -141,11 +132,8 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
               onMouseLeave={() => setShowTooltip(false)}
               onClick={toggleTooltip}
             >
-              <svg
-                className="w-4 h-4 text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <Info
+                className="w-3.5 h-3.5 text-text-tertiary cursor-help hover:text-text transition-colors duration-[var(--dur-fast)] select-none"
                 aria-label="More information"
                 role="button"
                 tabIndex={0}
@@ -155,17 +143,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
                     toggleTooltip();
                   }
                 }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              />
               {showTooltip && (
                 <Tooltip targetRef={tooltipRef} position={tooltipPosition}>
-                  <p className="text-sm text-center leading-relaxed">
+                  <p className="text-small text-center leading-relaxed">
                     {description}
                   </p>
                 </Tooltip>
@@ -181,10 +162,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   return (
     <div className={horizontalContainerClasses}>
       <div className="max-w-2/3">
-        <h3 className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}>
+        <h3 className={`text-body font-medium ${disabled ? "opacity-50" : ""}`}>
           {title}
         </h3>
-        <p className={`text-sm ${disabled ? "opacity-50" : ""}`}>
+        <p className={`text-small text-text-secondary mt-0.5 ${disabled ? "opacity-50" : ""}`}>
           {description}
         </p>
       </div>

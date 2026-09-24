@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
+import Footer from "./footer";
 import { useSettings } from "../hooks/useSettings";
 import { HomeSettings } from "./home/HomeSettings";
 import {
@@ -140,33 +141,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   return (
-    <div className="flex flex-col w-40 h-full border-e border-mid-gray/20 items-center px-2">
-      <HandyTextLogo width={120} className="m-4" />
-      <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-mid-gray/20">
+    <div
+      className="w-[var(--sidebar-w)] shrink-0 h-full flex flex-col bg-transparent pt-[var(--titlebar-h)] px-3 pb-3"
+      data-tauri-drag-region
+    >
+      <HandyTextLogo width={88} className="ms-2 mb-6" />
+      <div className="flex flex-col w-full gap-0.5">
         {availableSections.map((section) => {
           const Icon = section.icon;
           const isActive = activeSection === section.id;
 
           return (
-            <div
+            <button
               key={section.id}
-              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors ${
+              type="button"
+              aria-current={isActive ? "page" : undefined}
+              className={`h-8 w-full flex items-center gap-2.5 px-2.5 rounded-md text-body font-medium transition-colors duration-[var(--dur-fast)] cursor-default ${
                 isActive
-                  ? "bg-logo-primary/80"
-                  : "hover:bg-mid-gray/20 hover:opacity-100 opacity-85"
+                  ? "bg-fill-active text-text shadow-[inset_0_0_0_1px_var(--color-border)]"
+                  : "text-text-secondary hover:bg-fill-hover hover:text-text"
               }`}
               onClick={() => onSectionChange(section.id)}
             >
-              <Icon width={24} height={24} className="shrink-0" />
-              <p
-                className="text-sm font-medium truncate"
-                title={t(section.labelKey)}
-              >
+              <Icon
+                size={16}
+                strokeWidth={1.75}
+                className={`shrink-0 ${isActive ? "text-text" : "text-text-tertiary"}`}
+              />
+              <p className="truncate" title={t(section.labelKey)}>
                 {t(section.labelKey)}
               </p>
-            </div>
+            </button>
           );
         })}
+      </div>
+      <div className="mt-auto border-t border-border pt-3">
+        <Footer />
       </div>
     </div>
   );

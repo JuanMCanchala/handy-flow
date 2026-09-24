@@ -265,7 +265,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
         descriptionMode={descriptionMode}
         grouped={grouped}
       >
-        <div className="text-sm text-mid-gray">
+        <div className="text-small text-text-secondary">
           {t("settings.general.shortcut.loading")}
         </div>
       </SettingContainer>
@@ -281,7 +281,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
         descriptionMode={descriptionMode}
         grouped={grouped}
       >
-        <div className="text-sm text-mid-gray">
+        <div className="text-small text-text-secondary">
           {t("settings.general.shortcut.none")}
         </div>
       </SettingContainer>
@@ -297,7 +297,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
         descriptionMode={descriptionMode}
         grouped={grouped}
       >
-        <div className="text-sm text-mid-gray">
+        <div className="text-small text-text-secondary">
           {t("settings.general.shortcut.none")}
         </div>
       </SettingContainer>
@@ -323,17 +323,17 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
       disabled={disabled}
       layout="horizontal"
     >
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center gap-1.5">
         {isRecording ? (
           <div
             ref={shortcutRef}
-            className="px-2 py-1 text-sm font-semibold border border-logo-primary bg-logo-primary/30 rounded-md"
+            className="px-2 h-7 flex items-center font-mono text-caption rounded-xs border border-text bg-surface-sunken"
           >
             {formatCurrentKeys()}
           </div>
         ) : (
           <div
-            className="px-2 py-1 text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 hover:bg-logo-primary/10 rounded-md cursor-pointer hover:border-logo-primary"
+            className="px-2 h-7 flex items-center font-mono text-caption rounded-xs bg-surface-sunken border border-border shadow-[inset_0_-1px_0_var(--color-border)] cursor-default hover:border-border-strong"
             onClick={startRecording}
           >
             {formatKeyCombination(binding.current_binding, osType)}

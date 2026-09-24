@@ -1,48 +1,165 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
 @import "./styles/theme.css";
 
 /* Register the shared color tokens (src/styles/theme.css) as Tailwind
    utilities */
 @theme inline {
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-surface-sunken: var(--color-surface-sunken);
+  --color-fill-hover: var(--color-fill-hover);
+  --color-fill-active: var(--color-fill-active);
+  --color-fill-selected: var(--color-fill-selected);
   --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+  --color-on-accent: var(--color-text-on-accent);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-focus: var(--color-focus);
+  --color-brand: var(--color-brand);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  /* legacy aliases: kept until every call site is swept to semantic tokens */
   --color-background: var(--color-background);
   --color-background-ui: var(--color-background-ui);
   --color-logo-primary: var(--color-logo-primary);
   --color-logo-stroke: var(--color-logo-stroke);
   --color-text-stroke: var(--color-text-stroke);
   --color-mid-gray: var(--color-mid-gray);
-  --color-warning: var(--color-warning);
-  --color-error: var(--color-error);
+
+  --font-sans:
+    "Inter Variable", -apple-system, BlinkMacSystemFont,
+    "Segoe UI Variable Text", "Segoe UI", system-ui, "Noto Sans", "PingFang SC",
+    "Hiragino Sans", "Microsoft YaHei UI", "Yu Gothic UI", "Malgun Gothic",
+    "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Devanagari", sans-serif;
+  --font-display:
+    "Instrument Serif", "Newsreader", "Iowan Old Style", Palatino, Georgia,
+    serif;
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas,
+    monospace;
+  --text-display-xl: 44px;
+  --text-display-xl--line-height: 48px;
+  --text-display-xl--letter-spacing: -0.01em;
+  --text-display: 32px;
+  --text-display--line-height: 38px;
+  --text-display--letter-spacing: -0.01em;
+  --text-title: 17px;
+  --text-title--line-height: 24px;
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-small: 13px;
+  --text-small--line-height: 18px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-overline: 11px;
+  --text-overline--line-height: 14px;
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --shadow-panel: var(--shadow-panel);
+  --shadow-pop: var(--shadow-pop);
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
 }
 
 :root {
-  /* Typography */
-  font-size: 15px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 20px;
   font-weight: 400;
+  font-family: var(--font-sans);
 
   /* Typography settings */
   font-synthesis: none;
+  font-feature-settings: "cv11", "ss01";
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --scrollbar-thumb: color-mix(in srgb, var(--color-text), transparent 85%);
-  --scrollbar-thumb-hover: color-mix(
-    in srgb,
-    var(--color-text),
-    transparent 70%
-  );
+  --scrollbar-thumb: var(--color-border-strong);
+  --scrollbar-thumb-hover: var(--color-text-tertiary);
 
   /* Log console surface — a subtle shade off the app background so the live log
-     viewer reads as a distinct console. In light mode this is a faint gray code
-     block (matching other surfaces); the dark theme overrides it below. */
-  --color-log-surface: color-mix(in srgb, var(--color-background), black 6%);
+     viewer reads as a distinct console. */
+  --color-log-surface: var(--color-surface-sunken);
 
   /* Apply colors */
   color: var(--color-text);
-  background-color: var(--color-background);
+  background: var(--color-canvas);
+}
+
+:root[data-platform="macos"] {
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Inter Variable", system-ui, sans-serif;
+}
+
+:root:lang(ar),
+:root:lang(he),
+:root:lang(hi),
+:root:lang(ne),
+:root:lang(ja),
+:root:lang(ko),
+:root:lang(zh),
+:root:lang(ru),
+:root:lang(uk),
+:root:lang(bg) {
+  --font-display: var(--font-sans);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-brand) 28%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+[data-tauri-drag-region]
+  :is(button, a, input, select, textarea, [role="button"]) {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+/* Only the sidebar/canvas is translucent when a native window effect is
+   active; the content panel stays opaque (--color-surface). */
+:root[data-vibrancy="on"] body {
+  background: transparent;
+}
+:root:not([data-vibrancy="on"]) body {
+  background: var(--color-canvas);
 }
 
 .container {
@@ -52,13 +169,6 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Just a bit darker than the (already dark) background, keeping its warm tint */
-    --color-log-surface: color-mix(in srgb, var(--color-background), black 15%);
-  }
 }
 
 /* Keep onboarding centered when classic scrollbars consume layout space.
@@ -74,8 +184,8 @@
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -107,4 +217,21 @@
   fill: var(--color-logo-stroke);
   stroke: var(--color-logo-stroke);
   stroke-width: 1;
+}
+
+/* react-select (Select.tsx) uses classNamePrefix="app-select"; styled here
+   instead of the styles prop so semantic tokens apply uniformly. */
+.app-select__control {
+  min-height: 32px !important;
+  border-radius: var(--radius-md) !important;
+}
+.app-select__menu {
+  border-radius: var(--radius-md) !important;
+  background-color: var(--color-surface-raised) !important;
+  box-shadow: var(--shadow-pop) !important;
+  border: none !important;
+  padding: 4px !important;
+}
+.app-select__option {
+  border-radius: var(--radius-sm) !important;
 }

@@ -17,7 +17,6 @@ import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import SecureInputWarning from "./components/SecureInputWarning";
-import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
 import {
   DebugSettings,
@@ -300,15 +299,16 @@ function App() {
   const toaster = (
     <Toaster
       theme="system"
+      position="bottom-right"
       toastOptions={{
         unstyled: true,
         classNames: {
           toast:
-            "bg-background border border-mid-gray/20 rounded-lg shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
+            "bg-surface-raised text-text rounded-lg shadow-pop px-4 py-3 flex items-center gap-3 text-small",
           title: "font-medium",
-          description: "text-mid-gray",
+          description: "text-text-secondary",
           actionButton:
-            "px-2 py-1 text-xs font-medium rounded-lg border bg-mid-gray/10 border-mid-gray/20 hover:bg-background-ui/30 hover:border-logo-primary cursor-pointer whitespace-nowrap",
+            "h-7 px-2.5 text-caption font-medium rounded-md border bg-surface text-text border-border-strong hover:bg-fill-hover cursor-pointer whitespace-nowrap",
         },
       }}
     />
@@ -337,7 +337,7 @@ function App() {
         <button
           type="button"
           onClick={() => setOnboardingPreview(null)}
-          className="fixed top-4 end-4 z-50 rounded-lg border border-mid-gray/20 bg-background px-4 py-2 text-sm font-medium text-text shadow-lg hover:bg-background-ui/30 cursor-pointer"
+          className="fixed top-4 end-4 z-50 rounded-md border border-border-strong bg-surface px-4 py-2 text-small font-medium text-text shadow-pop hover:bg-fill-hover cursor-default"
         >
           {t("settings.debug.onboardingPreview.exitButton")}
         </button>
@@ -353,30 +353,25 @@ function App() {
     content = (
       <div
         dir={direction}
-        className="h-screen flex flex-col select-none cursor-default"
+        className="h-screen flex bg-transparent select-none cursor-default"
       >
         <ErrorBoundary context="What's New">
           <WhatsNewGate />
         </ErrorBoundary>
-        {/* Main content area that takes remaining space */}
-        <div className="flex-1 flex overflow-hidden">
-          <Sidebar
-            activeSection={currentSection}
-            onSectionChange={setCurrentSection}
-          />
-          {/* Scrollable content area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div ref={settingsScrollRef} className="flex-1 overflow-y-auto">
-              <div className="flex flex-col items-center p-4 gap-4">
-                <AccessibilityPermissions />
-                <SecureInputWarning />
-                {renderSettingsContent(currentSection, setOnboardingPreview)}
-              </div>
+        <Sidebar
+          activeSection={currentSection}
+          onSectionChange={setCurrentSection}
+        />
+        <main className="flex-1 m-2 ms-0 bg-surface rounded-xl shadow-panel overflow-hidden flex flex-col">
+          <div data-tauri-drag-region className="h-[var(--titlebar-h)] shrink-0" />
+          <div ref={settingsScrollRef} className="flex-1 overflow-y-auto">
+            <div className="mx-auto w-full max-w-[720px] px-8 pb-12 flex flex-col gap-8">
+              <AccessibilityPermissions />
+              <SecureInputWarning />
+              {renderSettingsContent(currentSection, setOnboardingPreview)}
             </div>
           </div>
-        </div>
-        {/* Fixed footer at bottom */}
-        <Footer />
+        </main>
       </div>
     );
   }

@@ -1,6 +1,8 @@
 export { Dropdown } from "./Dropdown";
 export { Dialog } from "./Dialog";
+export { PageHeader } from "./PageHeader";
 export { Slider } from "./Slider";
+export { StatCard } from "./StatCard";
 export { ToggleSwitch } from "./ToggleSwitch";
 export { SettingContainer } from "./SettingContainer";
 export { SettingsGroup } from "./SettingsGroup";

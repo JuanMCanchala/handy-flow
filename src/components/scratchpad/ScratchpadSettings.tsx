@@ -10,6 +10,7 @@ import {
 import { formatDateTime } from "@/utils/dateFormat";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { PageHeader } from "../ui/PageHeader";
 import { Textarea } from "../ui/Textarea";
 
 export const ScratchpadSettings: React.FC = () => {
@@ -71,12 +72,10 @@ export const ScratchpadSettings: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <div className="space-y-2">
-        <div className="px-4 flex items-center justify-between">
-          <h2 className="text-xs font-medium text-mid-gray uppercase tracking-wide">
-            {t("settings.scratchpad.title")}
-          </h2>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title={t("sidebar.scratchpad")}
+        actions={
           <Button
             onClick={handleCreateNote}
             variant="secondary"
@@ -87,85 +86,85 @@ export const ScratchpadSettings: React.FC = () => {
             <Plus className="w-4 h-4" />
             <span>{t("settings.scratchpad.newNote")}</span>
           </Button>
-        </div>
+        }
+      />
 
-        <div className="bg-background border border-mid-gray/20 rounded-lg overflow-hidden flex h-[480px]">
-          <div className="w-1/3 border-e border-mid-gray/20 flex flex-col min-h-0">
-            <div className="p-2 border-b border-mid-gray/20">
-              <Input
-                variant="compact"
-                className="w-full"
-                placeholder={t("settings.scratchpad.searchPlaceholder")}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="flex-1 overflow-y-auto divide-y divide-mid-gray/20">
-              {isLoading ? (
-                <div className="px-4 py-3 text-center text-text/60 text-sm">
-                  {t("settings.scratchpad.loading")}
-                </div>
-              ) : filteredNotes.length === 0 ? (
-                <div className="px-4 py-3 text-center text-text/60 text-sm">
-                  {t("settings.scratchpad.empty")}
-                </div>
-              ) : (
-                filteredNotes.map((note) => {
-                  const title =
-                    getScratchpadNoteTitle(note.content) ||
-                    t("settings.scratchpad.untitled");
-                  const isActive = note.id === selectedId;
-                  return (
-                    <div
-                      key={note.id}
-                      onClick={() => setSelectedId(note.id)}
-                      className={`px-3 py-2 cursor-pointer flex items-center justify-between gap-2 group ${
-                        isActive ? "bg-logo-primary/10" : "hover:bg-mid-gray/10"
-                      }`}
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{title}</p>
-                        <p className="text-xs text-text/50">
-                          {formatDateTime(
-                            String(Math.floor(note.updatedAt / 1000)),
-                            i18n.language,
-                          )}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteNote(note);
-                        }}
-                        title={t("settings.scratchpad.delete")}
-                        className="p-1 rounded-md text-text/40 hover:text-logo-primary opacity-0 group-hover:opacity-100 transition-opacity shrink-0 cursor-pointer"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  );
-                })
-              )}
-            </div>
+      <div className="bg-surface border border-border rounded-lg overflow-hidden flex h-[480px]">
+        <div className="w-1/3 border-e border-border flex flex-col min-h-0">
+          <div className="p-2 border-b border-border">
+            <Input
+              variant="compact"
+              className="w-full"
+              placeholder={t("settings.scratchpad.searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-
-          <div className="flex-1 flex flex-col min-h-0">
-            {selectedNote ? (
-              <Textarea
-                key={selectedNote.id}
-                className="flex-1 w-full h-full resize-none border-0 rounded-none focus:bg-transparent hover:bg-transparent"
-                value={draft}
-                onChange={(e) => handleContentChange(e.target.value)}
-                placeholder={t("settings.scratchpad.editorPlaceholder")}
-                autoFocus
-              />
-            ) : (
-              <div className="flex-1 flex items-center justify-center text-text/50 text-sm">
-                {t("settings.scratchpad.noNoteSelected")}
+          <div className="flex-1 overflow-y-auto divide-y divide-border">
+            {isLoading ? (
+              <div className="px-4 py-3 text-center text-text-secondary text-small">
+                {t("settings.scratchpad.loading")}
               </div>
+            ) : filteredNotes.length === 0 ? (
+              <div className="px-4 py-3 text-center text-text-secondary text-small">
+                {t("settings.scratchpad.empty")}
+              </div>
+            ) : (
+              filteredNotes.map((note) => {
+                const title =
+                  getScratchpadNoteTitle(note.content) ||
+                  t("settings.scratchpad.untitled");
+                const isActive = note.id === selectedId;
+                return (
+                  <div
+                    key={note.id}
+                    onClick={() => setSelectedId(note.id)}
+                    className={`px-3 py-2 cursor-default flex items-center justify-between gap-2 group ${
+                      isActive ? "bg-fill-selected" : "hover:bg-fill-hover"
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <p className="text-body font-medium truncate">{title}</p>
+                      <p className="text-caption text-text-tertiary">
+                        {formatDateTime(
+                          String(Math.floor(note.updatedAt / 1000)),
+                          i18n.language,
+                        )}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteNote(note);
+                      }}
+                      title={t("settings.scratchpad.delete")}
+                      className="p-1 rounded-md text-text-tertiary hover:text-error opacity-0 group-hover:opacity-100 transition-opacity shrink-0 cursor-default"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })
             )}
           </div>
+        </div>
+
+        <div className="flex-1 flex flex-col min-h-0">
+          {selectedNote ? (
+            <Textarea
+              key={selectedNote.id}
+              className="flex-1 w-full h-full resize-none rounded-none focus:bg-transparent hover:bg-transparent"
+              value={draft}
+              onChange={(e) => handleContentChange(e.target.value)}
+              placeholder={t("settings.scratchpad.editorPlaceholder")}
+              autoFocus
+            />
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-text-secondary text-small">
+              {t("settings.scratchpad.noNoteSelected")}
+            </div>
+          )}
         </div>
       </div>
     </div>

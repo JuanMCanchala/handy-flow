@@ -22,19 +22,13 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full border-t border-mid-gray/20 pt-3">
-      <div className="flex justify-between items-center text-xs px-4 pb-3 text-text/60">
-        <div className="flex items-center gap-4">
-          <ModelSelector />
-        </div>
-
-        {/* Update Status */}
-        <div className="flex items-center gap-1">
-          <UpdateChecker />
-          <span>•</span>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span>v{version}</span>
-        </div>
+    <div className="flex flex-col gap-2 text-caption text-text-tertiary">
+      <ModelSelector />
+      <div className="flex items-center gap-1 px-2.5">
+        <UpdateChecker />
+        <span>•</span>
+        {/* eslint-disable-next-line i18next/no-literal-string */}
+        <span className="tabular">v{version}</span>
       </div>
     </div>
   );

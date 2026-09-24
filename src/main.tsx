@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { platform } from "@tauri-apps/plugin-os";
+import { platform, version } from "@tauri-apps/plugin-os";
 import App from "./App";
 import { installCompatShims } from "./lib/compat";
 import {
@@ -12,7 +12,24 @@ import {
 installCompatShims();
 
 // Set platform before render so CSS can scope per-platform (e.g. scrollbar styles)
-document.documentElement.dataset.platform = platform();
+const currentPlatform = platform();
+document.documentElement.dataset.platform = currentPlatform;
+
+// Native window effects (macOS Sidebar vibrancy, Windows 11 22H2+ Mica) make
+// the window background transparent behind the sidebar; everywhere else the
+// canvas must stay opaque. See docs/design/macos-style.md section 4.
+const isVibrancyCapable = (() => {
+  if (currentPlatform === "macos") return true;
+  if (currentPlatform === "windows") {
+    // Windows build 22000 is the first Windows 11 build (Mica support).
+    const build = parseInt(version().split(".")[2] ?? "", 10);
+    return Number.isFinite(build) && build >= 22000;
+  }
+  return false;
+})();
+if (isVibrancyCapable) {
+  document.documentElement.dataset.vibrancy = "on";
+}
 
 // Apply the last-known theme synchronously before render to avoid a flash of
 // the wrong palette, then reconcile with the persisted setting once it loads.
