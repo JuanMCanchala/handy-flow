@@ -7,7 +7,9 @@
     "model": "模型",
     "quit": "結束",
     "cancel": "取消",
-    "secureInputWarning": "⚠ 快捷鍵被 Secure Input 阻擋"
+    "secureInputWarning": "⚠ 快捷鍵被 Secure Input 阻擋",
+    "modes": "Modes",
+    "noMode": "No mode"
   },
   "sidebar": {
     "home": "首頁",
@@ -23,7 +25,8 @@
     "debug": "偵錯",
     "about": "關於",
     "liveTranslate": "即時翻譯",
-    "copilot": "副駕駛"
+    "copilot": "副駕駛",
+    "modes": "Modes"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -826,6 +829,40 @@
         "title": "History",
         "empty": "No suggested answers yet.",
         "clear": "Clear history"
+      }
+    },
+    "modes": {
+      "title": "Modes",
+      "active": "Active mode",
+      "noneOption": "None (use global settings)",
+      "add": {
+        "title": "Add Mode",
+        "description": "Create a named preset with its own post-processing prompt, provider/model, language and output format, like Superwhisper modes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "fields": {
+        "provider": "Provider override",
+        "providerNone": "Use global provider",
+        "model": "Model override",
+        "language": "Language override",
+        "languagePlaceholder": "Leave empty to use global language",
+        "outputFormat": "Output format",
+        "hotkey": "Hotkey"
+      },
+      "outputFormats": {
+        "plain": "Plain",
+        "bullet_list": "Bullet list",
+        "email": "Email",
+        "markdown": "Markdown"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}",
+        "activate": "Activate {{name}}"
       }
     }
   },

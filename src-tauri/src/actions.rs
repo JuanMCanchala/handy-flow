@@ -61,6 +61,10 @@ struct TranscribeAction {
     command: bool,
     /// Paste a translation of the transcript instead of the transcript itself.
     translate: bool,
+    /// Mode to activate for the duration of this recording (dynamic
+    /// `mode:<id>` bindings only). Post-processing resolves its
+    /// prompt/model/language from this mode instead of the global selection.
+    mode_id: Option<String>,
 }
 
 /// Field name for structured output JSON schema
@@ -133,6 +137,7 @@ async fn post_process_transcription(
     settings: &AppSettings,
     transcription: &str,
     style_category: crate::style::StyleCategory,
+    mode_id: Option<&str>,
 ) -> Option<String> {
     if is_blank_transcription(transcription) {
         debug!("Post-processing skipped because the transcription is empty");
@@ -150,7 +155,41 @@ async fn post_process_transcription(
         None
     };
 
-    let provider = match settings.active_post_process_provider().cloned() {
+    let active_mode = mode_id
+        .or(settings.active_mode_id.as_deref())
+        .and_then(|id| crate::modes::find_mode(&settings.modes, id));
+
+    let selected_prompt_id = match &settings.post_process_selected_prompt_id {
+        Some(id) => id.clone(),
+        None => {
+            if active_mode.is_none() {
+                debug!("Post-processing skipped because no prompt is selected");
+                return None;
+            }
+            String::new()
+        }
+    };
+
+    let global_prompt = settings
+        .post_process_prompts
+        .iter()
+        .find(|prompt| prompt.id == selected_prompt_id)
+        .map(|prompt| prompt.prompt.clone())
+        .unwrap_or_default();
+
+    if active_mode.is_none() && global_prompt.trim().is_empty() {
+        debug!("Post-processing skipped because the selected prompt was not found or is empty");
+        return None;
+    }
+
+    let resolved = crate::modes::resolve(active_mode, &global_prompt, style_instruction);
+
+    let provider = match resolved
+        .provider_id
+        .as_deref()
+        .and_then(|id| settings.post_process_provider(id).cloned())
+        .or_else(|| settings.active_post_process_provider().cloned())
+    {
         Some(provider) => provider,
         None => {
             debug!("Post-processing enabled but no provider is selected");
@@ -158,11 +197,13 @@ async fn post_process_transcription(
         }
     };
 
-    let model = settings
-        .post_process_models
-        .get(&provider.id)
-        .cloned()
-        .unwrap_or_default();
+    let model = resolved.model.clone().unwrap_or_else(|| {
+        settings
+            .post_process_models
+            .get(&provider.id)
+            .cloned()
+            .unwrap_or_default()
+    });
 
     if model.trim().is_empty() {
         debug!(
@@ -172,33 +213,7 @@ async fn post_process_transcription(
         return None;
     }
 
-    let selected_prompt_id = match &settings.post_process_selected_prompt_id {
-        Some(id) => id.clone(),
-        None => {
-            debug!("Post-processing skipped because no prompt is selected");
-            return None;
-        }
-    };
-
-    let prompt = match settings
-        .post_process_prompts
-        .iter()
-        .find(|prompt| prompt.id == selected_prompt_id)
-    {
-        Some(prompt) => prompt.prompt.clone(),
-        None => {
-            debug!(
-                "Post-processing skipped because prompt '{}' was not found",
-                selected_prompt_id
-            );
-            return None;
-        }
-    };
-
-    if prompt.trim().is_empty() {
-        debug!("Post-processing skipped because the selected prompt is empty");
-        return None;
-    }
+    let prompt = resolved.prompt;
 
     debug!(
         "Starting LLM post-processing with provider '{}' (model: {})",
@@ -219,7 +234,7 @@ async fn post_process_transcription(
     if provider.supports_structured_output {
         debug!("Using structured outputs for provider '{}'", provider.id);
 
-        let system_prompt = build_system_prompt(&prompt, style_instruction);
+        let system_prompt = build_system_prompt(&prompt, None);
         let user_content = transcription.to_string();
 
         // Handle Apple Intelligence separately since it uses native Swift APIs
@@ -333,11 +348,10 @@ async fn post_process_transcription(
         }
     }
 
-    // Legacy mode: Replace ${output} variable in the prompt with the actual text
-    let mut processed_prompt = prompt.replace("${output}", transcription);
-    if let Some(instruction) = style_instruction {
-        processed_prompt = format!("{processed_prompt}\n\n{instruction}");
-    }
+    // Legacy mode: Replace ${output} variable in the prompt with the actual text.
+    // `prompt` (from `resolve()`) already has the mode's format instruction and
+    // the style tone fragment appended, so no further appending is needed here.
+    let processed_prompt = prompt.replace("${output}", transcription);
     debug!("Processed prompt length: {} chars", processed_prompt.len());
 
     match crate::llm_client::send_chat_completion(
@@ -453,6 +467,7 @@ pub(crate) async fn process_transcription_output(
     transcription: &str,
     post_process: bool,
     style_category: crate::style::StyleCategory,
+    mode_id: Option<&str>,
 ) -> ProcessedTranscription {
     let settings = get_settings(app);
     let mut final_text = transcription.to_string();
@@ -479,7 +494,7 @@ pub(crate) async fn process_transcription_output(
 
     if post_process {
         if let Some(processed_text) =
-            post_process_transcription(&settings, &final_text, style_category).await
+            post_process_transcription(&settings, &final_text, style_category, mode_id).await
         {
             post_processed_text = Some(processed_text.clone());
             final_text = processed_text;
@@ -549,10 +564,17 @@ async fn process_output_or_command(
     post_process: bool,
     style_category: crate::style::StyleCategory,
     command_instruction: Option<String>,
+    mode_id: Option<&str>,
 ) -> ProcessedTranscription {
     let Some(instruction) = command_instruction else {
-        return process_transcription_output(app, transcription, post_process, style_category)
-            .await;
+        return process_transcription_output(
+            app,
+            transcription,
+            post_process,
+            style_category,
+            mode_id,
+        )
+        .await;
     };
 
     let app_for_copy = app.clone();
@@ -809,6 +831,7 @@ impl ShortcutAction for TranscribeAction {
         let post_process = self.post_process;
         let command = self.command;
         let translate = self.translate;
+        let mode_id = self.mode_id.clone();
         let cancel_generation = rm.cancel_generation();
 
         tauri::async_runtime::spawn(async move {
@@ -935,6 +958,7 @@ impl ShortcutAction for TranscribeAction {
                                             post_process,
                                             style_category,
                                             command_instruction,
+                                            mode_id.as_deref(),
                                         )
                                         .await
                                     }
@@ -1153,6 +1177,7 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
             post_process: false,
             command: false,
             translate: false,
+            mode_id: None,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
@@ -1161,6 +1186,7 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
             post_process: true,
             command: false,
             translate: false,
+            mode_id: None,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
@@ -1169,6 +1195,7 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
             post_process: false,
             command: true,
             translate: false,
+            mode_id: None,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
@@ -1177,6 +1204,7 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
             post_process: false,
             command: false,
             translate: true,
+            mode_id: None,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
@@ -1197,6 +1225,21 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     );
     map
 });
+
+/// Resolves the action for a binding id, including dynamic `mode:<id>`
+/// bindings (which are not present in the static [`ACTION_MAP`]): recording
+/// with post-processing, tagged with the mode to apply when it stops.
+pub fn resolve_action(binding_id: &str) -> Option<Arc<dyn ShortcutAction>> {
+    if let Some(mode_id) = crate::modes::mode_id_from_binding(binding_id) {
+        return Some(Arc::new(TranscribeAction {
+            post_process: true,
+            command: false,
+            translate: false,
+            mode_id: Some(mode_id.to_string()),
+        }) as Arc<dyn ShortcutAction>);
+    }
+    ACTION_MAP.get(binding_id).cloned()
+}
 
 #[cfg(test)]
 mod tests {

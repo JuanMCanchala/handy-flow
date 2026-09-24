@@ -7,7 +7,9 @@
     "model": "モデル",
     "quit": "終了",
     "cancel": "キャンセル",
-    "secureInputWarning": "⚠ Secure Input でショートカットがブロック中"
+    "secureInputWarning": "⚠ Secure Input でショートカットがブロック中",
+    "modes": "Modes",
+    "noMode": "No mode"
   },
   "sidebar": {
     "home": "ホーム",
@@ -23,7 +25,8 @@
     "debug": "デバッグ",
     "about": "概要",
     "liveTranslate": "ライブ翻訳",
-    "copilot": "コパイロット"
+    "copilot": "コパイロット",
+    "modes": "Modes"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしのモデルを選択してください",
@@ -826,6 +829,40 @@
         "title": "History",
         "empty": "No suggested answers yet.",
         "clear": "Clear history"
+      }
+    },
+    "modes": {
+      "title": "Modes",
+      "active": "Active mode",
+      "noneOption": "None (use global settings)",
+      "add": {
+        "title": "Add Mode",
+        "description": "Create a named preset with its own post-processing prompt, provider/model, language and output format, like Superwhisper modes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "fields": {
+        "provider": "Provider override",
+        "providerNone": "Use global provider",
+        "model": "Model override",
+        "language": "Language override",
+        "languagePlaceholder": "Leave empty to use global language",
+        "outputFormat": "Output format",
+        "hotkey": "Hotkey"
+      },
+      "outputFormats": {
+        "plain": "Plain",
+        "bullet_list": "Bullet list",
+        "email": "Email",
+        "markdown": "Markdown"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}",
+        "activate": "Activate {{name}}"
       }
     }
   },

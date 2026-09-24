@@ -1,4 +1,4 @@
-use crate::actions::ACTION_MAP;
+use crate::actions::resolve_action;
 use crate::managers::audio::AudioRecordingManager;
 use crate::settings::ShortcutActivation;
 use log::{debug, error, warn};
@@ -535,7 +535,10 @@ pub struct TranscriptionCoordinator {
 }
 
 pub fn is_transcribe_binding(id: &str) -> bool {
-    id == "transcribe" || id == "transcribe_with_post_process" || id == "command"
+    id == "transcribe"
+        || id == "transcribe_with_post_process"
+        || id == "command"
+        || crate::modes::mode_id_from_binding(id).is_some()
 }
 
 impl TranscriptionCoordinator {
@@ -687,7 +690,7 @@ fn run_effect(app: &AppHandle, state: &mut CoordinatorState, effect: Effect) {
 /// Execute a start effect; returns whether recording actually began, so the
 /// state machine can roll back its optimistic transition on failure.
 fn start(app: &AppHandle, binding_id: &str, hotkey_string: &str) -> bool {
-    let Some(action) = ACTION_MAP.get(binding_id) else {
+    let Some(action) = resolve_action(binding_id) else {
         warn!("No action in ACTION_MAP for '{binding_id}'");
         return false;
     };
@@ -702,7 +705,7 @@ fn start(app: &AppHandle, binding_id: &str, hotkey_string: &str) -> bool {
 }
 
 fn stop(app: &AppHandle, binding_id: &str, hotkey_string: &str) {
-    let Some(action) = ACTION_MAP.get(binding_id) else {
+    let Some(action) = resolve_action(binding_id) else {
         warn!("No action in ACTION_MAP for '{binding_id}'");
         return;
     };

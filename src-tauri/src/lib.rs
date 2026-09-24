@@ -19,6 +19,7 @@ mod live_translate;
 mod llm_client;
 mod managers;
 mod memory;
+mod modes;
 mod overlay;
 mod paste_tx;
 pub mod portable;
@@ -359,6 +360,17 @@ fn initialize_core_logic(app_handle: &AppHandle) {
                     }
                     tray::update_tray_menu(&app_clone);
                 });
+            }
+            id if id.starts_with("mode_select:") => {
+                let mode_id = id.strip_prefix("mode_select:").unwrap().to_string();
+                let mode_id = if mode_id.is_empty() {
+                    None
+                } else {
+                    Some(mode_id)
+                };
+                if let Err(e) = commands::modes::set_active_mode(app.clone(), mode_id) {
+                    log::error!("Failed to set active mode via tray: {}", e);
+                }
             }
             _ => {}
         })
@@ -805,6 +817,10 @@ pub fn run(cli_args: CliArgs) {
             commands::transforms::update_transform,
             commands::transforms::delete_transform,
             commands::transforms::change_translation_target_setting,
+            commands::modes::add_mode,
+            commands::modes::update_mode,
+            commands::modes::delete_mode,
+            commands::modes::set_active_mode,
             commands::live_translate::change_live_translate_source_setting,
             commands::live_translate::is_live_translate_active,
             commands::live_translate::toggle_live_translate,

@@ -5,6 +5,8 @@
     "copyLastTranscript": "Copiar la última transcripción",
     "unloadModel": "Descargar modelo",
     "model": "Modelo",
+    "modes": "Modos",
+    "noMode": "Sin modo",
     "quit": "Salir",
     "cancel": "Cancelar",
     "secureInputWarning": "⚠ Atajos bloqueados por Secure Input"
@@ -16,6 +18,7 @@
     "advanced": "Avanzado",
     "snippets": "Fragmentos",
     "transforms": "Transformaciones",
+    "modes": "Modos",
     "postProcessing": "Post proceso",
     "style": "Estilo",
     "history": "Historial",
@@ -475,6 +478,40 @@
         "save": "Guardar",
         "cancel": "Cancelar",
         "remove": "Eliminar {{name}}"
+      }
+    },
+    "modes": {
+      "title": "Modos",
+      "active": "Modo activo",
+      "noneOption": "Ninguno (usar ajustes globales)",
+      "add": {
+        "title": "Añadir modo",
+        "description": "Crea un preajuste con nombre con su propio prompt de post-procesamiento, proveedor/modelo, idioma y formato de salida, como los modos de Superwhisper.",
+        "namePlaceholder": "Nombre",
+        "promptPlaceholder": "Prompt",
+        "add": "Añadir"
+      },
+      "fields": {
+        "provider": "Proveedor (anular)",
+        "providerNone": "Usar proveedor global",
+        "model": "Modelo (anular)",
+        "language": "Idioma (anular)",
+        "languagePlaceholder": "Déjalo vacío para usar el idioma global",
+        "outputFormat": "Formato de salida",
+        "hotkey": "Atajo"
+      },
+      "outputFormats": {
+        "plain": "Simple",
+        "bullet_list": "Lista de viñetas",
+        "email": "Correo electrónico",
+        "markdown": "Markdown"
+      },
+      "list": {
+        "edit": "Editar {{name}}",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "remove": "Eliminar {{name}}",
+        "activate": "Activar {{name}}"
       }
     },
     "postProcessing": {

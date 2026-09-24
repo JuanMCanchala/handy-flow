@@ -5,6 +5,8 @@
     "copyLastTranscript": "Copy Last Transcript",
     "unloadModel": "Unload Model",
     "model": "Model",
+    "modes": "Modes",
+    "noMode": "No mode",
     "quit": "Quit",
     "cancel": "Cancel",
     "secureInputWarning": "⚠ Shortcuts blocked by Secure Input"
@@ -16,6 +18,7 @@
     "advanced": "Advanced",
     "snippets": "Snippets",
     "transforms": "Transforms",
+    "modes": "Modes",
     "postProcessing": "Post Process",
     "style": "Style",
     "history": "History",
@@ -475,6 +478,40 @@
         "save": "Save",
         "cancel": "Cancel",
         "remove": "Remove {{name}}"
+      }
+    },
+    "modes": {
+      "title": "Modes",
+      "active": "Active mode",
+      "noneOption": "None (use global settings)",
+      "add": {
+        "title": "Add Mode",
+        "description": "Create a named preset with its own post-processing prompt, provider/model, language and output format, like Superwhisper modes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "fields": {
+        "provider": "Provider override",
+        "providerNone": "Use global provider",
+        "model": "Model override",
+        "language": "Language override",
+        "languagePlaceholder": "Leave empty to use global language",
+        "outputFormat": "Output format",
+        "hotkey": "Hotkey"
+      },
+      "outputFormats": {
+        "plain": "Plain",
+        "bullet_list": "Bullet list",
+        "email": "Email",
+        "markdown": "Markdown"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}",
+        "activate": "Activate {{name}}"
       }
     },
     "postProcessing": {

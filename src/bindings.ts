@@ -416,6 +416,38 @@ async changeTranslationTargetSetting(target: TranslationTarget) : Promise<Result
     else return { status: "error", error: e  as any };
 }
 },
+async addMode(name: string, prompt: string, providerId: string | null, model: string | null, language: string | null, outputFormat: ModeOutputFormat, hotkey: string | null) : Promise<Result<Mode, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("add_mode", { name, prompt, providerId, model, language, outputFormat, hotkey }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async updateMode(id: string, name: string, prompt: string, providerId: string | null, model: string | null, language: string | null, outputFormat: ModeOutputFormat, hotkey: string | null) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_mode", { id, name, prompt, providerId, model, language, outputFormat, hotkey }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async deleteMode(id: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("delete_mode", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async setActiveMode(id: string | null) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("set_active_mode", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Temporarily unregister all bindings while the user is recording a
  * shortcut in the UI. This avoids firing actions while keys are recorded.
@@ -1286,7 +1318,17 @@ translation_target?: TranslationTarget;
  * only implemented on Windows; other platforms report an error when
  * selected (see `live_translate::capture`).
  */
-live_translate_source?: LiveTranslateSource }
+live_translate_source?: LiveTranslateSource; 
+/**
+ * User-defined named modes/presets (Superwhisper-style). Seeded with
+ * Default/Email/Notes on fresh installs. See `modes.rs`.
+ */
+modes?: Mode[]; 
+/**
+ * Id of the currently active mode, or `None` to use the global
+ * post-processing prompt/model/language selection.
+ */
+active_mode_id?: string | null }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1320,6 +1362,39 @@ key_down: number; key_up: number; flags_changed: number; mouse: number; duration
 export type Insights = { total_words: number; words_today: number; average_wpm: number; day_streak: number }
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
+/**
+ * A user-defined mode/preset.
+ */
+export type Mode = { id: string; name: string; 
+/**
+ * Post-processing instruction. May contain `${output}` like
+ * `LLMPrompt::prompt`; resolution leaves substitution to the caller.
+ */
+prompt: string; 
+/**
+ * Post-processing provider override. `None` means "use the global
+ * post-processing provider/model selection".
+ */
+provider_id: string | null; 
+/**
+ * Model override, only meaningful together with `provider_id`.
+ */
+model: string | null; 
+/**
+ * Language override. `None` means "use the global selected language".
+ */
+language: string | null; output_format: ModeOutputFormat; 
+/**
+ * Optional hotkey binding id suffix. When present, the shortcut system
+ * registers a dynamic binding `mode:<id>` for this mode.
+ */
+hotkey: string | null }
+/**
+ * Output shape a mode's prompt should aim for. Purely descriptive: it is
+ * appended to the prompt as an instruction fragment, the same way
+ * `style.rs` appends its tone fragment.
+ */
+export type ModeOutputFormat = "plain" | "bullet_list" | "email" | "markdown"
 export type LiveSubtitleLine = { original: string; translation: string }
 export type LiveTranslateSource = "microphone" | "system_audio"
 export type CopilotAnswerLine = { question: string; answer: string }

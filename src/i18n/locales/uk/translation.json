@@ -7,7 +7,9 @@
     "model": "Модель",
     "quit": "Вийти",
     "cancel": "Скасувати",
-    "secureInputWarning": "⚠ Комбінації клавіш заблоковано Secure Input"
+    "secureInputWarning": "⚠ Комбінації клавіш заблоковано Secure Input",
+    "modes": "Modes",
+    "noMode": "No mode"
   },
   "sidebar": {
     "home": "Головна",
@@ -23,7 +25,8 @@
     "debug": "Дебаг",
     "about": "Інфо",
     "liveTranslate": "Живий переклад",
-    "copilot": "Копілот"
+    "copilot": "Копілот",
+    "modes": "Modes"
   },
   "onboarding": {
     "subtitle": "Для початку оберіть модель транскрипції",
@@ -826,6 +829,40 @@
         "title": "History",
         "empty": "No suggested answers yet.",
         "clear": "Clear history"
+      }
+    },
+    "modes": {
+      "title": "Modes",
+      "active": "Active mode",
+      "noneOption": "None (use global settings)",
+      "add": {
+        "title": "Add Mode",
+        "description": "Create a named preset with its own post-processing prompt, provider/model, language and output format, like Superwhisper modes.",
+        "namePlaceholder": "Name",
+        "promptPlaceholder": "Prompt",
+        "add": "Add"
+      },
+      "fields": {
+        "provider": "Provider override",
+        "providerNone": "Use global provider",
+        "model": "Model override",
+        "language": "Language override",
+        "languagePlaceholder": "Leave empty to use global language",
+        "outputFormat": "Output format",
+        "hotkey": "Hotkey"
+      },
+      "outputFormats": {
+        "plain": "Plain",
+        "bullet_list": "Bullet list",
+        "email": "Email",
+        "markdown": "Markdown"
+      },
+      "list": {
+        "edit": "Edit {{name}}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove {{name}}",
+        "activate": "Activate {{name}}"
       }
     }
   },

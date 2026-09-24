@@ -492,6 +492,40 @@ fn register_all_shortcuts_for_implementation(
         }
     }
 
+    // Dynamic `mode:<id>` bindings aren't in the static defaults above; register
+    // them the same way so switching keyboard implementation doesn't drop them.
+    for (id, binding) in current_settings.bindings.clone() {
+        if crate::modes::mode_id_from_binding(&id).is_none() {
+            continue;
+        }
+
+        let mut binding = binding;
+        if let Err(e) =
+            validate_shortcut_for_implementation(&binding.current_binding, implementation)
+        {
+            info!(
+                "Mode shortcut '{}' ({}) is invalid for {:?}: {}. Resetting to default.",
+                id, binding.current_binding, implementation, e
+            );
+            binding.current_binding = binding.default_binding.clone();
+            current_settings
+                .bindings
+                .insert(id.clone(), binding.clone());
+            reset_bindings.push(id.clone());
+        }
+
+        let result = match implementation {
+            KeyboardImplementation::Tauri => tauri_impl::register_shortcut(app, binding),
+            KeyboardImplementation::HandyKeys => handy_keys::register_shortcut(app, binding),
+        };
+        if let Err(e) = result {
+            error!(
+                "Failed to register mode shortcut '{}' for {:?}: {}",
+                id, implementation, e
+            );
+        }
+    }
+
     // Save settings if any bindings were reset
     if !reset_bindings.is_empty() {
         settings::write_settings(app, current_settings);

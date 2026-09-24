@@ -100,6 +100,7 @@ pub async fn retry_history_entry_transcription(
         &transcription,
         entry.post_process_requested,
         crate::style::classify_foreground_app(),
+        None,
     )
     .await;
     history_manager
