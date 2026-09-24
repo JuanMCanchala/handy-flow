@@ -216,6 +216,10 @@
           "push_to_talk": "按住快捷鍵期間錄音",
           "toggle": "輕按快捷鍵開始錄音，再次輕按停止"
         }
+      },
+      "voiceEdits": {
+        "label": "語音編輯指令",
+        "description": "口述時，像 scratch that、換行 或 新段落 這樣的語音指令會被執行而不是被輸入，支援英語和西班牙語。"
       }
     },
     "models": {

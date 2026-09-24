@@ -216,6 +216,10 @@
           "push_to_talk": "Merekam selama Anda menahan pintasan",
           "toggle": "Ketuk pintasan untuk mulai merekam, lalu ketuk lagi untuk berhenti"
         }
+      },
+      "voiceEdits": {
+        "label": "Perintah Pengeditan Suara",
+        "description": "Saat mendiktekan, perintah lisan seperti \"scratch that\", \"baris baru\", atau \"paragraf baru\" diterapkan bukannya diketik, dalam bahasa Inggris dan Spanyol."
       }
     },
     "models": {

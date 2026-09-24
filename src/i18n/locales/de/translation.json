@@ -236,6 +236,10 @@
           "push_to_talk": "Nimmt auf, solange die Tastenkombination gedrückt bleibt",
           "toggle": "Tastenkombination antippen, um die Aufnahme zu starten, erneut antippen zum Stoppen"
         }
+      },
+      "voiceEdits": {
+        "label": "Sprachbefehle zum Bearbeiten",
+        "description": "Beim Diktieren werden gesprochene Befehle wie „scratch that“, „neue Zeile“ oder „neuer Absatz“ ausgeführt statt eingetippt, auf Englisch und Spanisch."
       }
     },
     "sound": {

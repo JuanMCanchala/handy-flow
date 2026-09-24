@@ -236,6 +236,10 @@
           "push_to_talk": "Nagrywa, dopóki trzymasz skrót",
           "toggle": "Dotknij skrótu, aby rozpocząć nagrywanie, dotknij ponownie, aby zatrzymać"
         }
+      },
+      "voiceEdits": {
+        "label": "Głosowe komendy edycyjne",
+        "description": "Podczas dyktowania wypowiadane komendy takie jak „scratch that”, „nowa linia” lub „nowy paragraf” są stosowane, a nie wpisywane, w języku angielskim i hiszpańskim."
       }
     },
     "sound": {

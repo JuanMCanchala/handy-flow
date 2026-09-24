@@ -236,6 +236,10 @@
           "push_to_talk": "Kısayolu basılı tuttuğunuz sürece kaydeder",
           "toggle": "Kaydı başlatmak için kısayola dokunun, durdurmak için tekrar dokunun"
         }
+      },
+      "voiceEdits": {
+        "label": "Sesli Düzenleme Komutları",
+        "description": "Dikte ederken, \"scratch that\", \"yeni satır\" veya \"yeni paragraf\" gibi sözlü komutlar yazılmak yerine uygulanır; İngilizce ve İspanyolca desteklenir."
       }
     },
     "sound": {

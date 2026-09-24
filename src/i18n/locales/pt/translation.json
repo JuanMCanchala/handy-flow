@@ -216,6 +216,10 @@
           "push_to_talk": "Grava enquanto você mantém o atalho pressionado",
           "toggle": "Toque no atalho para começar a gravar, toque novamente para parar"
         }
+      },
+      "voiceEdits": {
+        "label": "Comandos de edição por voz",
+        "description": "Durante o dictado, comandos falados como \"scratch that\", \"nova linha\" ou \"novo parágrafo\" são aplicados em vez de digitados, em inglês e espanhol."
       }
     },
     "models": {
