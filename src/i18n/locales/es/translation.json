@@ -222,6 +222,15 @@
     },
     "general": {
       "title": "General",
+      "flowBar": {
+        "title": "Barra Flow",
+        "description": "Una barra pequeña en la parte inferior de la pantalla con acceso rápido al dictado, los subtítulos en vivo y el bloc de notas. En macOS y Linux «En campos de texto» se comporta como «Siempre».",
+        "options": {
+          "textFields": "En campos de texto",
+          "always": "Siempre",
+          "never": "Nunca"
+        }
+      },
       "shortcut": {
         "title": "Atajos de Voxa",
         "description": "Configura atajos de teclado para activar la grabación de voz a texto",
@@ -988,7 +997,13 @@
   },
   "overlay": {
     "transcribing": "Transcribiendo...",
-    "processing": "Procesando..."
+    "processing": "Procesando...",
+    "flowBar": {
+      "language": "Idioma",
+      "mic": "Iniciar o detener el dictado",
+      "liveTranslate": "Subtítulos en vivo",
+      "scratchpad": "Abrir el bloc de notas"
+    }
   },
   "whatsNew": {
     "title": "Nuevo en Voxa v{{version}}"

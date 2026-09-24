@@ -93,6 +93,26 @@ function App() {
     checkOnboardingStatus();
   }, []);
 
+  // The Flow bar's scratchpad button opens the main window on a given section.
+  // The window may have just been recreated (Windows parks it destroyed while
+  // in the tray, so it has no listener yet), hence the pending section is both
+  // read once on mount and pushed as an event for an already-open window.
+  useEffect(() => {
+    const goToSection = (section: string | null) => {
+      if (section && section in SECTIONS_CONFIG) {
+        setCurrentSection(section as SidebarSection);
+      }
+    };
+
+    commands.takePendingMainSection().then(goToSection).catch(() => {});
+    const unlisten = listen<string>("navigate-to-section", (event) => {
+      goToSection(event.payload);
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, []);
+
   // Initialize RTL direction when language changes
   useEffect(() => {
     initializeRTL(i18n.language);

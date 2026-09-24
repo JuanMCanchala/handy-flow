@@ -235,6 +235,15 @@
       "voiceEdits": {
         "label": "आवाज सम्पादन आदेशहरू",
         "description": "बोलेर लेखाउँदा, \"scratch that\", \"नयाँ लाइन\", वा \"नयाँ अनुच्छेद\" जस्ता बोलिएका आदेशहरू टाइप हुनुको सट्टा लागू हुन्छन्, अंग्रेजी र स्पेनिशमा।"
+      },
+      "flowBar": {
+        "title": "Flow Bar",
+        "description": "A small bar at the bottom of the screen with quick access to dictation, live subtitles and the scratchpad. On macOS and Linux \"On text fields\" behaves like \"Always\".",
+        "options": {
+          "textFields": "On text fields",
+          "always": "Always",
+          "never": "Never"
+        }
       }
     },
     "models": {
@@ -991,7 +1000,13 @@
   },
   "overlay": {
     "transcribing": "ट्रान्सक्राइब गरिँदैछ...",
-    "processing": "प्रशोधन गरिँदैछ..."
+    "processing": "प्रशोधन गरिँदैछ...",
+    "flowBar": {
+      "language": "Language",
+      "mic": "Start or stop dictation",
+      "liveTranslate": "Live subtitles",
+      "scratchpad": "Open scratchpad"
+    }
   },
   "secureInput": {
     "blockedWithCulprit_one": "{{name}} ले 1 सर्टकट रोकिरहेको हुन सक्छ",

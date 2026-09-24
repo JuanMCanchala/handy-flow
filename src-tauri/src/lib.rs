@@ -13,6 +13,9 @@ mod commands;
 mod copilot;
 mod diarization;
 mod file_import;
+mod flow_bar;
+#[cfg(target_os = "windows")]
+mod flow_bar_windows;
 mod helpers;
 mod history_search;
 mod input;
@@ -212,7 +215,7 @@ fn destroy_main_window_for_memory(app: &AppHandle) {
     }
 }
 
-fn show_main_window(app: &AppHandle) {
+pub(crate) fn show_main_window(app: &AppHandle) {
     let main_window = match app.get_webview_window("main") {
         Some(window) => window,
         None => {
@@ -528,6 +531,22 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // instant-show latency requirement, so it's created/destroyed per
     // session by LiveTranslateManager (see live_translate/overlay.rs).
     utils::create_recording_overlay(app_handle);
+
+    // Flow bar: idle pill shown on the same overlay window. On Windows, start
+    // UI Automation focus tracking so `flow_bar_visibility: text_fields` can
+    // decide visibility from real focus state; other platforms show it
+    // immediately since they fall back to `Always` behavior.
+    #[cfg(target_os = "windows")]
+    {
+        let app_handle_for_uia = app_handle.clone();
+        let overlay_hwnds = app_handle
+            .get_webview_window("recording_overlay")
+            .and_then(|w| w.hwnd().ok())
+            .map(|hwnd| vec![hwnd.0 as isize])
+            .unwrap_or_default();
+        flow_bar_windows::start_focus_tracking(app_handle_for_uia, overlay_hwnds);
+    }
+    overlay::show_flow_bar_if_applicable(app_handle);
 }
 
 #[tauri::command]
@@ -823,6 +842,12 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_selected_language_setting,
             shortcut::change_overlay_position_setting,
             shortcut::change_overlay_style_setting,
+            flow_bar::change_flow_bar_visibility_setting,
+            flow_bar::flow_bar_cycle_language,
+            flow_bar::flow_bar_toggle_transcribe,
+            flow_bar::flow_bar_set_expanded,
+            flow_bar::flow_bar_open_scratchpad,
+            flow_bar::take_pending_main_section,
             shortcut::change_debug_mode_setting,
             shortcut::change_word_correction_threshold_setting,
             shortcut::change_extra_recording_buffer_setting,

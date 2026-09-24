@@ -159,7 +159,9 @@ windows = { version = "0.61.3", features = [
   "Win32_Foundation",
   "Win32_Graphics_Gdi",
   "Win32_UI_WindowsAndMessaging",
+  "Win32_UI_Accessibility",
 ] }
+windows-core = "0.61"
 winreg = "0.55"
 
 # Whisper backend per Windows arch. x86_64 ships the Vulkan GPU backend and

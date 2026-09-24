@@ -1,0 +1,113 @@
+/*
+ * Flow bar — the persistent idle pill that lives on the same overlay window as
+ * the recording card (see overlay.rs). It reuses the `.ov-stage` positioning
+ * and the `--s-*` ink tokens from RecordingOverlay.css so both forms share one
+ * visual language.
+ *
+ * Geometry is mirrored by FLOW_BAR_* in overlay.rs: the native window is only
+ * as large as the current form (resting pill vs. hover toolbar), so the bar
+ * never eats mouse clicks outside its own area. Keep both in sync.
+ */
+
+/* The stage fills the (small) overlay window and is the hover target. */
+.fbar-stage {
+  cursor: default;
+}
+
+.fbar {
+  width: 44px;
+  height: 8px;
+  flex: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--s-surface);
+  border: 0.5px solid var(--s-border);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.25);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  transition:
+    width 150ms var(--ease-out),
+    height 150ms var(--ease-out);
+}
+
+.fbar.expanded {
+  width: 212px;
+  height: 36px;
+}
+
+/* Controls stay laid out at their final size and fade in, so the expansion is a
+   pure box animation (no text reflow mid-transition). */
+.fbar-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms var(--ease-out);
+}
+.fbar.expanded .fbar-tools {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fbar-btn,
+.fbar-chip {
+  height: 24px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--s-muted);
+  background: var(--s-hair);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 100ms ease;
+}
+
+.fbar-btn {
+  width: 24px;
+  border-radius: 50%;
+}
+.fbar-btn svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+
+.fbar-chip {
+  min-width: 40px;
+  padding: 0 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--s-font);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.fbar-btn:hover,
+.fbar-chip:hover {
+  background: var(--s-accent-soft);
+  color: #fff;
+  transform: scale(1.05);
+}
+.fbar-btn:active,
+.fbar-chip:active {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fbar,
+  .fbar-tools {
+    transition: none;
+  }
+}

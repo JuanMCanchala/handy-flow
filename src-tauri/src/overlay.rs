@@ -53,10 +53,30 @@ const OVERLAY_HEIGHT: f64 = 50.0;
 const OVERLAY_STREAM_WIDTH: f64 = 400.0;
 const OVERLAY_STREAM_HEIGHT: f64 = 120.0;
 
+// Idle Flow bar pill (~44x8 logical px at rest) that expands into a hover
+// toolbar. Unlike the recording states, the window is only as large as the
+// state it currently shows: a persistent window swallows mouse clicks over
+// its whole area even where it is fully transparent, so the collapsed box is
+// kept to a small hover target around the pill and grown to the toolbar size
+// while hovered (see `set_flow_bar_expanded` and FlowBar.css).
+const FLOW_BAR_WIDTH: f64 = 64.0;
+const FLOW_BAR_HEIGHT: f64 = 24.0;
+const FLOW_BAR_EXPANDED_WIDTH: f64 = 220.0;
+const FLOW_BAR_EXPANDED_HEIGHT: f64 = 44.0;
+
+/// Whether the Flow bar is currently hovered (expanded into its toolbar).
+static FLOW_BAR_EXPANDED: AtomicBool = AtomicBool::new(false);
+
 /// Overlay window size (logical) for a given UI state.
 fn overlay_dimensions(state: &str) -> (f64, f64) {
     if state == "streaming" {
         (OVERLAY_STREAM_WIDTH, OVERLAY_STREAM_HEIGHT)
+    } else if state == "flow_bar" {
+        if FLOW_BAR_EXPANDED.load(Ordering::Relaxed) {
+            (FLOW_BAR_EXPANDED_WIDTH, FLOW_BAR_EXPANDED_HEIGHT)
+        } else {
+            (FLOW_BAR_WIDTH, FLOW_BAR_HEIGHT)
+        }
     } else {
         (OVERLAY_WIDTH, OVERLAY_HEIGHT)
     }
@@ -439,6 +459,14 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
                 }
             }
 
+            // Belt-and-suspenders alongside `.focusable(false)`: explicitly set
+            // WS_EX_NOACTIVATE so clicking the idle Flow bar pill never steals
+            // keyboard focus from the text field being dictated into.
+            #[cfg(target_os = "windows")]
+            if let Ok(hwnd) = window.hwnd() {
+                crate::flow_bar_windows::make_non_activating(hwnd);
+            }
+
             debug!("Recording overlay window created successfully (hidden)");
         }
         Err(e) => {
@@ -489,8 +517,10 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     // Whether the overlay shows at all is governed by overlay_style; position
     // only chooses Top vs Bottom placement. Checked here (off the main thread)
     // so the common overlay-disabled case never pays for a main-thread hop.
+    // The Flow bar idle pill is a separate feature gated by its own
+    // `flow_bar_visibility` setting, so it is exempt from this guard.
     let settings = settings::get_settings(app_handle);
-    if settings.overlay_style == OverlayStyle::None {
+    if state != "flow_bar" && settings.overlay_style == OverlayStyle::None {
         return;
     }
 
@@ -510,6 +540,7 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
 fn show_overlay_state_on_main(app_handle: &AppHandle, state: &str) {
     // Size the overlay for this state (compact vs. streaming), then position it.
     let (width, height) = overlay_dimensions(state);
+    set_session_overlay_active(state != "flow_bar");
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         // Invalidate any delayed hide still in flight from a previous session
         // (see `hide_recording_overlay`).
@@ -698,6 +729,7 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
         // Hide the window after a short delay to allow animation to complete,
         // unless a newer session has shown the overlay again by then.
         let window_clone = overlay_window.clone();
+        let app_handle_clone = app_handle.clone();
         std::thread::spawn(move || {
             std::thread::sleep(std::time::Duration::from_millis(300));
             if OVERLAY_SHOW_GENERATION.load(Ordering::SeqCst) != scheduled_at {
@@ -705,6 +737,11 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
                 return;
             }
             let _ = window_clone.hide();
+            // The idle Flow bar shares this window with the recording pill —
+            // once the recording/transcribing session's fade-out completes,
+            // restore the Flow bar if it should currently be visible.
+            set_session_overlay_active(false);
+            show_flow_bar_if_applicable(&app_handle_clone);
         });
     }
 }
@@ -725,6 +762,98 @@ static LAYER_SHELL_ACTIVE: AtomicBool = AtomicBool::new(false);
 /// whenever the user changes whether the overlay is shown.
 pub fn update_overlay_enabled_cache(enabled: bool) {
     OVERLAY_ENABLED.store(enabled, Ordering::Relaxed);
+}
+
+/// True while any recording/transcribing/streaming session owns the shared
+/// overlay window. The Flow bar must never show over one of those states.
+static SESSION_OVERLAY_ACTIVE: AtomicBool = AtomicBool::new(false);
+
+/// Marks whether a recording/transcribing/streaming session currently owns
+/// the overlay window. `show_overlay_state`/`hide_recording_overlay` toggle
+/// this so the Flow bar knows not to show on top of them.
+fn set_session_overlay_active(active: bool) {
+    if active {
+        // A session repaints the window; the Flow bar comes back collapsed.
+        FLOW_BAR_EXPANDED.store(false, Ordering::Relaxed);
+    }
+    SESSION_OVERLAY_ACTIVE.store(active, Ordering::SeqCst);
+}
+
+/// Whether the idle Flow bar pill should currently be shown, per
+/// `flow_bar_visibility` and (Windows only) the last known text-field focus
+/// state and foreground fullscreen state.
+fn flow_bar_should_be_visible(app_handle: &AppHandle) -> bool {
+    use crate::flow_bar::FlowBarVisibility;
+
+    let settings = settings::get_settings(app_handle);
+    match settings.flow_bar_visibility {
+        FlowBarVisibility::Never => false,
+        FlowBarVisibility::Always => true,
+        FlowBarVisibility::TextFields => {
+            #[cfg(target_os = "windows")]
+            {
+                !crate::flow_bar_windows::is_foreground_window_fullscreen()
+                    && crate::flow_bar_windows::focused_is_text_field()
+            }
+            // macOS/Linux have no focus-tracking backend for this yet, so
+            // `TextFields` behaves like `Always` there (documented in README).
+            #[cfg(not(target_os = "windows"))]
+            {
+                true
+            }
+        }
+    }
+}
+
+/// Shows the idle Flow bar pill if it isn't already superseded by an active
+/// recording/transcribing/streaming session and the current settings/focus
+/// state say it should be visible. Safe to call redundantly.
+pub fn show_flow_bar_if_applicable(app_handle: &AppHandle) {
+    if SESSION_OVERLAY_ACTIVE.load(Ordering::SeqCst) {
+        return;
+    }
+    if !flow_bar_should_be_visible(app_handle) {
+        hide_flow_bar(app_handle);
+        return;
+    }
+    show_overlay_state(app_handle, "flow_bar");
+}
+
+/// Hides the Flow bar pill immediately (no fade delay bookkeeping — used
+/// when settings/focus say it should no longer be shown, as opposed to a
+/// session taking over the window).
+pub fn hide_flow_bar(app_handle: &AppHandle) {
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let _ = overlay_window.emit("hide-overlay", ());
+        let window_clone = overlay_window.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(300));
+            if !SESSION_OVERLAY_ACTIVE.load(Ordering::SeqCst) {
+                let _ = window_clone.hide();
+            }
+        });
+    }
+}
+
+/// Re-evaluates and applies Flow bar visibility. Called after the
+/// `flow_bar_visibility` setting changes.
+pub fn update_flow_bar_visibility(app_handle: &AppHandle) {
+    show_flow_bar_if_applicable(app_handle);
+}
+
+/// Grows the Flow bar window to its hover toolbar size (or shrinks it back to
+/// the resting pill), so the window never covers more of the screen — and
+/// therefore never eats more mouse clicks — than the bar currently draws.
+pub fn set_flow_bar_expanded(app_handle: &AppHandle, expanded: bool) {
+    FLOW_BAR_EXPANDED.store(expanded, Ordering::Relaxed);
+    show_flow_bar_if_applicable(app_handle);
+}
+
+/// Called from the Windows UI Automation focus-changed handler whenever the
+/// focused element's text-field status changes.
+#[cfg(target_os = "windows")]
+pub fn on_focus_text_field_changed(app_handle: &AppHandle, _is_text_field: bool) {
+    show_flow_bar_if_applicable(app_handle);
 }
 
 pub fn emit_levels(app_handle: &AppHandle, levels: &[f32]) {

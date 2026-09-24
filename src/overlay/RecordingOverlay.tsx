@@ -2,6 +2,7 @@ import { listen } from "@tauri-apps/api/event";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./RecordingOverlay.css";
+import FlowBar from "./FlowBar";
 import { commands, events } from "@/bindings";
 import type {
   StreamPhase,
@@ -12,7 +13,12 @@ import type {
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
 
-type OverlayState = "recording" | "streaming" | "transcribing" | "processing";
+type OverlayState =
+  | "flow_bar"
+  | "recording"
+  | "streaming"
+  | "transcribing"
+  | "processing";
 
 // Number of reactive bars in the waveform (the simple, smoothed style shared by
 // every overlay form). Mic levels arrive as 16 FFT buckets; we take the first N.
@@ -158,6 +164,11 @@ const RecordingOverlay: React.FC = () => {
   }, [session]);
 
   if (!isVisible) return null;
+
+  // ---- Idle Flow bar: the persistent pill shown when no session is running ----
+  if (state === "flow_bar") {
+    return <FlowBar position={position} />;
+  }
 
   // Re-pin when the user is within ~a line of the bottom; unpin otherwise.
   const handleStreamScroll = () => {
