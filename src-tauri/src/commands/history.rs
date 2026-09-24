@@ -1,6 +1,6 @@
 use crate::actions::process_transcription_output;
 use crate::managers::{
-    history::{HistoryEntry, HistoryManager, PaginatedHistory},
+    history::{HistoryEntry, HistoryManager, LearningCandidate, PaginatedHistory},
     transcription::TranscriptionManager,
 };
 use crate::transcript_export::{self, ExportFormat, TranscriptSegment};
@@ -248,4 +248,124 @@ pub async fn export_transcript(
     std::fs::write(&dest_path, content).map_err(|e| format!("Failed to write file: {}", e))?;
 
     Ok(())
+}
+
+/// Save a user edit to a history entry's transcription text (from the
+/// Home/History UI). Diffs the change to harvest self-learning dictionary
+/// candidates as a side effect.
+#[tauri::command]
+#[specta::specta]
+pub async fn edit_history_entry_text(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+    text: String,
+) -> Result<HistoryEntry, String> {
+    history_manager
+        .edit_entry_text(id, text)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+/// Minimum hit count a learning candidate must exceed before it's
+/// surfaced as a suggestion on Home.
+const LEARNING_CANDIDATE_MIN_HITS: i64 = 2;
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_learning_candidates(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+) -> Result<Vec<LearningCandidate>, String> {
+    history_manager
+        .list_learning_candidates(LEARNING_CANDIDATE_MIN_HITS)
+        .map_err(|e| e.to_string())
+}
+
+/// Adds a learning candidate's replacement word(s) to the existing
+/// `custom_words` setting, then removes the candidate so it stops being
+/// suggested.
+#[tauri::command]
+#[specta::specta]
+pub async fn add_learning_candidate_to_dictionary(
+    app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+    phrase_to: String,
+) -> Result<(), String> {
+    let mut settings = crate::settings::get_settings(&app);
+    if !settings.custom_words.iter().any(|w| w == &phrase_to) {
+        settings.custom_words.push(phrase_to);
+    }
+    crate::settings::write_settings(&app, settings);
+
+    history_manager
+        .remove_learning_candidate(id)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn dismiss_learning_candidate(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    id: i64,
+) -> Result<(), String> {
+    history_manager
+        .dismiss_learning_candidate(id)
+        .map_err(|e| e.to_string())
+}
+
+/// "Ask your history" search box: SQLite FTS5 search over transcription
+/// text, returning entries with a link-back id/title/snippet.
+#[tauri::command]
+#[specta::specta]
+pub async fn search_history(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    query: String,
+) -> Result<Vec<crate::history_search::SearchResult>, String> {
+    let Some(sanitized) = crate::history_search::sanitize_fts_query(&query) else {
+        return Ok(Vec::new());
+    };
+    history_manager
+        .search_history_fts(&sanitized, crate::history_search::ASK_TOP_K)
+        .map_err(|e| e.to_string())
+}
+
+/// "Ask" button: runs the top-k FTS matches for `question` through the
+/// configured LLM and returns the answer plus the matched entries it was
+/// grounded in (for the frontend to render as source links).
+#[tauri::command]
+#[specta::specta]
+pub async fn ask_history(
+    app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    question: String,
+) -> Result<AskHistoryResponse, String> {
+    let matches = match crate::history_search::sanitize_fts_query(&question) {
+        Some(sanitized) => history_manager
+            .search_history_fts(&sanitized, crate::history_search::ASK_TOP_K)
+            .map_err(|e| e.to_string())?,
+        None => Vec::new(),
+    };
+
+    let settings = crate::settings::get_settings(&app);
+    let (provider, model, api_key) = settings
+        .resolve_llm_target()
+        .ok_or_else(|| "No AI provider/model configured".to_string())?;
+
+    let prompt = crate::history_search::build_ask_prompt(&question, &matches);
+
+    let answer = crate::llm_client::send_chat_completion(&provider, api_key, &model, prompt, true)
+        .await?
+        .ok_or_else(|| "The AI provider returned an empty response".to_string())?;
+
+    Ok(AskHistoryResponse { answer, matches })
+}
+
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize, specta::Type)]
+pub struct AskHistoryResponse {
+    pub answer: String,
+    pub matches: Vec<crate::history_search::SearchResult>,
 }

@@ -557,6 +557,21 @@
         "averageWpm": "PPM promedio",
         "dayStreak": "Racha de días"
       },
+      "ask": {
+        "placeholder": "Busca o pregúntale a tu historial...",
+        "search": "Buscar",
+        "ask": "Preguntar",
+        "searchError": "No se pudo buscar en el historial. Por favor, inténtalo de nuevo.",
+        "askError": "No se pudo obtener una respuesta. Por favor, inténtalo de nuevo.",
+        "noResults": "No se encontraron entradas del historial que coincidan.",
+        "sources": "Fuentes"
+      },
+      "learning": {
+        "suggestion": "¿Reemplazar \"{{from}}\" por \"{{to}}\"?",
+        "addToDictionary": "Añadir al diccionario",
+        "dismiss": "Descartar",
+        "addError": "No se pudo añadir al diccionario. Por favor, inténtalo de nuevo."
+      },
       "import": {
         "button": "Importar archivo",
         "dropHint": "Arrastra y suelta un archivo de audio o video aquí, o",
@@ -611,7 +626,11 @@
       "retranscribe": "Re-transcribir",
       "retranscribeError": "No se pudo re-transcribir. Por favor, inténtalo de nuevo.",
       "transcribing": "Transcribiendo...",
-      "transcriptionFailed": "La transcripción falló. Puedes re-transcribir usando el icono de reintentar."
+      "transcriptionFailed": "La transcripción falló. Puedes re-transcribir usando el icono de reintentar.",
+      "edit": "Editar transcripción",
+      "cancelEdit": "Cancelar",
+      "saveEdit": "Guardar",
+      "editError": "No se pudo guardar tu edición. Por favor, inténtalo de nuevo."
     },
     "scratchpad": {
       "title": "Bloc de notas",

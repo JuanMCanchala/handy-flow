@@ -13,8 +13,10 @@ mod commands;
 mod copilot;
 mod file_import;
 mod helpers;
+mod history_search;
 mod input;
 mod insights;
+mod learning;
 mod live_translate;
 mod llm_client;
 mod managers;
@@ -800,6 +802,12 @@ pub fn run(cli_args: CliArgs) {
             commands::history::import_audio_file,
             commands::history::cancel_audio_import,
             commands::history::export_transcript,
+            commands::history::edit_history_entry_text,
+            commands::history::get_learning_candidates,
+            commands::history::add_learning_candidate_to_dictionary,
+            commands::history::dismiss_learning_candidate,
+            commands::history::search_history,
+            commands::history::ask_history,
             commands::insights::get_insights,
             commands::transforms::add_transform,
             commands::transforms::update_transform,
