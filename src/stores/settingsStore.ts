@@ -210,6 +210,8 @@ const settingUpdaters: {
     commands.changeStylePerAppEnabledSetting(value as boolean),
   translation_target: (value) =>
     commands.changeTranslationTargetSetting(value as TranslationTarget),
+  live_translate_include_me: (value) =>
+    commands.changeLiveTranslateIncludeMeSetting(value as boolean),
   hide_from_screen_share: (value) =>
     commands.changeHideFromScreenShareSetting(value as boolean),
   live_translate_suggest_answers: (value) =>

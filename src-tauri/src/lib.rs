@@ -998,6 +998,7 @@ pub fn run(cli_args: CliArgs) {
             commands::live_translate::set_live_overlays_move_mode,
             commands::live_translate::get_live_overlays_move_mode,
             commands::live_translate::change_live_llm_setting,
+            commands::live_translate::change_live_translate_include_me_setting,
             commands::copilot::get_copilot_profile,
             commands::copilot::set_copilot_profile_text,
             commands::copilot::set_copilot_answer_language,

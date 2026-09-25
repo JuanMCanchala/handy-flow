@@ -898,6 +898,10 @@
       "hideFromShare": {
         "label": "Hide Voxa from screen sharing",
         "description": "Voxa windows stay visible to you but don't appear in Meet, Zoom, Teams or recordings."
+      },
+      "includeMe": {
+        "label": "Follow what I say",
+        "description": "With system audio, also listens to your microphone so suggested answers build on what you already said. Your voice is never subtitled or answered. Use headphones for best results."
       }
     },
     "copilot": {

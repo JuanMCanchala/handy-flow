@@ -9,7 +9,7 @@
 use super::profile::CopilotAnswerLanguage;
 
 /// Max number of recent transcript segments included as conversation context.
-pub const MAX_TRANSCRIPT_CONTEXT: usize = 6;
+pub const MAX_TRANSCRIPT_CONTEXT: usize = 10;
 
 /// System + user messages for one answer suggestion.
 pub struct AnswerPrompt {
@@ -43,7 +43,10 @@ must suggest how THEY should answer the question just asked to them.\n\n",
         "Write the answer the user should say out loud, in first person (\"I\", \"my\"), \
 2 to 4 short sentences, natural and speakable — not a bullet list. Lead with the direct \
 answer in the first sentence, then one concrete detail (project, tool, number) from the \
-profile. Only use facts present in the profile or conversation. If the profile does not \
+profile. Only use facts present in the profile or conversation. Stay consistent with \
+what the user (\"Me\") already said in the conversation: build on it, do not repeat it and \
+never contradict it; for a follow-up question, continue the thread of their previous answer. \
+If the profile does not \
 contain what is needed, give an honest, general answer the user can adapt and never invent \
 employers, dates or numbers.\n",
     );
@@ -87,11 +90,15 @@ of that answer>\n",
 
     let mut user = String::new();
     if !recent_transcript.is_empty() {
-        user.push_str("Recent conversation (oldest first, for context only):\n");
-        for line in recent_transcript.iter().take(MAX_TRANSCRIPT_CONTEXT) {
-            user.push_str("- \"");
+        user.push_str(
+            "Recent conversation (oldest first, for context only). \"Interviewer\" is the \
+other side of the call; \"Me\" is the user, whose answers you are helping with:\n",
+        );
+        let skip = recent_transcript.len().saturating_sub(MAX_TRANSCRIPT_CONTEXT);
+        for line in &recent_transcript[skip..] {
+            user.push_str("- ");
             user.push_str(line);
-            user.push_str("\"\n");
+            user.push('\n');
         }
         user.push('\n');
     }
@@ -150,10 +157,24 @@ mod tests {
     }
 
     #[test]
+    fn conversation_keeps_speaker_roles_and_asks_to_follow_the_user() {
+        let context = vec![
+            "Interviewer: Tell me about SIVA.".to_string(),
+            "Me: I built the money flows.".to_string(),
+        ];
+        let prompt = build_answer_prompt("Profile", &context, "How?", CopilotAnswerLanguage::En);
+        assert!(prompt.user.contains("- Me: I built the money flows."));
+        assert!(prompt.user.contains("\"Me\" is the user"));
+        assert!(prompt.system.contains("continue the thread"));
+    }
+
+    #[test]
     fn only_up_to_max_context_segments_are_included() {
-        let context: Vec<String> = (0..10).map(|i| format!("segment {i}")).collect();
+        let context: Vec<String> = (0..14).map(|i| format!("segment {i}.")).collect();
         let prompt = build_answer_prompt("Profile", &context, "Q?", CopilotAnswerLanguage::Auto);
-        assert!(!prompt.user.contains("segment 6"));
-        assert!(prompt.user.contains("segment 5"));
+        // The newest lines are kept, the oldest dropped.
+        assert!(!prompt.user.contains("segment 3."));
+        assert!(prompt.user.contains("segment 4."));
+        assert!(prompt.user.contains("segment 13."));
     }
 }

@@ -277,6 +277,17 @@ export const LiveTranslateSettings: React.FC = () => {
           grouped={true}
         />
         <ToggleSwitch
+          checked={getSetting("live_translate_include_me") ?? true}
+          onChange={(enabled) =>
+            updateSetting("live_translate_include_me", enabled)
+          }
+          isUpdating={isUpdating("live_translate_include_me")}
+          label={t("settings.liveTranslate.includeMe.label")}
+          description={t("settings.liveTranslate.includeMe.description")}
+          descriptionMode="tooltip"
+          grouped={true}
+        />
+        <ToggleSwitch
           checked={getSetting("hide_from_screen_share") ?? true}
           onChange={(enabled) =>
             updateSetting("hide_from_screen_share", enabled)

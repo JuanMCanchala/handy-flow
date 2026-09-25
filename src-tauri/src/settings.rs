@@ -619,6 +619,10 @@ pub struct AppSettings {
     /// Copilot profile) whenever a question is detected.
     #[serde(default)]
     pub live_translate_suggest_answers: bool,
+    /// With system audio, also capture the user's microphone as "Me" so
+    /// answer suggestions follow what the user already said. Never subtitled.
+    #[serde(default = "default_true")]
+    pub live_translate_include_me: bool,
     /// Exclude every Voxa window from screen sharing / recording.
     #[serde(default = "default_true")]
     pub hide_from_screen_share: bool,
@@ -1334,6 +1338,7 @@ pub fn get_default_settings() -> AppSettings {
         live_translate_source: LiveTranslateSource::default(),
         live_translate_suggest_answers: false,
         hide_from_screen_share: true,
+        live_translate_include_me: true,
         live_subtitles_position: SubtitlesPosition::default(),
         live_subtitles_custom_position: None,
         copilot_answers_custom_position: None,

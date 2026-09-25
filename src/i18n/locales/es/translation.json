@@ -898,6 +898,10 @@
       "hideFromShare": {
         "label": "Ocultar Voxa al compartir pantalla",
         "description": "Tú sigues viendo las ventanas de Voxa, pero no aparecen en Meet, Zoom, Teams ni en grabaciones."
+      },
+      "includeMe": {
+        "label": "Seguir lo que yo digo",
+        "description": "Con audio del sistema, también escucha tu micrófono para que las respuestas sugeridas sigan el hilo de lo que ya dijiste. Tu voz nunca se subtitula ni se responde. Funciona mejor con audífonos."
       }
     },
     "copilot": {

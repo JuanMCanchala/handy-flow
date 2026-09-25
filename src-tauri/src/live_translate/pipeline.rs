@@ -35,6 +35,12 @@ const MAX_CONTEXT_HISTORY: usize = 3;
 /// wait is typically zero; it only avoids answering half a question when the
 /// interviewer pauses mid-sentence.
 const TURN_GRACE_MS: u64 = 550;
+/// While the other side is talking (and this long after), the user's
+/// microphone is treated as silent: with speakers instead of headphones the
+/// mic hears the interviewer too, and that echo must not become "Me".
+const ECHO_GUARD_MS: u64 = 350;
+/// Conversation lines (both speakers) kept as context for answers.
+const MAX_CONVERSATION_LINES: usize = 10;
 /// Cap on the fragments merged into one utterance (monologues).
 const MAX_UTTERANCE_FRAGMENTS: usize = 10;
 /// Minimum spacing between streamed answer/translation updates.
@@ -47,6 +53,24 @@ fn now_ms() -> u64 {
     EPOCH.elapsed().as_millis() as u64
 }
 
+/// Who a segment came from. In system-audio sessions the loopback is the
+/// other side of the call (`Them`) and the microphone is the user (`Me`); a
+/// microphone-only session has a single `Them` channel.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Speaker {
+    Them,
+    Me,
+}
+
+impl Speaker {
+    fn label(self) -> &'static str {
+        match self {
+            Speaker::Them => "Interviewer",
+            Speaker::Me => "Me",
+        }
+    }
+}
+
 /// A closed segment whose transcription is in flight. Queued in capture
 /// order so lines and utterances stay ordered even though transcriptions run
 /// concurrently.
@@ -54,6 +78,7 @@ struct PendingSegment {
     transcript: tauri::async_runtime::JoinHandle<Option<String>>,
     closed_by_cap: bool,
     closed_at_ms: u64,
+    speaker: Speaker,
 }
 
 /// A transcribed segment handed to the answer-suggestion stage.
@@ -61,6 +86,7 @@ struct UtteranceFragment {
     text: String,
     closed_by_cap: bool,
     closed_at_ms: u64,
+    speaker: Speaker,
 }
 
 /// One rendered subtitle line, emitted to the overlay window.
@@ -111,6 +137,8 @@ pub struct LiveTranslateManager {
     active: Arc<AtomicBool>,
     mode: Arc<Mutex<LiveTranslateMode>>,
     capture: Arc<Mutex<Option<CaptureStream>>>,
+    /// The user's microphone, captured alongside system audio as `Me`.
+    me_capture: Arc<Mutex<Option<CaptureStream>>>,
     context: Arc<Mutex<Vec<ContextSegment>>>,
     /// Recent transcript segments (plain text, oldest first), used as
     /// conversation context for copilot answers. Independent of `context`
@@ -119,11 +147,13 @@ pub struct LiveTranslateManager {
     /// Live during a capture session so `stop()` can flush the in-progress
     /// segment instead of discarding it.
     segmenter: Arc<Mutex<Option<SpeechSegmenter>>>,
+    me_segmenter: Arc<Mutex<Option<SpeechSegmenter>>>,
     /// Ordered queue of closed segments for the session (see
     /// `run_segment_consumer`); dropped on stop so the consumer drains and
     /// exits.
     segments_tx: Arc<Mutex<Option<tokio::sync::mpsc::UnboundedSender<PendingSegment>>>>,
-    /// `now_ms()` of the last frame the VAD classified as speech.
+    /// `now_ms()` of the last frame the VAD classified as speech on the
+    /// other side of the call.
     last_speech_ms: Arc<AtomicU64>,
 }
 
@@ -135,9 +165,11 @@ impl LiveTranslateManager {
             active: Arc::new(AtomicBool::new(false)),
             mode: Arc::new(Mutex::new(LiveTranslateMode::Subtitles)),
             capture: Arc::new(Mutex::new(None)),
+            me_capture: Arc::new(Mutex::new(None)),
             context: Arc::new(Mutex::new(Vec::new())),
             transcript_history: Arc::new(Mutex::new(Vec::new())),
             segmenter: Arc::new(Mutex::new(None)),
+            me_segmenter: Arc::new(Mutex::new(None)),
             segments_tx: Arc::new(Mutex::new(None)),
             last_speech_ms: Arc::new(AtomicU64::new(0)),
         }
@@ -182,92 +214,38 @@ impl LiveTranslateManager {
         self.context.lock().unwrap().clear();
         self.transcript_history.lock().unwrap().clear();
 
-        let detector = match build_vad(&self.app_handle) {
-            Ok(detector) => detector,
-            Err(e) => {
-                log::error!("Live session: VAD init failed: {e}");
-                self.active.store(false, Ordering::SeqCst);
-                return Err(e);
-            }
-        };
-        let segmenter_config = SegmenterConfig::default();
-        *self.segmenter.lock().unwrap() = Some(SpeechSegmenter::new(segmenter_config));
-        let segmenter = Arc::clone(&self.segmenter);
-        let vad = Arc::new(Mutex::new(detector));
-
         let (segments_tx, segments_rx) = tokio::sync::mpsc::unbounded_channel();
         *self.segments_tx.lock().unwrap() = Some(segments_tx);
         let consumer = self.clone();
         tauri::async_runtime::spawn(async move {
             consumer.run_segment_consumer(segments_rx).await;
         });
-        let last_speech_ms = Arc::clone(&self.last_speech_ms);
 
-        let manager = self.clone();
-        let frame_samples = vad.lock().unwrap().frame_samples();
-        let mut pending: Vec<f32> = Vec::with_capacity(frame_samples * 2);
-
-        // Periodic level/VAD diagnostics (~every 3 s) so "nothing happens"
-        // can be told apart from "no audio" vs "audio but no speech".
-        let mut diag_frames = 0u32;
-        let mut diag_speech = 0u32;
-        let mut diag_peak = 0.0f32;
-        let on_frame = move |frame: &[f32]| {
-            pending.extend_from_slice(frame);
-            while pending.len() >= frame_samples {
-                let chunk: Vec<f32> = pending.drain(..frame_samples).collect();
-                let is_speech = match vad.lock().unwrap().is_voice(&chunk) {
-                    Ok(speech) => speech,
-                    Err(e) => {
-                        log::error!("Live subtitles VAD error: {e}");
-                        false
-                    }
-                };
-                if is_speech {
-                    last_speech_ms.store(now_ms(), Ordering::Relaxed);
-                }
-                diag_frames += 1;
-                diag_speech += u32::from(is_speech);
-                diag_peak = chunk.iter().fold(diag_peak, |m, v| m.max(v.abs()));
-                if diag_frames >= 100 {
-                    log::debug!(
-                        "Live session audio: peak={:.3} speech_frames={}/{}",
-                        diag_peak,
-                        diag_speech,
-                        diag_frames
-                    );
-                    diag_frames = 0;
-                    diag_speech = 0;
-                    diag_peak = 0.0;
-                }
-
-                let closed_segment = segmenter.lock().unwrap().as_mut().and_then(|s| {
-                    s.push(&chunk, is_speech)
-                        .map(|segment| (segment, s.last_closed_by_cap()))
-                });
-                if let Some((segment, closed_by_cap)) = closed_segment {
-                    manager.process_segment(segment, closed_by_cap);
-                }
-            }
-        };
-
-        let capture_result = match source {
-            LiveTranslateSource::Microphone => capture::start_microphone_capture(on_frame),
-            LiveTranslateSource::SystemAudio => capture::start_system_audio_capture(on_frame),
-        };
-
-        let stream = match capture_result {
+        let stream = match self.start_channel(Speaker::Them, source) {
             Ok(stream) => stream,
             Err(e) => {
                 log::error!("Live session: audio capture failed: {e}");
+                *self.segments_tx.lock().unwrap() = None;
                 self.active.store(false, Ordering::SeqCst);
                 return Err(e);
             }
         };
+        *self.capture.lock().unwrap() = Some(stream);
+
+        // With system audio (a call), also listen to the user's own mic so
+        // answers follow what they have already said. Their voice is never
+        // subtitled or answered; it is only conversation context.
+        if source == LiveTranslateSource::SystemAudio
+            && get_settings(&self.app_handle).live_translate_include_me
+        {
+            match self.start_channel(Speaker::Me, LiveTranslateSource::Microphone) {
+                Ok(stream) => *self.me_capture.lock().unwrap() = Some(stream),
+                Err(e) => log::warn!("Live session: microphone (Me) capture unavailable: {e}"),
+            }
+        }
 
         log::info!("Live session capturing audio");
         let _ = self.app_handle.emit("live-translate-state", true);
-        *self.capture.lock().unwrap() = Some(stream);
 
         // Keep the STT/LLM connections warm for the whole session: each
         // segment is a separate request, and re-opening DNS + TLS per segment
@@ -312,10 +290,21 @@ impl LiveTranslateManager {
             .unwrap()
             .as_mut()
             .and_then(|s| s.flush());
+        let me_flushed = self
+            .me_segmenter
+            .lock()
+            .unwrap()
+            .as_mut()
+            .and_then(|s| s.flush());
         *self.capture.lock().unwrap() = None;
+        *self.me_capture.lock().unwrap() = None;
         *self.segmenter.lock().unwrap() = None;
+        *self.me_segmenter.lock().unwrap() = None;
         if let Some(segment) = flushed {
-            self.process_segment(segment, false);
+            self.process_segment(segment, false, Speaker::Them);
+        }
+        if let Some(segment) = me_flushed {
+            self.process_segment(segment, false, Speaker::Me);
         }
         // Dropping the sender lets the consumer drain what is queued and exit.
         *self.segments_tx.lock().unwrap() = None;
@@ -324,10 +313,90 @@ impl LiveTranslateManager {
         let _ = self.app_handle.emit("live-translate-state", false);
     }
 
+    /// Starts one capture channel (VAD + segmenter) for `speaker`.
+    fn start_channel(
+        &self,
+        speaker: Speaker,
+        source: LiveTranslateSource,
+    ) -> Result<CaptureStream, String> {
+        let detector = build_vad(&self.app_handle)?;
+        let slot = match speaker {
+            Speaker::Them => &self.segmenter,
+            Speaker::Me => &self.me_segmenter,
+        };
+        *slot.lock().unwrap() = Some(SpeechSegmenter::new(SegmenterConfig::default()));
+        let segmenter = Arc::clone(slot);
+        let vad = Arc::new(Mutex::new(detector));
+        let last_them_speech = Arc::clone(&self.last_speech_ms);
+
+        let manager = self.clone();
+        let frame_samples = vad.lock().unwrap().frame_samples();
+        let mut pending: Vec<f32> = Vec::with_capacity(frame_samples * 2);
+
+        // Periodic level/VAD diagnostics (~every 3 s) so "nothing happens"
+        // can be told apart from "no audio" vs "audio but no speech".
+        let mut diag_frames = 0u32;
+        let mut diag_speech = 0u32;
+        let mut diag_peak = 0.0f32;
+        let on_frame = move |frame: &[f32]| {
+            pending.extend_from_slice(frame);
+            while pending.len() >= frame_samples {
+                let chunk: Vec<f32> = pending.drain(..frame_samples).collect();
+                let mut is_speech = match vad.lock().unwrap().is_voice(&chunk) {
+                    Ok(speech) => speech,
+                    Err(e) => {
+                        log::error!("Live subtitles VAD error: {e}");
+                        false
+                    }
+                };
+                match speaker {
+                    Speaker::Them if is_speech => {
+                        last_them_speech.store(now_ms(), Ordering::Relaxed);
+                    }
+                    Speaker::Me
+                        if now_ms().saturating_sub(last_them_speech.load(Ordering::Relaxed))
+                            < ECHO_GUARD_MS =>
+                    {
+                        is_speech = false;
+                    }
+                    _ => {}
+                }
+                diag_frames += 1;
+                diag_speech += u32::from(is_speech);
+                diag_peak = chunk.iter().fold(diag_peak, |m, v| m.max(v.abs()));
+                if diag_frames >= 100 {
+                    log::debug!(
+                        "Live session audio ({}): peak={:.3} speech_frames={}/{}",
+                        speaker.label(),
+                        diag_peak,
+                        diag_speech,
+                        diag_frames
+                    );
+                    diag_frames = 0;
+                    diag_speech = 0;
+                    diag_peak = 0.0;
+                }
+
+                let closed_segment = segmenter.lock().unwrap().as_mut().and_then(|s| {
+                    s.push(&chunk, is_speech)
+                        .map(|segment| (segment, s.last_closed_by_cap()))
+                });
+                if let Some((segment, closed_by_cap)) = closed_segment {
+                    manager.process_segment(segment, closed_by_cap, speaker);
+                }
+            }
+        };
+
+        match source {
+            LiveTranslateSource::Microphone => capture::start_microphone_capture(on_frame),
+            LiveTranslateSource::SystemAudio => capture::start_system_audio_capture(on_frame),
+        }
+    }
+
     /// Starts transcribing one closed speech segment right away (so
     /// transcriptions overlap) and queues it, in capture order, for
     /// `run_segment_consumer`. Never blocks the capture callback.
-    fn process_segment(&self, segment: Vec<f32>, closed_by_cap: bool) {
+    fn process_segment(&self, segment: Vec<f32>, closed_by_cap: bool, speaker: Speaker) {
         let closed_at_ms = now_ms();
         let sample_rate = crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as usize;
         // Segments too short to be meaningful speech (VAD noise) are not
@@ -337,7 +406,8 @@ impl LiveTranslateManager {
             tauri::async_runtime::spawn(async { None })
         } else {
             log::debug!(
-                "Live session: segment closed ({:.1}s, cap={}), transcribing",
+                "Live session: {} segment closed ({:.1}s, cap={}), transcribing",
+                speaker.label(),
                 segment.len() as f32 / sample_rate as f32,
                 closed_by_cap
             );
@@ -362,6 +432,7 @@ impl LiveTranslateManager {
                 transcript,
                 closed_by_cap,
                 closed_at_ms,
+                speaker,
             });
         }
     }
@@ -383,7 +454,12 @@ impl LiveTranslateManager {
             let text = segment.transcript.await.ok().flatten().unwrap_or_default();
             let mode = *self.mode.lock().unwrap();
 
-            if mode == LiveTranslateMode::Subtitles && !text.is_empty() {
+            // Only the other side is subtitled; the user's own voice is
+            // context for answers.
+            if mode == LiveTranslateMode::Subtitles
+                && segment.speaker == Speaker::Them
+                && !text.is_empty()
+            {
                 let manager = self.clone();
                 let text = text.clone();
                 tauri::async_runtime::spawn(async move {
@@ -395,6 +471,7 @@ impl LiveTranslateManager {
                 text,
                 closed_by_cap: segment.closed_by_cap,
                 closed_at_ms: segment.closed_at_ms,
+                speaker: segment.speaker,
             });
         }
     }
@@ -416,6 +493,19 @@ impl LiveTranslateManager {
                 || get_settings(&self.app_handle).live_translate_suggest_answers;
             if !answering {
                 utterance.clear();
+                continue;
+            }
+            if fragment.speaker == Speaker::Me {
+                if !fragment.text.is_empty() {
+                    // The user started talking: the interviewer's turn is
+                    // over, answer what is pending right now.
+                    if !utterance.is_empty() {
+                        deferred = false;
+                        self.dispatch_utterance(utterance.join(" "));
+                        utterance.clear();
+                    }
+                    self.push_conversation(Speaker::Me, &fragment.text);
+                }
                 continue;
             }
             // A fragment the transcriber punctuated as a question ends the
@@ -451,17 +541,34 @@ impl LiveTranslateManager {
             }
             deferred = false;
 
-            let text = utterance.join(" ");
+            self.dispatch_utterance(utterance.join(" "));
             utterance.clear();
-            let manager = self.clone();
-            tauri::async_runtime::spawn(async move {
-                manager.handle_copilot_utterance(text).await;
-            });
         }
 
         // Session over: a question still being held back must not be lost.
         if !utterance.is_empty() {
-            self.handle_copilot_utterance(utterance.join(" ")).await;
+            self.dispatch_utterance(utterance.join(" "));
+        }
+    }
+
+    /// Records a finished interviewer utterance in the conversation and, in
+    /// the background, answers it if it is a question. The conversation
+    /// snapshot is taken here, in order, so later lines can't leak into it.
+    fn dispatch_utterance(&self, text: String) {
+        let context = self.transcript_history.lock().unwrap().clone();
+        self.push_conversation(Speaker::Them, &text);
+        let manager = self.clone();
+        tauri::async_runtime::spawn(async move {
+            manager.handle_copilot_utterance(text, context).await;
+        });
+    }
+
+    fn push_conversation(&self, speaker: Speaker, text: &str) {
+        let mut history = self.transcript_history.lock().unwrap();
+        history.push(format!("{}: {}", speaker.label(), text.trim()));
+        if history.len() > MAX_CONVERSATION_LINES {
+            let excess = history.len() - MAX_CONVERSATION_LINES;
+            history.drain(0..excess);
         }
     }
 
@@ -520,13 +627,7 @@ impl LiveTranslateManager {
     /// Runs the copilot's question detector on a finished utterance; on a
     /// match, streams an answer suggestion from the live LLM (grounded in
     /// the user's profile) to the answers panel, the live view and history.
-    async fn handle_copilot_utterance(&self, transcript: String) {
-        self.transcript_history
-            .lock()
-            .unwrap()
-            .push(transcript.clone());
-        self.trim_transcript_history();
-
+    async fn handle_copilot_utterance(&self, transcript: String, recent_transcript: Vec<String>) {
         if !crate::copilot::is_question(&transcript) {
             return;
         }
@@ -543,11 +644,6 @@ impl LiveTranslateManager {
         }
 
         let profile = crate::copilot::get_profile(&self.app_handle);
-        let recent_transcript = {
-            let history = self.transcript_history.lock().unwrap();
-            // Exclude the question itself; the prompt passes it separately.
-            history[..history.len().saturating_sub(1)].to_vec()
-        };
         let prompt = crate::copilot::build_answer_prompt(
             &profile.text,
             &recent_transcript,
@@ -617,19 +713,6 @@ impl LiveTranslateManager {
                 timestamp,
             },
         );
-    }
-
-    fn trim_transcript_history(&self) {
-        let mut history = self.transcript_history.lock().unwrap();
-        // Keep one extra slot beyond the context window: the newest entry is
-        // the just-finished utterance itself (excluded from context by the
-        // caller), so MAX_CONTEXT_SEGMENTS prior utterances need to survive
-        // alongside it.
-        let cap = super::prompt::MAX_CONTEXT_SEGMENTS + 1;
-        if history.len() > cap {
-            let excess = history.len() - cap;
-            history.drain(0..excess);
-        }
     }
 
     async fn translate<F>(

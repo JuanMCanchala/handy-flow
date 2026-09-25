@@ -129,3 +129,12 @@ pub fn change_live_llm_setting(
     settings::write_settings(&app, current_settings);
     Ok(())
 }
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_live_translate_include_me_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut current_settings = settings::get_settings(&app);
+    current_settings.live_translate_include_me = enabled;
+    settings::write_settings(&app, current_settings);
+    Ok(())
+}

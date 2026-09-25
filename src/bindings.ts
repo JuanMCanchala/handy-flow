@@ -1282,6 +1282,14 @@ async changeLiveLlmSetting(providerId: string, model: string) : Promise<Result<n
     else return { status: "error", error: e  as any };
 }
 },
+async changeLiveTranslateIncludeMeSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_live_translate_include_me_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeHideFromScreenShareSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_hide_from_screen_share_setting", { enabled }) };
@@ -1571,7 +1579,7 @@ translation_target?: TranslationTarget;
  * only implemented on Windows; other platforms report an error when
  * selected (see `live_translate::capture`).
  */
-live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; hide_from_screen_share?: boolean; live_subtitles_position?: SubtitlesPosition; live_subtitles_custom_position?: WindowPoint | null; copilot_answers_custom_position?: WindowPoint | null; live_llm_provider_id?: string; live_llm_model?: string; 
+live_translate_source?: LiveTranslateSource; live_translate_suggest_answers?: boolean; hide_from_screen_share?: boolean; live_translate_include_me?: boolean; live_subtitles_position?: SubtitlesPosition; live_subtitles_custom_position?: WindowPoint | null; copilot_answers_custom_position?: WindowPoint | null; live_llm_provider_id?: string; live_llm_model?: string; 
 /**
  * User-defined named modes/presets (Superwhisper-style). Seeded with
  * Default/Email/Notes on fresh installs. See `modes.rs`.
