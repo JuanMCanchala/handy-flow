@@ -599,7 +599,14 @@ impl LiveTranslateManager {
             }
         };
 
-        let translation = match self.translate(&transcript, target_lang, on_partial).await {
+        let mut result = self.translate(&transcript, target_lang, on_partial).await;
+        if matches!(&result, Err(e) if e.starts_with("Empty")) {
+            // Reasoning models occasionally spend the whole budget thinking;
+            // one retry almost always returns the translation.
+            log::debug!("Live subtitles: empty translation, retrying once");
+            result = self.translate(&transcript, target_lang, |_| {}).await;
+        }
+        let translation = match result {
             Ok(text) => clean_model_text(&text),
             Err(e) => {
                 log::error!("Live subtitles translation failed: {e}");
